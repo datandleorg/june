@@ -227,7 +227,7 @@ if(isset($_GET['grn_id']))
                                         <td>
                                             <select name="itemcode" class="form-control itemcode" onchange="rowitem.set_itemrow(this,'purchase');" id="item_select">
                                                 <option value="" name="itemcode" selected>Item Code</option>
-                                                <?php $qr  = "select * from purchaseitemaster where status ='1' and orgid='$session_org' ;";
+                                                <?php $qr  = "select * from purchaseitemaster where status ='1' ;";
                                                 $exc = mysqli_query($dbcon,$qr)or die();
                                                 while($r = mysqli_fetch_array($exc)){ ?>
                                                 <option value="<?php echo $r['id']; ?>"><?php echo "[".$r['itemcode']."] ".$r['itemname']; ?></option>
