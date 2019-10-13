@@ -344,6 +344,34 @@ function query_genrator($array,$id,$table,$col){
 
 }
 
+function insertRow($dbcon,$table,$row){
+    $query = "";
+
+    $query2 = array(); // After loop cleans the array
+    $query3 = array(); // After loop cleans the array
+
+    $query = "INSERT INTO $table ";
+
+    foreach($row as $key => $value) {
+        if($key!='table'){
+            $query2[] = $key;
+            $query3[] = "'".$value."'";
+        }
+    }
+ 
+    $query.="(".implode(",", $query2).")";
+    $query.=" VALUES (".implode(",", $query3).") ;";
+
+    if (mysqli_query($dbcon,$query)) {
+        $return['status']=true;
+
+    }else{
+        $return['status']=false;
+        $return['error']=mysqli_error($dbcon);
+    }
+    return $return;
+}
+
 function findbyand($dbcon,$col_val,$table,$col){
     $sql=" SELECT * FROM $table where $col='$col_val'; "; 
     //echo $sql;
@@ -383,7 +411,7 @@ function updatebyand($dbcon,$col_val,$table,$col,$cond_col,$cond_val){
 function update_query($dbcon,$array,$grn_id,$table,$col){
     $return2=array();
 
-     $sql3 =  query_genrator($array,$grn_id,$table,$col);
+    $sql3 =  query_genrator($array,$grn_id,$table,$col);
     if (mysqli_query($dbcon,$sql3)) {
 
         $return['status']=true;

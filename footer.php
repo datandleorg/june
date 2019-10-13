@@ -157,6 +157,7 @@
 <script>								
 $(document).ready(function() {
     $('.select2').select2();
+    $('.select2readonly').select2("readonly", true);
 });
 </script>
 <!-- END Java Script for this page -->

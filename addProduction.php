@@ -69,16 +69,18 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                 <div class="form-row">
                                         <div class="form-group col-md-8">
 
-                                        <label for="">Select Entry Type</label>
-                                        <select class="form-control form-control-sm " name="entrytype"
+                                        <label for="">Select Entry Type </label>
+                                        <select  name="entrytype"
                                          id="entrytype"
-                                         <?php
-                                                 if(isset($_GET['action']))
-                                            {
-                                               echo  $_GET['action']=="edit" ? "readonly" : "";
-                                            }
-                                         ?>
-                                         data-orgid="<?php echo $orgidUrl!=="" ? '"'.$orgidUrl.'"' :  "" ?>"
+                                        
+                                         <?php if(isset($_GET['action']))
+                                         { 
+                                            echo  $_GET['action']==="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2 ';
+                                         }else{
+                                             echo ' class="form-control form-control-sm select2 "  ';
+                                         }
+                                        ?>  
+                                        <?php echo $orgidUrl!=='' ? ' data-orgid="'.$orgidUrl.'"' :  '' ?>
                                         onchange="redirectTo(this.name);">
                                                 <option value="">Select Type</option>
                                                 <option value="self" <?php if($entryType!="" && $entryType=="self"){ echo "selected"; } ?> >Self</option>
@@ -94,10 +96,11 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                         <select data-entry="<?php echo $entryType;?>"
                                         <?php if(isset($_GET['action']))
                                          {
-                                           echo  $_GET['action']=="edit" ? "readonly" : "";
+                                            echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
+                                         }else{
+                                             echo ' class="form-control form-control-sm select2"  ';
                                          }
-
-                                        ?> 
+                                        ?>  
                                         id="prod_company" name="prod_company"
                                         class="form-control form-control-sm"  
                                         onchange="redirectTo(this.name)"
@@ -128,28 +131,24 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                         <select id="prod_item" onchange="post_rawItems(this.value);setUom('salesitemaster2',this)" 
                                         <?php if(isset($_GET['action']))
                                          {
-                                           echo  $_GET['action']=="edit" ? "readonly" : "";
+                                            echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
+                                         }else{
+                                             echo ' class="form-control form-control-sm select2"  ';
                                          }
-                                        ?> 
+                                        ?>  
                                         class="form-control form-control-sm select2" name="prod_item">
-                                            <option selected>--Select item--</option>
+                                            <option selected value="">--Select item--</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
-                                            if($entryType!="" && $orgidUrl!=""){
-                                             $sql = "SELECT itemcode,concat(itemcode,'-',itemname) as itemname FROM salesitemaster2 s";
-                                             if($entryType=="self"){
-                                                $sql.= $orgidUrl!='' ? ", comprofile comp WHERE comp.orgid='".$orgidUrl."' AND comp.orgid=s.orgid " : "  ";
-                                             }else{
-                                                $sql.= $orgidUrl!='' ? " , customerprofile cust WHERE cust.custid='".$orgidUrl."' AND cust.custid=s.custid " : "  ";
-                                             }       
-                                             echo $sql;     
+                                             $sql = "SELECT itemcode,concat(itemcode,'-',itemname) as itemname FROM salesitemaster2 s where s.orgid='".$orgidUrl."' ";
+                                            
                                              $exe = mysqli_query($dbcon,$sql);
                                             while ($row = $exe->fetch_assoc()){	
                                                 echo $itemcode=$row['itemcode'];
                                                 echo $itemname=$row['itemname'];
                                                 echo '<option value="'.$itemcode.'" >'.$itemname.' </option>';
                                             }
-                                             }
+                                             
                                             ?>
                                         </select>
 
@@ -159,18 +158,25 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                         <input type="text" placeholder="Qty"
                                         <?php if(isset($_GET['action']))
                                          {
-                                           echo  $_GET['action']=="edit" ? "" : "readonly";
+                                           echo  $_GET['action']=="edit" ? "readonly" : "";
                                          }
                                         ?>  
                                         name="prod_qty" id="prod_qty" class="form-control form-control-sm"> 
                                     </div>
                                     <div class="form-group col-md-2">
                                     <label>Unit</label>
-                                    <select class="form-control form-control-sm " id="prod_uom"  
+                                    <select id="prod_uom"  
+                                    <?php if(isset($_GET['action']))
+                                         {
+                                            echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
+                                         }else{
+                                             echo ' class="form-control form-control-sm select2"  ';
+                                         }
+                                    ?>  
                                      name="prod_uom">
-                                            <option value="" selected>Open Unit</option>
+                                            <option value="">Open Unit</option>
                                             <?php 
-                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom ");
+                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom limit 25");
                                             while ($row = $sql->fetch_assoc()){	
 
                                                 echo '<option  value="'.$row['code'].'">'.$row['description'].'</option>';
@@ -365,35 +371,37 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
     
 
     function post_rawItems(productId){
+        console.log(productId);
+        if(productId!=""){
         var prod_company = $('#prod_company').val();
         var entrytype = $('#entrytype').val();
         if(prod_company!==''){
-            var cond={proditemcode:productId};
-               if(entrytype=="outsourced"){
-                cond.custid = prod_company;
-               }else{
-                cond.orgid = prod_company;
-               }
-            
+            var cond={proditemcode:productId,orgid:prod_company};            
             var rawItemList = Page.get_vals_by_condition("rawitemaster",cond);
         }
+
         $("#tb").find("tr:gt(1)").remove();
         
         set_math_vals(JSON.parse(rawItemList.raw_items));
-        
+
+        }else{
+            $("#tb").find("tr:gt(1)").remove();
+        }
     }
 
     
     function setUom(table,ele){
             var itemCode = $(ele).val();
-            var itemData = Page.get_edit_vals(itemCode,table,"itemcode");
+            if(itemCode!=""){
+           var itemData = Page.get_edit_vals(itemCode,table,"itemcode");
            $('#prod_uom').val(itemData.sales_uom);
+
+            }
     }
 
     if(page_action=="edit"){
             var edit_data = Page.get_edit_vals(page_pro_code,page_table,"prod_code");
-            edit_data.prod_company = edit_data.orgid!="" && edit_data.orgid!=null ? edit_data.orgid: edit_data.custid;
-        console.log(edit_data);
+            edit_data.prod_company = edit_data.orgid;
             set_form_data(edit_data);
             $("#cancel-form").click(function(){
                 if(page_action=="edit"){
@@ -416,7 +424,6 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
         }
 
         function set_math_vals(po_items_json){
-            console.log(po_items_json);
             var itemrowCount = po_items_json.length;
             var rowCount = $('#tb tr').length;
             var totalamt = 0;
@@ -477,12 +484,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
         var prod_orgid = $('#prod_company').val();
 
         data.entrytype = $('#entrytype').val();
-        if(data.entrytype=="outsourced"){
-                data.custid = data.prod_company;
-                data.prod_company = ""
-        }else{
-            data.orgid = prod_orgid;
-        }
+        data.orgid = prod_orgid;
 
         $.ajax ({
             url: 'workers/setters/save_production.php',

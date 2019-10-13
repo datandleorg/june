@@ -213,8 +213,6 @@
                 }
 
 
-                console.log(taxarray);
-
                 $('#posubtotal').text(eval(posubtotal).toFixed(2));
 
                 var podiscount = $('#podiscount').val();
@@ -236,7 +234,6 @@
                 $('#taxdiv').html(tax_text.taxhtml);
 
                 var pograndtotal = (eval(posubtotal - podeduction));
-            //  console.log(tax_text.total_tax_amt_master," total_tax_amt_master")
                 pograndtotal = (eval(pograndtotal) + eval(tax_text.total_tax_amt_master)).toFixed(2);
 
                 $('#pograndtotal').text(pograndtotal);
@@ -469,8 +466,6 @@
                 var posubtotal = 0;
                 var taxarray = [];
                 for(i=1;i<rowCount;i++){ 
-                    console.log($('#tb tr').eq(i).find('#qty').val());
-
                     var rwqty = $('#tb tr').eq(i).find('#qty').val();
                     var tax_val = $('#tb tr').eq(i).find('#taxname option:selected').attr('data-rate');
                     var tax_type = $('#tb tr').eq(i).find('#taxname option:selected').attr('data-type');
@@ -589,7 +584,6 @@
             }
         },
         gettax_text: function(taxarray){
-            console.log(taxarray);
 
             function groupBy(data, property) {
                 return data.reduce((acc, obj) => {

@@ -1,19 +1,25 @@
 <?php
 include("database/db_conection.php");//make connection here
-$ItemFound ='';
-//$groupNotFound ='';
+//$ItemFound ='';
 
 /*$con = mysqli_connect("localhost","root","root","dhirajpro");
 	// Check connection
 	if(mysqli_connect_errno()){
 		echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	}*/
+    }*/
+$entryType = "";
+if(isset($_GET['entryType'])){
+    $entryType = $_GET['entryType'];
+}
 
 if(isset($_POST['submit']))
 {	$itemcode ="";
- $prefix = "DAPL00";
  //$postfix = "/";
  //$today = date("dmy");
+ $orgid =$_POST['orgid'];
+ $orgname =$_POST['hiddenOrgname'];
+ $prefix = strtoupper(substr($orgname, 0, 3))."0";
+
  $itemname=$_POST['itemname'];//here getting result from the post array after submitting the form.
  $vendor=$_POST['vendor'];//same
  //$description=$_POST['description'];//same
@@ -29,7 +35,10 @@ if(isset($_POST['submit']))
  $hsncode =$_POST['hsncode'];
  $pricedatefrom 	=$_POST['pricedatefrom'];
  $stockinqty 	=$_POST['stockinqty'];
- //$stockinuom	=$_POST['stockinuom'];
+ $stockinuom	=$_POST['stockinuom'];
+ $scrapqty 	=$_POST['scrapqty'];
+ $scrapinuom	=$_POST['scrapinuom'];
+
  $lowstockalert	=$_POST['lowstockalert'];
  $stockasofdate =$_POST['stockasofdate'];
  //$qtyondemand=$_POST['qtyondemand'];
@@ -58,23 +67,13 @@ if(isset($_POST['submit']))
          $itemcode = $prefix.$maxid;
      }
  }
- $check_itemname_query="select itemname from purchaseitemaster WHERE itemname='$itemname'";
-    $run_query=mysqli_query($dbcon,$check_itemname_query);
-	if(mysqli_num_rows($run_query)>0)
-    {
-		//echo '0';
-       // echo "<script>alert('Item Name: $itemname is already exist in our database, Please try another one!')</script>";
-        //$fmsg= "Email already exists";   
-        $ItemFound = "Item Name: '$itemname'' is already exist in our database, Please try another one!";
-       //exit();
-        // header("location:addPurchaseItemMaster.php");
-    }
-    else{	
  
- $sql = "INSERT into purchaseitemaster(`itemcode`,
-										`itemname`,
-										`vendor`,
-										
+ $sql = "INSERT into purchaseitemaster (";
+ $sql.= $entryType!="" && $entryType=="outsourced" ? "`custid`," : "`orgid`,";
+  $sql.="`itemcode`,
+ `itemname`,
+ `entrytype`,
+ `vendor`,
 										`category`,
 										`priceperqty`,
 										`uom`,
@@ -89,14 +88,18 @@ if(isset($_POST['submit']))
 										`hsncode`,
 										`pricedatefrom`,
 										`stockinqty`,
+                                        `stockinuom`,
+										`scrapqty`,
+                                        `scrapinuom`,
                                         `lowstockalert`,
 										`stockasofdate`,
 										`handler`,
 										`notes`)
-								VALUES ('$itemcode',
+								VALUES ('$orgid',
+                                        '$itemcode',
 								        '$itemname',
+								        '$entryType',
 										'$vendor',
-										
 										'$category',
 										'$priceperqty',
 										'$uom',
@@ -111,27 +114,31 @@ if(isset($_POST['submit']))
 										'$hsncode',
 										'$pricedatefrom',
 										'$stockinqty',
+                                        '$stockinuom',
+										'$scrapqty',
+                                        '$scrapinuom',
                                         '$lowstockalert',
 										'$stockasofdate',
 						                '$handler',
 										'$notes')";
 
  // Inserting Log details into purchaseitemlog
- $sql1="INSERT into purchaseitemlog(`itemcode`,
+ $sql1="INSERT into purchaseitemlog( ";
+ $sql1.= $entryType!="" && $entryType=="outsourced" ? "`custid`," : "`orgid`,";
+ $sql1.=" `itemcode`,
                                     `itemname`,
                                     `qtyonhand`,
                                     `uom`,
                                     `adjustedon`,
                                     `handler`,
-                                    `hsncode`,
                                     `notes`)
-				            VALUES ('$itemcode',
+				            VALUES ('$orgid',
+                                     '$itemcode',
                                     '$itemname',
                                     '$stockinqty',
-                                    '$uom',
+                                    '$stockinuom',
                                     '$stockasofdate',
 								    '$handler',
-                                    '$hsncode',
                                     '$notes')";
  //echo "$insert_purchaseItemMaster";	
 
@@ -143,77 +150,14 @@ if(isset($_POST['submit']))
      echo "<script>alert('User creation unsuccessful ')</script>";
  }
 }
-}
+
+
 ?>
 <?php include('header.php');?>
 <!-- End Sidebar -->
 
-<!-- Product/Itemname Modal -->
-<div class="modal fade custom-modal" id="customModal3" tabindex="-1" role="dialog" aria-labelledby="customModal3" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">Add New Itemname</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="#" enctype="multipart/form-data" method="post">
-
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="additemname"  id="additemname"  placeholder="Enter Product/Item Name">
-                    </div>		
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="adddescripton"  id="adddescription"  placeholder="Add Product Description">
-                    </div>		
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" name="submititemname" id="submititemname" class="btn btn-primary">Save and Associate</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--Product name Modal Ends-->
-
-
-<!-- HSN Modal -->
+<!-- Modal -->
 <div class="modal fade custom-modal" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel2">Add New Hsncode</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="#" enctype="multipart/form-data" method="post">
-
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="addhsncode"  id="addhsncode"  placeholder="enter HSNCODE">
-                    </div>		
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="adddescripton"  id="adddescription"  placeholder="enter product name">
-                    </div>		
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" name="submithsncode" id="submithsncode" class="btn btn-primary">Save and Associate</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--HSN Modal Ends-->
-
-
-<!-- Category Modal -->
-<div class="modal fade custom-modal" id="customModal2" tabindex="-1" role="dialog" aria-labelledby="customModal2" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -226,9 +170,8 @@ if(isset($_POST['submit']))
                 <form action="#" enctype="multipart/form-data" method="post">
 
                     <div class="form-group">
-                        <input type="text" class="form-control" name="addcategory"  id="addcategory"  placeholder="enter Category">
+                        <input type="text" class="form-control" name="addcategory"  id="addcategory"  placeholder="Add Category">
                     </div>		
-                    	
                 </form>
             </div>
 
@@ -239,8 +182,6 @@ if(isset($_POST['submit']))
         </div>
     </div>
 </div>
-<!--HSN Modal Ends-->
-
 <div class="content-page">
 
     <!-- Start content -->
@@ -268,88 +209,118 @@ if(isset($_POST['submit']))
 <h4 class="alert-heading">Company Registrtion Form</h4>
 <p></a></p>
 </div-->
-   <!--div class="alert alert-danger" role="alert">
-                <?php echo $ItemFound;?>
-					  <!--h4 class="alert-heading">Forms</h4-->					  
-			    </div--> 
+
 
             <div class="row">					
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">					
                     <div class="card mb-3">
-                        <div class="card-header">
+                           <div class="card-header">
                             <!--h3><i class="fa fa-check-square-o"></i>Create Company </h3-->
                             <!--h3 class="fa-hover col-md-12 col-sm-12">
                                  Purchase Item Master
                             </h3-->
-                            <p class="text-danger"><?php echo $ItemFound;?></p> 
-                        </div>
+                            </div>
+                        
+                     
                         
                         <div class="card-body">
-                            
-             
-			
 
                             <!--form autocomplete="off" action="#"-->
                             <form autocomplete="off" action="#" enctype="multipart/form-data" method="post">
-
-                                <!--div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label>Item Name<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control form-control-sm" name="itemname" placeholder="Product Name" required class="form-control" autocomplete="off" />
-                                    </div>
-                                </div-->
                                 
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="inputState">Product/Item Name</label>
-                                        <select id="itemname" onchange="onvendor(this);" class="form-control form-control-sm"  required name="itemname">
-                                            <option selected>--Select Product/Itemname--</option>
+
+                                    <label for="">Select Entry Type</label>
+                                    <select class="form-control form-control-sm select2" name="entrytype" id="entrytype"
+                                    onchange="location.href='addPurchaseItemMaster.php?entryType='+this.value">
+                                            <option value="">Select Type</option>
+                                            <option value="self" <?php if($entryType!="" && $entryType=="self"){ echo "selected"; } ?> >Self</option>
+                                            <option value="outsourced" <?php if($entryType!="" && $entryType=="outsourced"){ echo "selected"; } ?> >Outsourced</option>
+                                         
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputState">Select Company<i class="text-danger">*</i></label>
+                                        <select id="compcode" onchange="checkForItemName()" class="form-control form-control-sm select2"  required name="orgid" required autocomplete="off">
+                                            <option selected>Open Oranization</option>
+                                            <?php 
+                                            include("database/db_conection.php");//make connection here
+                                            $sql=="";
+                                            if($entryType=="outsourced"){
+                                                $sql = mysqli_query($dbcon,"SELECT custid as orgid,concat(custid,'-',custname) as orgname, custname as name FROM customerprofile 
+                                                where custype='Partner'
+                                                ORDER BY id ASC
+                                                "); 
+                                            }else{
+                                                $sql = mysqli_query($dbcon,"SELECT orgid,concat(orgid,'-',orgname) as orgname, orgname as name FROM comprofile
+                                                ORDER BY id ASC
+                                                "); 
+                                            }
+                                        
+                                            while ($row = $sql->fetch_assoc()){	
+                                                echo $orgid=$row['orgid'];
+                                                echo $orgname=$row['orgname'];
+                                                echo '<option data-orgname="'.$row['name'].'" value="'.$orgid.'" >'.$row['name'].' </option>';
+
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row" style="display:none">
+                                <div class="form-group">
+                                  <label for="">hiddenOrgname</label>
+                                  <input type="text"
+                                    class="form-control form-control-sm select2"
+                                     name="hiddenOrgname" 
+                                     id="hiddenOrgname" aria-describedby="helpId" placeholder="">
+                                </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label>Item Name<span class="text-danger">*</span></label>
+                                        <input type="text"
+                                          onkeypress="checkForItemName();" 
+                                          onkeyup="checkForItemName();" 
+                                         class="form-control form-control-sm" name="itemname" id="itemname"
+                                          placeholder="Product Name" required class="form-control" autocomplete="off" />
+                                          <small id="itemNameHelpText" style="display:none;" class="form-text text-danger">Item name already exists</small>
+
+                                    </div>
+                                </div>
+                                
+                               
+                                <!--div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="inputState">Select Itemname<i class="text-danger">*</i></label>
+                                        <select id="itemcode" onchange="onvendor(this);" class="form-control form-control-sm"  required name="itemname" required autocomplete="off">
+                                            <option selected>-Select Itemname-</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
                                             $sql = mysqli_query($dbcon,"SELECT itemname FROM itemaster
 																			ORDER BY id ASC
-																			");
+																			"); 
                                             while ($row = $sql->fetch_assoc()){	
                                                 echo $itemname=$row['itemname'];
-                                               //echo $category=$row['category'];
-                                                echo '<option onchange="'.$row[''].'" value="'.$itemname.'" >'.$itemname.'</option>';
+                                                //echo $shortname=$row['shortname'];
+                                                echo '<option onchange="'.$row[''].'" value="'.$itemname.'" >'.$itemname.' </option>';
 
                                             }
                                             ?>
                                         </select>
-                                         <a href="#custom-modal" data-target="#customModal3" data-toggle="modal"> 
-                                            <i class="fa fa-user-plus" aria-hidden="true"></i>Add New Itemname</a><br>
                                     </div>
-                                </div>	
-                                
-                                   <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="inputState">HSN Codes</label>
-                                        <select id="hsncode" onchange="onvendor(this);" class="form-control form-control-sm"  required name="hsncode">
-                                            <option selected>--Select HSNCODE--</option>
-                                            <?php 
-                                            include("database/db_conection.php");//make connection here
-                                            $sql = mysqli_query($dbcon,"SELECT hsncode FROM hsncode_lookups
-																			ORDER BY id ASC
-																			");
-                                            while ($row = $sql->fetch_assoc()){	
-                                                echo $code=$row['hsncode'];
-                                               //echo $category=$row['category'];
-                                                echo '<option onchange="'.$row[''].'" value="'.$code.'" >'.$code.'</option>';
-
-                                            }
-                                            ?>
-                                        </select>
-                                         <a href="#custom-modal" data-target="#customModal" data-toggle="modal"> 
-                                            <i class="fa fa-user-plus" aria-hidden="true"></i>Add New Hsncodes</a><br>
-                                    </div>
-                                </div>	
-                                
+                                </div-->
 
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputState">Category</label>
-                                        <select id="category" onchange="onvendor(this);" class="form-control form-control-sm"  required name="category" autocomplete="off">
+                                            <select id="category" onchange="onvendor(this);" class="form-control form-control-sm select2"  required name="category" autocomplete="off">
                                             <option selected>Select Category</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
@@ -364,10 +335,8 @@ if(isset($_POST['submit']))
                                             }
                                             ?>
                                         </select>
-                                        
-                                        <a href="#custom-modal" data-target="#customModal2" data-toggle="modal"> 
+                                        <a href="#custom-modal" data-target="#customModal" data-toggle="modal"> 
                                             <i class="fa fa-user-plus" aria-hidden="true"></i>Add New Category</a><br>
-                                       
                                     </div>
                                 </div>
                                 
@@ -382,7 +351,7 @@ if(isset($_POST['submit']))
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputState">Prefered Supplier Name</label>
-                                        <select id="compcode" onchange="onvendor(this);" class="form-control form-control-sm"   name="vendor" autocomplete="off">
+                                        <select id="compcode" onchange="onvendor(this);" class="form-control form-control-sm"  required name="vendor" autocomplete="off">
                                             <option selected>Open Vendors</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
@@ -410,15 +379,15 @@ if(isset($_POST['submit']))
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <i class="fa fa-rupee fonts" aria-hidden="true"></i>
-                                        <label>Price/Qty<span class="text-danger">*</span></label>
-                                        <input type="text" onchange="gettaxrate()" name="priceperqty" id="priceperqty" class="form-control form-control-sm"  required placeholder="Price Per Qty" autocomplete="off" />
+                                        <label>Price/Qty<span class="text-danger"></span></label>
+                                        <input type="text" onchange="gettaxrate()" name="priceperqty" id="priceperqty" class="form-control form-control-sm " placeholder="Price Per Qty"  autocomplete="off" />
                                     </div>
 
                                     <div class="form-group col-md-3">
                                         <label>UOM&nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" 
                                                            data-trigger="focus" data-placement="top" title="The Item will be measured in terms of this UNIT(e.g.:Kgs,dozen,box"></i>
-                                            <span class="text-danger">*</span></label>
-                                        <select id="uom" onchange="gettaxrate()" required class="form-control form-control-sm" name="uom">
+                                            <span class="text-danger"></span></label>
+                                        <select id="uom" onchange="gettaxrate()"  class="form-control form-control-sm select2" name="uom">
                                             <option value="0" selected>Select UOM</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
@@ -460,7 +429,7 @@ if(isset($_POST['submit']))
 
                                     <div class="form-group col-md-3">
                                         <label for="inputState">Tax Name</label>
-                                        <select id="taxid" onchange="gettaxrate();" required class="form-control form-control-sm" name="taxid">
+                                        <select id="taxid" onchange="gettaxrate();" required class="form-control form-control-sm select2" name="taxid">
                                             <option value="0" selected>Open Taxrate</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
@@ -516,6 +485,15 @@ if(isset($_POST['submit']))
 
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
+                                        <label>HSN Code</label>
+                                        <input type="text" name="hsncode" class="form-control form-control-sm"  placeholder="Enter a valid HSN Code.."  >
+                                    </div>
+                                </div>														   
+
+
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
                                         <h5>Stock Information</h5>
                                     </div>
                                 </div>
@@ -534,16 +512,16 @@ if(isset($_POST['submit']))
                                         </div>
                                     </div-->
                                     
-                                    <!--div class="form-group col-md-3">
+                                    <div class="form-group col-md-3">
                                         <label>UOM&nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" 
                                                            data-trigger="focus" data-placement="top" title="The Item will be measured in terms of this UNIT(e.g.:Kgs,dozen,box"></i>
                                             <span class="text-danger">*</span></label>
-                                        <select id="uom" onchange="gettaxrate()" required class="form-control form-control-sm" name="uom">
+                                        <select id="$stockinuom" onchange="gettaxrate()" required class="form-control form-control-sm select2" name="stockinuom">
                                             <option value="0" selected>Select UOM</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
 
-                                            $sql = mysqli_query($dbcon, "SELECT code,description FROM uom ");
+                                            $sql = mysqli_query($dbcon, "SELECT code,description FROM uom_lookups ");
                                             while ($row = $sql->fetch_assoc()){	
                                                 $description=$row['description'];
                                                 $code=$row['code'];
@@ -551,7 +529,7 @@ if(isset($_POST['submit']))
                                             }
                                             ?>
                                         </select>	
-                                    </div-->			
+                                    </div>			
                                     
                                 </div>
 
@@ -559,7 +537,7 @@ if(isset($_POST['submit']))
 
                                 <div class="form-row">
                                     <div class="form-group col-md-3">									  
-                                        <label>Low Stock Alert</label>
+                                        <label>Low Stock Alert<span><i class="text-danger">&nbsp;in %</i></span></label>
                                         <input type="text" class="form-control form-control-sm" name="lowstockalert" placeholder="eg., 5  or 10 "  required class="form-control" autocomplete="off">
                                     </div>
 
@@ -569,22 +547,38 @@ if(isset($_POST['submit']))
                                     </div>
                                 </div>
 
-                                <!--div class="form-row">
-<div class="form-group col-md-6">
-<label for="inputState">Handler</label>
-<select id="taxrate" onchange="onusername(this)" class="form-control form-control-sm" name="handler">
-<option selected>Select Username</option>
-<?php 
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <h5>Scrap Information</h5>
+                                    </div>
+                                </div>
 
-$sql = mysqli_query($dbcon, "SELECT username FROM userprofile ORDER by id ASC");
-while ($row = $sql->fetch_assoc()){	
-    echo $username=$row['username'];
-    echo '<option onchange="'.$row[''].'" value="'.$username.'" >'.$username.'</option>';
-}
-?>
-</select>
-</div>
-</div-->
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">									  
+                                        <label>Scrap Qty <span><i class="text-danger"></i></span></label>
+                                        <input type="text" id="scrapqty" class="form-control form-control-sm" name="scrapqty" placeholder="Scrap Qty"  required class="form-control" autocomplete="off">
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <label for="inputState">UOM</label>									
+                                        <select id="scrapinuom" required class="form-control form-control-sm select2" name="scrapinuom">
+                                            <option value="0" selected>Select UOM</option>
+                                            <?php 
+                                            include("database/db_conection.php");//make connection here
+
+                                            $sql = mysqli_query($dbcon, "SELECT code,description FROM uom_lookups ");
+                                            while ($row = $sql->fetch_assoc()){	
+                                                $description=$row['description'];
+                                                $code=$row['code'];
+                                                echo '<option  value="'.$code.'" >'.$description.'</option>';
+                                            }
+                                            ?>
+                                        </select>	
+                                    </div>
+                                </div>
+
+
+               
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputState">Handler</label>
@@ -626,8 +620,7 @@ while ($row = $sql->fetch_assoc()){
                                         &nbsp;<button class="btn btn-primary" name="submit" type="submit">
                                         Submit
                                         </button>
-
-                                        <button type="button" name="cancel" class="btn btn-secondary m-l-5" onclick="window.history.back();">Cancel
+<button type="button" name="cancel" class="btn btn-secondary m-l-5" onclick="window.history.back();">Cancel
                                                         </button>
                                         
                                     </div>
@@ -692,104 +685,64 @@ while ($row = $sql->fetch_assoc()){
         });
     </script>
 
+
+
     <script>
-        $('document').ready(function(){	
-            $('#submithsncode').click(function(){
-                 console.log("hsn")
-                var hsncode = $('#addhsncode').val();
-                var description = $('#adddescription').val();
-                //alert(groupname+description);
-                $.ajax ({
-                    url: 'addHsncodes_Ajax.php',
-                    type: 'post',
-                    data: {
-                        hsncode:hsncode,
-                        description:description
-                    },
-                    //dataType: 'json',
-                    success:function(response){
-                        if(response!=0 || response!=""){
-                            var new_option ="<option>"+response+"</option>";
-                            $('#hsncode').append(new_option);
-                            $('#customModal').modal('toggle');
-                            //location.reload();
-                        }else{
-                            alert('Error in inserting new hsncode,try another unique code');
-                        }
-                    }
 
-                });
+    function checkForItemName(itemnameEle){
+         var itemname = $('#itemname').val();
+         var orgid = $('#compcode').val();
+         var entrytype = $('#entrytype').val();
+         var cond = {itemname:itemname};
+         console.log(entrytype);
+         if(entrytype==="outsourced"){
+            cond.custid = orgid;
+         }else{
+            cond.orgid = orgid;
+         }
+         console.log(cond);
+         $('#hiddenOrgname').val($('#compcode option:selected').attr('data-orgname'));
+         var edit_data = Page.get_vals_by_condition("purchaseitemaster",cond);
+         if(edit_data.itemname!=undefined){
+            $('#itemNameHelpText').show();
+         }else{
+            $('#itemNameHelpText').hide();
+         }
+    }
 
-            });
-        });
 
-    </script>	
-    
-    <script>
-        $('document').ready(function(){	
+        $('document').ready(function(){
+
             $('#submitcategory').click(function(){
-                console.log("hsn")
                 var category = $('#addcategory').val();
-                //var description = $('#adddescription').val();
+                //var suptype = $('#addsupptype').val();
                 //alert(groupname+description);
                 $.ajax ({
                     url: 'addCategoryModal.php',
                     type: 'post',
                     data: {
-                        category:category
-                        //description:description
+                        category:category,
+                        // description:description
                     },
                     //dataType: 'json',
                     success:function(response){
                         if(response!=0 || response!=""){
                             var new_option ="<option>"+response+"</option>";
                             $('#category').append(new_option);
-                            $('#customModal2').modal('toggle');
-                           // location.reload();
+                            $('#customModal').modal('toggle');
                         }else{
-                            alert('Error in inserting new category,try another unique category');
+                            alert('Error in inserting new Category,try another unique category');
                         }
                     }
 
                 });
 
             });
+
+
         });
 
-    </script>	
-    
-       <script>
-        $('document').ready(function(){	
-            $('#submititemname').click(function(){
-                console.log("hsn")
-                var itemname = $('#additemname').val();
-                var description = $('#adddescription').val();
-                //alert(groupname+description);
-                $.ajax ({
-                    url: 'saveItmNameModal_Ajax',
-                    type: 'post',
-                    data: {
-                        itemname:itemname,
-                        description:description
-                    },
-                    //dataType: 'json',
-                    success:function(response){
-                        if(response!=0 || response!=""){
-                            var new_option ="<option>"+response+"</option>";
-                            $('#itemname').append(new_option);
-                            $('#customModal3').modal('toggle');
-                          //  location.reload();
-                        }else{
-                            alert('Error in inserting new itemname,try another unique name');
-                        }
-                    }
-
-                });
-
-            });
-        });
-
-    </script>
+    </script>			
 
 
     <?php include('footer.php');?>

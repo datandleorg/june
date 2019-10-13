@@ -55,7 +55,15 @@ include('header.php');
                                 <div class="form-row">
                                     <div class="form-group col-md-8">
                                         <label for="inputState">Company Name<span class="text-danger">*</span></label>
-                                        <select id="inv_comp_code"  class="form-control form-control-sm" name="inv_comp_code">
+                                        <select id="inv_comp_code"
+                                        <?php if(isset($_GET['action']))
+                                         {
+                                            echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
+                                         }else{
+                                             echo ' class="form-control form-control-sm select2"  ';
+                                         }
+                                        ?>  
+                                         name="inv_comp_code">
                                             <option selected>--Select Company--</option>
                                             <?php
                                             $sql = mysqli_query($dbcon,"SELECT * FROM comprofile");
@@ -74,7 +82,15 @@ include('header.php');
                                 <div class="form-row">
                                     <div class="form-group col-md-8">
                                         <label for="inputState"><span class="text-danger">Customer Name*</span></label>
-                                        <select id="inv_customer" onchange="post_address(this.value);onCustSelect(this);" class="form-control form-control-sm" name="inv_customer" required>
+                                        <select id="inv_customer" onchange="post_address(this.value);onCustSelect(this);" 
+                                        <?php if(isset($_GET['action']))
+                                         {
+                                            echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
+                                         }else{
+                                             echo ' class="form-control form-control-sm select2"  ';
+                                         }
+                                        ?>  
+                                        name="inv_customer" required>
                                             <option selected>--Select Customer--</option>
                                             <?php
                                             $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
@@ -324,7 +340,7 @@ include('header.php');
                                         <select class="form-control amount" id="uom"  onchange="sales_rowitem.update_math_vals();"; name="uom" style="line-height:1.5;">
                                             <option value="" selected>Open Unit</option>
                                             <?php 
-                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom ");
+                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom limit 25");
                                             while ($row = $sql->fetch_assoc()){	
 
                                                 echo '<option  value="'.$row['code'].'">'.$row['description'].'</option>';
@@ -474,49 +490,9 @@ include('header.php');
         <!-- END content-page -->
 
 
-        <!--?php include('footer.php');?-->
-        <footer class="footer">
-            <span class="text-right">
-                Copyright@<a target="_blank" href="#">Lento Foods India Pvt. Ltd.,</a>
-            </span>
-            <span class="float-right">
-                Powered by <a target="_blank" href=""><span>e-Schoolz</span> </a>
-            </span>
-        </footer>
 
     </div>
-    <!-- END main -->
-    <style>
-        #discoutType li {
 
-            cursor: pointer;
-        }
-        #discoutType li:hover {
-
-            background-color:#007BFF;
-            color: #ffffff;
-        }
-    </style>
-
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-
-    <script src="assets/js/detect.js"></script>
-    <script src="assets/js/fastclick.js"></script>
-    <script src="assets/js/jquery.blockUI.js"></script>
-    <script src="assets/js/jquery.nicescroll.js"></script>
-    <script src="assets/js/jquery.scrollTo.min.js"></script>
-    <script src="assets/plugins/switchery/switchery.min.js"></script>
-
-    <!-- App js -->
-    <script src="assets/js/pikeadmin.js"></script>
-
-    <!-- BEGIN Java Script for this page -->
-
-    <!-- END Java Script for this page -->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> 
     <script>       
         var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
         var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
@@ -531,14 +507,16 @@ include('header.php');
             var custid = $('#inv_customer').val();
             var itemlist_params = [];
             if(custype=="Partner"){
-                itemlist_params[0] = {"custid":custid};
+                itemlist_params[0] = {"orgid":custid};
+            }else{
+                itemlist_params[0] = {"orgid":'<?php echo $session_org;?>'};
             }
+            console.log(itemlist_params);
             Page.load_select_options('item_select',itemlist_params,'salesitemaster2','Item','id','itemname',5);
         }
 
 
         $(function(){
-
 
             ////set select options
             var user_params = [];
@@ -573,6 +551,7 @@ include('header.php');
              Page.load_select_options('inv_shipping_state',loction_params,'state','Shipping State','code','description',3);
             Page.load_select_options('inv_shipping_country',loction_params,'country','Shipping Country','code','description',3);
             Page.load_select_options('inv_billing_country',loction_params,'country','Billing Country','code','description',3);
+            Page.load_select_options('item_select',[{"orgid":'<?php echo $session_org;?>'}],'salesitemaster2','Item','id','itemname',5);
 
             $('#addMore').on('click', function() {
                 var data = $("#tb tr:eq(1)").clone(true).appendTo("#tb");
@@ -643,10 +622,11 @@ include('header.php');
             if(page_action!=""){
                 if(page_inv_code!=""&&page_action=="edit"){
                     var edit_data = Page.get_edit_vals(page_inv_code,page_table,"inv_code");
+                    onCustSelect(edit_data.inv_customer);
                     set_form_data(edit_data);
                     $('#inv_code_row').show();
-                    console.log(edit_data);
                     $('#inv_code_row #inv_code').val(edit_data.inv_code);
+
                 }else if(page_so_code!=""&&page_action=="add"){
                     var edit_data2 = Page.get_edit_vals(page_so_code,"salesorders","so_code");
                     $('#inv_so_code').val(edit_data2.so_code);
@@ -919,3 +899,7 @@ include('header.php');
 
     </body>
 </html>
+
+<?php
+include('footer.php');
+?>

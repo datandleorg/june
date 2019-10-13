@@ -7,7 +7,7 @@ if(isset($_POST['submit']))
 {
     //here getting result from the post array after submitting the form.
     $orgid ="";
-    $prefix = "00";
+    $prefix = "COMP00";
 
     $title =	$_POST['title'];
     $orgname 	 =	$_POST['orgname'];	

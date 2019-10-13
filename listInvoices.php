@@ -58,7 +58,7 @@
 												 $orgname=$row['orgname'];
                                                  $orgtype=$row['orgtype'];
                                                 
-												if($orgidUrl!='' && $orgidUrl==$orgid){
+												if($orgidUrl!='' && $orgidUrl===$orgid){
 													echo '<option data-orgtype="'.$orgtype.'" selected  value="'.$orgid.'" >'.$orgname.' </option>';
 												}else{
 													echo '<option data-orgtype="'.$orgtype.'" value="'.$orgid.'" >'.$orgname.' </option>';

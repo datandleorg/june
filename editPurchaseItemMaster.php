@@ -496,11 +496,9 @@ if(isset($_POST['exit']))
 									  <input type="text" class="form-control form-control-sm" id="stockinuom" name="stockinuom" readonly value="<?php echo $stockinuom;?>" />
 										</div>
 									 
-									  <div class="form-group col-md-2">									
-									 <label>Adj Stock</label>
-									<!--input type="text" id="adjstock" name="adjstock" class="form-control form-control-sm"   /-->
-									<input type="number" step="any" onkeypress="update_math_valsAdjStock();"   onkeyup="update_math_valsAdjStock();" id="adjstockinqty" name="adjstockinqty" class="form-control form-control-sm"   />
-							
+										<div class="form-group col-md-2">									
+											<label>Adj Stock</label>
+											<input type="number" step="any" onkeypress="update_math_valsAdjStock();"   onkeyup="update_math_valsAdjStock();" id="adjstockinqty" name="adjstockinqty" class="form-control form-control-sm"   />
 										</div>
 										
 									  <script>

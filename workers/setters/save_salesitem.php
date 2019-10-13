@@ -30,11 +30,11 @@ if (isset($_POST['array'])) {
             $obj = json_decode($array,true);
 
             $sql4 = "INSERT INTO salesitemlognew (entrytype,";
-            $sql4.= $obj['entrytype'] == "outsourced" ? "custid," : "orgid," ;
-            $sql4.="itemcode,itemname,qtyonhand,uom,adjustedon,handler,notes) 
+            $sql4.= "orgid," ;
+            $sql4.="itemcode,itemname,qtyonhand,newqty,uom,adjustedon,handler,notes) 
             VALUES ('".$obj['entrytype']."',";
-            $sql4.=$obj['entrytype'] == "outsourced" ? "'".$obj['custid']."'," : "'".$obj['orgid']."'," ;
-            $sql4.="'$itemcode','".$obj['itemname']."','".$obj['stockinqty']."','".$obj['sales_uom']."','".$obj['stockinqty_date']."','".$obj['handler']."','".$obj['notes']."')";
+            $sql4.= "'".$obj['orgid']."'," ;
+            $sql4.="'$itemcode','".$obj['itemname']."','".$obj['stockinqty']."','".$obj['stockinqty']."','".$obj['sales_uom']."','".$obj['stockinqty_date']."','".$obj['handler']."','".$obj['notes']."')";
            
             if(mysqli_query($dbcon,$sql4)){
                 $return['status']=true;
@@ -49,10 +49,11 @@ if (isset($_POST['array'])) {
     }else{
         $return = update_query($dbcon,$array,$itemcode,$table,"itemcode");
         $obj = json_decode($array,true);
-        $adjstk=$_POST['adjstk'];
+        $adjstk = $_POST['adjstk'];
+        $oldstock = $obj['stockinqty'] - $adjstk;
 
-        $sql3 = "INSERT INTO salesitemlognew (itemcode,itemname,qtyonhand,qtyadjusted,
-        uom,adjustedon,handler,notes) VALUES ('$itemcode','".$obj['itemname']."','".$obj['stockinqty']."','".$adjstk."','".$obj['sales_uom']."','".$obj['stockinqty_date']."','".$obj['handler']."','".$obj['notes']."')";
+        $sql3 = "INSERT INTO salesitemlognew (entrytype,itemcode,itemname,orgid,qtyonhand,newqty,qtyadjusted,
+        uom,adjustedon,handler,notes) VALUES ('".$obj['entrytype']."','$itemcode','".$obj['itemname']."','".$obj['orgid']."','".$oldstock."','".$obj['stockinqty']."','".$adjstk."','".$obj['sales_uom']."','".$obj['stockinqty_date']."','".$obj['handler']."','".$obj['notes']."')";
 
 
         if (mysqli_query($dbcon,$sql3) ) {  

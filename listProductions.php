@@ -46,7 +46,7 @@
                                     <div class="form-group col-md-4">
                                         <label for="inputState">Filter By Company<i class="text-danger">*</i></label>
                                         <select id="compcode" 
-										onchange="redirectTo(this)" class="form-control form-control-sm"  
+										onchange="redirectTo(this)" class="form-control form-control-sm select2"  
 										required name="orgid" required autocomplete="off">
                                             <option value="">Select Company</option>
                                             <?php 
@@ -61,7 +61,7 @@
                                                  $orgid=$row['orgid'];
 												 $orgname=$row['orgname'];
 												 $orgtype=$row['orgtype'];
-												if($orgidUrl!='' && $orgidUrl==$orgid){
+												if($orgidUrl!='' && $orgidUrl===$orgid){
 													echo '<option data-orgtype="'.$orgtype.'" selected  value="'.$orgid.'" >'.$orgname.' </option>';
 												}else{
 													echo '<option data-orgtype="'.$orgtype.'" value="'.$orgid.'" >'.$orgname.' </option>';
@@ -109,33 +109,10 @@
                                         }
 
                                         include("database/db_conection.php");//make connection here
-                                        // $sql = "SELECT p.*,i.*,c.orgname from productionlist p,salesitemaster2 i, comprofile c ";
-										// $sql.=" WHERE p.prod_item=i.itemcode AND";
-                                        // $sql.= $orgidUrl!='' ? " p.prod_company='".$orgidUrl."' AND p.prod_company=c.orgid " : " p.prod_company=c.orgid";
-                                        // $sql.= " ORDER BY p.id DESC ";
-
-                                        if($orgType=="self"){
-                                            $sql = "SELECT p.*,i.*,c.orgname,c.orgid as orgid from productionlist p,salesitemaster2 i, comprofile c ";
-                                            $sql.=" WHERE p.prod_item=i.itemcode ";
-                                            $sql.= $orgidUrl!=='' ? " AND p.prod_company='".$orgidUrl."' AND p.prod_company=c.orgid " :" AND p.prod_company=c.orgid";
-                                            $sql.= " ORDER BY p.id DESC ";
-
-                                        }else if($orgType=="outsourced"){
-                                            $sql = "SELECT p.*,i.*,c.custname,c.custid as orgid from productionlist p,salesitemaster2 i, customerprofile c ";
-                                            $sql.=" WHERE p.prod_item=i.itemcode ";
-                                            $sql.= $orgidUrl!=='' ? " and p.prod_company='".$orgidUrl."' and p.custid=c.custid " :" WHERE p.custid=c.custid";
-                                            $sql.= " ORDER BY p.id DESC ";
-
-                                        }else{
-                                            $sql = "select p.entrytype,c.orgid as orgid,p.id as id, p.prod_code,p.prod_date,p.prod_qty,p.prod_status,p.prod_handler,s.itemname from productionlist p,salesitemaster2 s, comprofile c where 
-                                            p.prod_company=c.orgid and s.itemcode=p.prod_item
-                                            union 
-                                            select p.entrytype,cus.custid as orgid,p.id as id, p.prod_code,p.prod_date,p.prod_qty,p.prod_status,p.prod_handler,s.itemname from productionlist p,salesitemaster2 s, customerprofile cus where p.custid=cus.custid 
-                                            and s.itemcode=p.prod_item";
-                                            $sql.= " ORDER BY id ASC ";
-
-                                        }
-                                        //echo $sql;
+                                        $sql = "select prod.*,c.*,s.* from productionlist prod ,salesitemaster2 s,(select orgid,orgname from comprofile union select custid as orgid, custname as orgname from customerprofile) as c ";
+                                        $sql.=" where prod.prod_item=s.itemcode and prod.orgid=c.orgid";
+                                        $sql.= $orgidUrl!="" ? " and prod.orgid='".$orgidUrl."' " : ""; 
+                                      
                                         $result = mysqli_query($dbcon,$sql);
                                         if ($result->num_rows > 0){
                                             while ($row =$result-> fetch_assoc()){

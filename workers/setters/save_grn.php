@@ -143,7 +143,6 @@ if (isset($_POST['array'])) {
                          }
                          $prefix = "DAPL00";
                          $itemcode = $prefix.$obj_change[$j]['itemcode'];
-                         print_r($obj_change[$j]);
                          $adjstockinqty = $items[$j]['rwqty']-$obj_change[$j]['rwqty'];
                          $itemname = $items[$j]['itemdetails'];
                          $itemname = substr($itemname,strpos($itemname,"]")+1);

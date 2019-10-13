@@ -15,6 +15,13 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
 }
 ?>
 
+<?php
+	$orgidUrl = "";
+	$orgType = "";
+	if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; } 
+	if(isset($_GET['orgtype'])){ $orgType = $_GET['orgtype']; } 
+?>
+
 <div class="content-page">
 
     <!-- Start content -->
@@ -50,11 +57,49 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
                             <!-- Start coding here -->
                             <div class="row">
                                 <div class="col-md-12">
-                                    <span id="po_reports_div"></span>
+
+                                <div class="row">
+                                        <div class="col-md-6">
+                                        <span id="po_reports_div"></span>
+                                                
+                                                <div class="form-group col-md-6 px-0 mt-2">
+                                                    <select id="compcode" 
+                                                    onchange="redirectTo(this)" class="form-control form-control-sm select2"  
+                                                    required name="orgid" required autocomplete="off">
+                                                        <option value="">Select Company Filter</option>
+                                                        <?php 
+                                                        include("database/db_conection.php");//make connection here
+                                                        $sql = "SELECT id as oid, orgid as orgid,concat(orgid,'-',orgname) as orgname,'self' as orgtype FROM comprofile
+                                                        UNION SELECT id as oid, custid as orgid,concat(custid,'-',custname) as orgname,'outsourced' as orgtype FROM customerprofile 
+                                                        WHERE custype='Partner'
+                                                        ORDER BY oid ASC;
+                                                        ";
+                                                        $exe = mysqli_query($dbcon,$sql); 
+                                                        while ($row = $exe->fetch_assoc()){	
+                                                            $orgid=$row['orgid'];
+                                                            $orgname=$row['orgname'];
+                                                            $orgtype=$row['orgtype'];
+                                                            if($orgidUrl!='' && $orgidUrl===$orgid){
+                                                                echo '<option data-orgtype="'.$orgtype.'" selected  value="'.$orgid.'" >'.$orgname.' </option>';
+                                                            }else{
+                                                                echo '<option data-orgtype="'.$orgtype.'" value="'.$orgid.'" >'.$orgname.' </option>';
+
+                                                            }
+
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                        
+                                        </div>
+                                       
+                                    </div>
+
                                     <table id="po_reports" class="table table-bordered" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>Item Code</th>												
+                                            <th>Company Code</th>												
+                                            <th>Item Code</th>												
                                                 <th>Item Name</th>												
                                                 <th>Item Cost</th>
                                                 <th>Taxrate</th>												
@@ -66,13 +111,18 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
                                         <tbody>
                                             <?php
 
-                                            $sql = "SELECT * from salesitemaster2 ORDER BY id DESC;";    
+                                            $sql = "SELECT s.*,c.*
+                                            FROM salesitemaster2 s, (select orgid as orgid from comprofile union select custid as orgid from customerprofile) as c
+                                            WHERE ";
+                                            $sql.= $orgidUrl!==''  ? "  s.orgid='".$orgidUrl."' AND c.orgid=s.orgid " : "  c.orgid=s.orgid ";
+                                            $sql.="ORDER BY s.id DESC;";    
 
 
                                             $result = mysqli_query($dbcon,$sql);
                                             if ($result->num_rows > 0){
                                                 while ($row =$result-> fetch_assoc()){
                                                     echo '<tr>';
+                                                    echo '<td>' .$row['orgid'] . '</td>';
                                                     echo '<td>' .$row['itemcode'] . '</td>';
                                                     echo '<td>'.$row['itemname'].' </td>';
                                                     echo '<td>'.($row['sales_priceperqty']-$row['sales_taxamount']).' </td>';
@@ -90,7 +140,8 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th></th>
+                                            <th></th>
+                                            <th></th>
                                                 <th></th>
                                                 <th></th>
                                                 <th></th>
@@ -137,7 +188,7 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
                         i : 0;
                 };
                 var grossval = api
-                .column( 6 )
+                .column( 7 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
@@ -145,7 +196,7 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
 
 
                 $( api.column( 0 ).footer() ).html('Total');
-                $( api.column( 6 ).footer() ).html(grossval);
+                $( api.column( 7 ).footer() ).html(grossval);
 
             },
             buttons: [
@@ -193,6 +244,12 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
 
 
     });
+
+    function redirectTo(ele){
+		 var orgid = $(ele).val();
+		 var orgtype = $(ele).find('option:selected').attr('data-orgtype');
+		 location.href='StockOutwardReports.php?orgid='+orgid+'&orgtype='+orgtype;
+	 }
 
 </script>
 <?php

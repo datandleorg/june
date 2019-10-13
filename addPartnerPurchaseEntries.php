@@ -20,10 +20,10 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
 										<div class="row">
 					<div class="col-xl-12">
 							<div class="breadcrumb-holder">
-								<h1 class="main-title float-left"><i class="fa fa-shopping-basket bigfonts">Rawmaterials Data Input Form</i></h1>
+								<h1 class="main-title float-left"><i class="fa fa-shopping-basket bigfonts">Partner Entries Data Input Form</i></h1>
                                     <ol class="breadcrumb float-right">
 									<a  href="index.php"><li class="breadcrumb-item">Home</a>
-										<li class="breadcrumb-item active"> Rawmaterials</li>
+										<li class="breadcrumb-item active"> Partner Entries</li>
                                     </ol>
                                     <div class="clearfix"></div>
                             </div>
@@ -38,39 +38,17 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-8">						
 						<div class="card mb-3">
 							<div class="card-header">
-								<p>Add Rawmaterials </p>
+								<p>Add Partner Entries </p>
 							</div>
 								
 							<div class="card-body p-4">
 								
-								<form id="add_rawmaterial_form" autocomplete="off" enctype="multipart/form-data" method="post">
+								<form id="add_partnerentries_form" autocomplete="off" enctype="multipart/form-data" method="post">
 								
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-
-                                        <label for="">Select Entry Type</label>
-                                        <select name="entrytype"
-                                         id="entrytype"
-                                         <?php if(isset($_GET['action']))
-                                         {
-                                            echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
-                                         }else{
-                                             echo ' class="form-control form-control-sm select2"  ';
-                                         }
-                                        ?> 
-                                         data-orgid="<?php echo $orgidUrl!=="" ? '"'.$orgidUrl.'"' :  "" ?>"
-                                         onchange="redirectTo(this.name);">
-                                                <option value="">Select Type</option>
-                                                <option value="self" <?php if($entryType!="" && $entryType=="self"){ echo "selected"; } ?> >Self</option>
-                                                <option value="outsourced" <?php if($entryType!="" && $entryType=="outsourced"){ echo "selected"; } ?> >Outsourced</option>
-                                                
-                                        </select>
-                                        </div>
-                                    </div>
 
 									<div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <label for="inputState">Assign Company<i class="text-danger">*</i></label>
+                                     <div class="form-group col-md-6">
+                                        <label for="inputState">Select Partner<i class="text-danger">*</i></label>
                                         <select data-entry="<?php echo $entryType;?>"
                                         
                                         <?php if(isset($_GET['action']))
@@ -80,13 +58,12 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                              echo ' class="form-control form-control-sm select2"  ';
                                          }
                                         ?>  
-                                        id="orgid" name="orgid"
+                                        id="pe_orgid" name="pe_orgid"
                                         onchange="redirectTo(this.name)"
                                         required required autocomplete="off">
-                                              <option selected>--Select Company--</option>
+                                              <option selected>--Select Partner--</option>
                                             <?php
-                                           if($entryType!=""){
-                                            $sql = $entryType=="outsourced" ? mysqli_query($dbcon,"SELECT custid as orgid,custname as orgname FROM customerprofile where custype='Partner' ") : mysqli_query($dbcon,"SELECT * FROM comprofile");
+                                            $sql = mysqli_query($dbcon,"SELECT custid as orgid,custname as orgname FROM customerprofile where custype='Partner' ");
                                             while ($row = $sql->fetch_assoc()){	
                                                 $orgid=$row['orgid'];
                                                 $orgname=$row['orgname'];
@@ -96,45 +73,11 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
 													echo '<option data-orgname="'.$orgname.'" value="'.$orgid.'" >'.$orgname.' </option>';
 												}
                                             }
-                                        }
                                             ?>
                                         </select>
                                     </div>
                                 </div>
 								 
-									
-								<div class="form-row">
-                                    <div class="form-group col-md-12">
-                                        <label for="inputState">Assign Production Itemname<i class="text-danger">*</i></label>
-                                        <select id="proditemcode" 
-                                        onchange="checkForProduct(this.value);" 
-                                        required name="proditemcode" autocomplete="off"
-                                        <?php if(isset($_GET['action']))
-                                         {
-                                            echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
-                                         }else{
-                                             echo ' class="form-control form-control-sm select2"  ';
-                                         }
-                                        ?>  
-                                        >
-                                            <option value="" selected>-Select Production Itemname-</option>
-                                            <?php 
-                                            include("database/db_conection.php");//make connection here
-                                             $sql = "SELECT itemcode,concat(itemcode,'-',itemname) as itemname FROM salesitemaster2 s where s.orgid='".$orgidUrl."'";    
-
-                                             $exe = mysqli_query($dbcon,$sql);
-                                            while ($row = $exe->fetch_assoc()){	
-                                                 $itemcode=$row['itemcode'];
-                                                 $itemname=$row['itemname'];
-                                                echo '<option value="'.$itemcode.'" >'.$itemname.' </option>';
-                                             }
-                                            ?>
-                                        </select>
-
-                                        <small id="productValidation" style="display:none;" class="form-text text-danger">Rawmaterials list already exist for the product</small>
-
-                                    </div>
-									</div>
                                     
 
                                 <table  class="table table-hover small-text" id="tb">
@@ -149,19 +92,19 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                     </tr>
                                     <tr>
                                         <td>
-                                            <select onChange="setUom('purchaseitemaster',this)" name="itemcode" class="form-control form-control-sm itemcode " id="item_select">
+                                            <select onChange="setUom('purchaseitemaster',this)" name="itemcode" class="form-control form-control-sm itemcode" id="item_select">
                                                 <option value="" selected>Select Raw materials</option>
                                                 <?php 
                                             include("database/db_conection.php");//make connection here
                                        
-                           $sql = "SELECT itemcode,concat(itemcode,'-',itemname) as itemname FROM purchaseitemaster p where p.orgid='".$orgidUrl."' ";            
+                                             $sql = "SELECT itemcode,concat(itemcode,'-',itemname) as itemname FROM purchaseitemaster p where p.orgid='".$orgidUrl."' ";            
                                   
                                              $exe = mysqli_query($dbcon,$sql);
                                             while ($row = $exe->fetch_assoc()){	
                                                  $itemcode=$row['itemcode'];
                                                  $itemname=$row['itemname'];
                                                  
-                                                echo $entryType!='' && $orgidUrl!='' ? '<option data-item="'.$itemname.'"  value="'.$itemcode.'" >'.$itemname.' </option>' : '';
+                                                echo  $orgidUrl!='' ? '<option data-item="'.$itemname.'"  value="'.$itemcode.'" >'.$itemname.' </option>' : '';
 
                                             }
                                             ?>
@@ -172,7 +115,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                         <select class="form-control form-control-sm amount" id="uom" name="uom" style="line-height:1.5;">
                                             <option value="" selected>Open Unit</option>
                                             <?php 
-                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom limit 25 ");
+                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom ");
                                             while ($row = $sql->fetch_assoc()){	
                                                 echo '<option  value="'.$row['code'].'">'.$row['description'].'</option>';
                                             }
@@ -196,7 +139,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                         //$count = mysqli_num_rows($result);
                                         $rs = mysqli_fetch_assoc($result);
                                         ?>
-                                        <input type="text" class="form-control form-control-sm" name="handler" readonly class="form-control form-control-sm" value="<?php echo $rs['username']; ?>" required />
+                                        <input type="text" class="form-control form-control-sm" name="pe_handler" readonly class="form-control form-control-sm" value="<?php echo $rs['username']; ?>" required />
 
                                     </div>
                                 </div>
@@ -241,7 +184,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
 <script>
     var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
     var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
-    var page_rw_code = "<?php if(isset($_GET['rw_code'])){ echo $_GET['rw_code']; } ?>";
+    var page_pe_code = "<?php if(isset($_GET['pe_code'])){ echo $_GET['pe_code']; } ?>";
 
     var error = false;
 
@@ -262,47 +205,18 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
         });
 
         function redirectTo(select){
-            var entryType = "";
-            var redirectOrgid = "";
-
-            if(select=="entrytype"){
-                 entryType = $('#'+select).val();
-                 redirectOrgid = $('#'+select).attr('data-orgid');
-            }else{
-                 entryType = $('#'+select).attr('data-entry');
-                 redirectOrgid = $('#'+select).val();
-            }
-            console.log(entryType,redirectOrgid,page_action,'page_action');
+            redirectOrgid = $('#'+select).val();
 
             if(page_action!==""){
-                location.href="addRawMatItemaster.php?rw_code="+page_rw_code+"&action="+page_action+"&type="+page_table+"&entrytype="+entryType+"&orgid="+redirectOrgid;
+                location.href="addPartnerPurchaseEntries.php?pe_code="+page_pe_code+"&action="+page_action+"&type="+page_table+"&orgid="+redirectOrgid;
             }else{
-                location.href="addRawMatItemaster.php?entrytype="+entryType+"&orgid="+redirectOrgid;
+                location.href="addPartnerPurchaseEntries.php?orgid="+redirectOrgid;
             }
         }
 
 
-        function checkForProduct(itemnameEle){
-         var proditemcode = $('#proditemcode').val();
-         var orgid = $('#orgid').val();
-         var cond = {};
-         cond['proditemcode'] = proditemcode;
-         cond['orgid'] = orgid;
-
-         var edit_data = Page.get_vals_by_condition("rawitemaster",cond);
-         if(edit_data.proditemcode!=undefined){
-            $('#productValidation').show();
-            error = true;
-         }else{
-            $('#productValidation').hide();
-            error = false;
-         }
-       }
-
-
         if(page_action=="edit"){
-            var edit_data = Page.get_edit_vals(page_rw_code,page_table,"rw_code");
-            console.log(edit_data);
+            var edit_data = Page.get_edit_vals(page_pe_code,page_table,"pe_code");
             set_form_data(edit_data);
 
             $("#cancel-form").click(function(){
@@ -323,7 +237,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
             $.each(data, function(index, value) {
 
                 if(index=="id"||index=="rw_code"){
-                }else if(index=="raw_items"){
+                }else if(index=="pe_items"){
                     set_math_vals(JSON.parse(value));
                 }else{
                     $('#'+index).val(value);
@@ -346,12 +260,12 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                 }
         }
 
-        $("form#add_rawmaterial_form").submit(function(e){
+        $("form#add_partnerentries_form").submit(function(e){
         e.preventDefault();
 
 
         var rowCount = $('#tb tr').length;
-        var raw_items = [];
+        var pe_items = [];
 
         for(i=1;i<rowCount;i++){ 
             var item_select = $('#tb tr').eq(i).find('#item_select').val();
@@ -359,17 +273,17 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
             var uom = $('#tb tr').eq(i).find('#uom').val();
             var qty = $('#tb tr').eq(i).find('#qty').val();
 
-            rawitem_ele = {
+            pe_items_ele = {
                 item:item_select,
                 itemname:itemname,
                 uom:uom,
                 qty:qty
             }; 
 
-            raw_items.push(rawitem_ele);
+            pe_items.push(pe_items_ele);
         }
 
-        var $form = $("#add_rawmaterial_form");
+        var $form = $("#add_partnerentries_form");
         var data = getFormData($form);
 
         function getFormData($form){
@@ -387,20 +301,25 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
             return indexed_array;
         }
 
-        data.raw_items = JSON.stringify(raw_items);
-        data.entrytype = $('#entrytype').val();
+        data.pe_items = JSON.stringify(pe_items);
+
+        var compname = $('#pe_orgid option:selected').attr('data-orgname');
+        var orgid = $('#pe_orgid').val();
+
 
         if(!error){
                     $.ajax ({
-                    url: 'workers/setters/save_rawitems.php',
+                    url: 'workers/setters/save_partnerentries.php',
                     type: 'post',
                     data: {array : JSON.stringify(data),
-                    rw_code:page_rw_code,
-                    action:page_action?page_action:"add",table:"rawitemaster"},
+                    compname:compname,
+                    orgid:orgid,
+                    pe_code:page_pe_code,
+                    action:page_action?page_action:"add",table:"partnerentries"},
                     dataType: 'json',
                     success:function(response){
                         if(response.status){
-                          location.href="listProductRawItems.php";
+                          location.href="listPartnerPurchaseEntries.php";
                         }
                     }
 

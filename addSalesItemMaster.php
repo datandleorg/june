@@ -1,7 +1,7 @@
 <?php include('header.php');
-$entryType = "";
-if(isset($_GET['entryType'])){
-    $entryType = $_GET['entryType'];
+$entrytype = "";
+if(isset($_GET['entrytype'])){
+    $entrytype = $_GET['entrytype'];
 }
 ?>
 <!-- End Sidebar -->
@@ -80,10 +80,10 @@ if(isset($_GET['entryType'])){
 
                                     <label for="">Select Entry Type</label>
                                     <select class="form-control form-control-sm select2" name="entrytype" id="entrytype"
-                                    onchange="location.href='addSalesItemMaster.php?entryType='+this.value">
+                                    onchange="location.href='addSalesItemMaster.php?entrytype='+this.value">
                                             <option value="">Select Type</option>
-                                            <option value="self" <?php if($entryType!="" && $entryType=="self"){ echo "selected"; } ?> >Self</option>
-                                            <option value="outsourced" <?php if($entryType!="" && $entryType=="outsourced"){ echo "selected"; } ?> >Outsourced</option>
+                                            <option value="self" <?php if($entrytype!="" && $entrytype=="self"){ echo "selected"; } ?> >Self</option>
+                                            <option value="outsourced" <?php if($entrytype!="" && $entrytype=="outsourced"){ echo "selected"; } ?> >Outsourced</option>
                                          
                                     </select>
                                     </div>
@@ -96,7 +96,7 @@ if(isset($_GET['entryType'])){
                                             <option selected>Open Oranization</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
-                                            if($entryType=="outsourced"){
+                                            if($entrytype=="outsourced"){
                                                 $sql = mysqli_query($dbcon,"SELECT custid as orgid,concat(custid,'-',custname) as orgname, custname as name FROM customerprofile
                                                  where custype='Partner'
                                                 ORDER BY id ASC
@@ -539,11 +539,8 @@ if(isset($_GET['entryType'])){
          var orgid = $('#orgid').val();
          var entrytype = $('#entrytype').val();
          var cond = {itemname:itemname};
-         if(entrytype==="outsourced"){
-            cond.custid = orgid;
-         }else{
-            cond.orgid = orgid;
-         }
+         cond.orgid = orgid;
+
          var edit_data = Page.get_vals_by_condition("salesitemaster2",cond);
          if(edit_data.itemname!=undefined){
             $('#itemNameHelpText').show();
@@ -587,7 +584,6 @@ if(isset($_GET['entryType'])){
                 page_priceperqty = edit_data.priceperqty;
                 page_stockinqty = edit_data.stockinqty;
                 edit_data.orgid = edit_data.custid!='' && edit_data.custid!=null ? edit_data.custid: edit_data.orgid;
-                console.log(edit_data);
                 set_form_data(edit_data);
                 $('#adjust_price').show();
                 $('#adjust_cost').show();
@@ -609,8 +605,6 @@ if(isset($_GET['entryType'])){
                     }
 
                 }); 
-
-
             }
 
             gettaxrate('sales_div');
@@ -718,9 +712,6 @@ if(isset($_GET['entryType'])){
 
             var $form = $("#salesitemform");
             var data = getFormData($form);
-            console.log(data);
-            console.log(page_item_code);
-            console.log(page_action);
             function getFormData($form){
                 var unindexed_array = $form.serializeArray();
                 var indexed_array = {};
@@ -739,25 +730,17 @@ if(isset($_GET['entryType'])){
 
             var compcode = $('#orgid option:selected').attr('data-orgname');
 
-            console.log(data.entrytype);
-            if(data.entrytype=="outsourced"){
-                data.custid = data.orgid;
-                data.orgid = ""
-            }
-
             $.ajax ({
                 url: 'workers/setters/save_salesitem.php',
                 type: 'post',
                 data: {array : JSON.stringify(data),
                 itemcode:page_item_code,action:page_action?page_action:"add",
-                table:"salesitemaster2",adjstk : adjstk,
+                table:"salesitemaster2",adjstk : adjstk==""?0:adjstk,
                 compcode: compcode},
                 dataType: 'json',
                 success:function(response){
-                   // alert(response)
                     if(response.status){
                         location.href="listSalesItemMaster.php";
-
                     }
                 },
                 error: function(ts) { alert(ts.responseText) }

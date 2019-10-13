@@ -6,12 +6,12 @@ if(isset($_GET['prod_code']))
 {
     $prod_code = $_GET['prod_code'];
 
-    $sql = "SELECT p.entrytype as prod_entrytype,p.custid as prod_custid,p.*,s.* from productionlist p , salesitemaster2 s where s.itemcode=p.prod_item and  prod_code = '$prod_code' ";
+    $sql = "SELECT p.entrytype as prod_entrytype,p.orgid as prod_orgid,p.*,s.* from productionlist p , salesitemaster2 s where s.itemcode=p.prod_item and  prod_code = '$prod_code' ";
     $result = mysqli_query($dbcon,$sql);
     $row =$result-> fetch_assoc();
 
     $prod_company = $row['prod_company'];
-    $prod_custid = $row['prod_custid'];
+    $prod_orgid = $row['prod_orgid'];
     $prod_raw_items = $row['prod_raw_items'];
     $prod_entrytype = $row['prod_entrytype'];
     $prod_raw_items_arr = json_decode($prod_raw_items);
@@ -20,14 +20,12 @@ if(isset($_GET['prod_code']))
     $result1 = mysqli_query($dbcon,$sql1);
     $row1 =$result1-> fetch_assoc();  
  
-    if($prod_entrytype=="self"){
-        $sql2 = "SELECT * from comprofile where orgid ='001' limit 1 ";
-    }else if($prod_entrytype=="outsourced"){
-        $sql2 = "SELECT comp.*, comp.custname as orgname from customerprofile comp where custid ='$prod_custid' limit 1 ";
-    }
+    $sql2 = "SELECT orgid,orgname,address,city,state,zip,country,mobile,gstin from comprofile c where c.orgid ='".$prod_orgid."' ";
+    $sql2.= " union ";
+    $sql2.= "SELECT custid as orgid,custname as orgname,address,city,state,zip,country,mobile,gstin from customerprofile c where c.custid ='".$prod_orgid."' ";
 
     $result2 = mysqli_query($dbcon,$sql2);
-    $row2 =$result2-> fetch_assoc();  
+    $row2 =$result2-> fetch_assoc();    
 
 
 }

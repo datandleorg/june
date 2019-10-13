@@ -61,7 +61,7 @@
                                                  $orgid=$row['orgid'];
 												 $orgname=$row['orgname'];
 												 $orgtype=$row['orgtype'];
-												if($orgidUrl!='' && $orgidUrl==$orgid){
+												if($orgidUrl!='' && $orgidUrl===$orgid){
 													echo '<option data-orgtype="'.$orgtype.'" selected  value="'.$orgid.'" >'.$orgname.' </option>';
 												}else{
 													echo '<option data-orgtype="'.$orgtype.'" value="'.$orgid.'" >'.$orgname.' </option>';
@@ -102,18 +102,18 @@
 
 													}else if($orgType=="outsourced"){
 														$sql = "SELECT p.id as id,p.*,c.*,c.custname as orgname,c.custid as orgid,p.handler as handler FROM purchaseitemaster p,customerprofile c ";
-														$sql.= $orgidUrl!==''  ? " WHERE p.custid='".$orgidUrl."' AND p.custid=c.custid " : " WHERE p.custid=c.custid";
+														$sql.= $orgidUrl!==''  ? " WHERE p.orgid='".$orgidUrl."' AND p.orgid=c.custid " : " WHERE p.orgid=c.custid";
 														$sql.= " ORDER BY p.id ASC ";
 
 													}else{
-														$sql = "select p.id as id,p.itemcost,p.itemcode,c.orgname,c.orgid,p.itemname,p.stockinqty,p.stockinuom,p.taxableprice
+														$sql = "select p.id as id,p.entrytype,p.itemcost,p.itemcode,c.orgname,c.orgid,p.itemname,p.stockinqty,p.stockinuom,p.taxableprice
 														,p.handler from purchaseitemaster p, comprofile c where p.orgid=c.orgid
 														union 
-														select p.id as id,p.itemcost,p.itemcode,cus.custname,cus.custid,p.itemname,p.stockinqty,p.stockinuom,p.taxableprice
-														,p.handler from purchaseitemaster p, customerprofile cus where p.custid=cus.custid";
+														select p.id as id,p.entrytype,p.itemcost,p.itemcode,cus.custname,cus.custid,p.itemname,p.stockinqty,p.stockinuom,p.taxableprice
+														,p.handler from purchaseitemaster p, customerprofile cus where p.orgid=cus.custid";
 														$sql.= " ORDER BY id ASC ";
-
 													}
+                                                    
                       
 													$result = mysqli_query($dbcon,$sql);
 													if ($result->num_rows > 0){
@@ -132,7 +132,7 @@
 													//echo '<td>'.$row['uom'].' </td>';													
 													echo '<td>'.$row['handler'].' </td>';
 													
-													echo '<td><a href="editPurchaseItemMaster.php?itemcode=' . $row['itemcode'] . '" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
+													echo '<td><a href="addPurchaseItemMaster.php?entrytype='.$row['entrytype'].'&itemcode=' . $row['itemcode'] . '&type=purchaseitemaster&action=edit" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
 														<i class="fa fa-pencil" aria-hidden="true"></i></a>
 													
 													<a href="javascript:deleteRecord_8(' . $row['id'] . ');" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="Delete">

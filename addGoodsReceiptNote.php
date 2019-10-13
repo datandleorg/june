@@ -83,7 +83,7 @@ if(isset($_GET['grn_id']))
                                 <div class="form-row">
                                     <div class="form-group col-md-8">
                                         <label for="inputState">Company Name<span class="text-danger">*</span></label>
-                                        <select id="grn_comp_code" class="form-control form-control-sm" name="grn_comp_code">
+                                        <select id="grn_comp_code" class="form-control form-control-sm select2" name="grn_comp_code">
                                             <option selected>Open Company Code</option>
                                         </select>
                                     </div>
@@ -93,7 +93,7 @@ if(isset($_GET['grn_id']))
                                 <div class="form-row">
                                     <div class="form-group col-md-8">
                                         <label for="inputState">Vendor Name<span class="text-danger">*</span></label>
-                                        <select id="grn_po_vendor" onchange="get_po_orders();" class="form-control form-control-sm" name="grn_po_vendor">
+                                        <select id="grn_po_vendor" onchange="get_po_orders();" class="form-control form-control-sm select2" name="grn_po_vendor">
                                             <option selected>Open Vendor Code</option>
                                         </select>
                                     </div>
@@ -103,7 +103,7 @@ if(isset($_GET['grn_id']))
                                 <div class="form-row">
                                     <div class="form-group col-md-4">	
                                         <label for="inputState">Purchase Order#<span class="text-danger">*</span></label>
-                                        <select id="grn_po_code" onchange="update_grn_form(this.value);"  class="form-control form-control-sm" name="grn_po_code">
+                                        <select id="grn_po_code" onchange="update_grn_form(this.value);"  class="form-control form-control-sm select2" name="grn_po_code">
                                             <option selected>Open PO#</option>
                                         </select>	
                                         <!--a href="addSupplierCodeMaster.php">add supplier type</a-->												
@@ -227,7 +227,8 @@ if(isset($_GET['grn_id']))
                                         <td>
                                             <select name="itemcode" class="form-control itemcode" onchange="rowitem.set_itemrow(this,'purchase');" id="item_select">
                                                 <option value="" name="itemcode" selected>Item Code</option>
-                                                <?php $qr  = "select * from purchaseitemaster where status ='1' ;";
+                                                <?php
+                                                echo $qr  = "select * from purchaseitemaster where status ='1' and orgid='".$session_org."' ;";
                                                 $exc = mysqli_query($dbcon,$qr)or die();
                                                 while($r = mysqli_fetch_array($exc)){ ?>
                                                 <option value="<?php echo $r['id']; ?>"><?php echo "[".$r['itemcode']."] ".$r['itemname']; ?></option>
@@ -380,13 +381,6 @@ if(isset($_GET['grn_id']))
 
     </div>
     <!-- END content-page -->
-
-
-    <?php include('footer.php');?>
-
-    <!-- END Java Script for this page -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> 
 
     <script>
 
@@ -768,3 +762,5 @@ if(isset($_GET['grn_id']))
 
     </body>
 </html>
+
+<?php include('footer.php');?>

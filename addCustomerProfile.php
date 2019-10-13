@@ -15,7 +15,7 @@ $blocation 	 =	$_POST['blocation'];
 //$industry 	 =	$_POST['industry'];	
 $address  =	$_POST['address'];		
 $city 	 =	$_POST['city'];	
-echo $country  =	$_POST['country'];		
+$country  =	$_POST['country'];		
 $state  =	$_POST['state'];		
 $zip  =	$_POST['zip'];		
 $workphone 	 =	$_POST['workphone'];	
@@ -52,7 +52,7 @@ $gstin 	 =	$_POST['gstin'];
 
 //Generating Vendor ID
 $custid ="";
-$prefix = "0000";
+$prefix = "CUST00";
  $sql="SELECT MAX(id) as latest_id FROM customerprofile ORDER BY id DESC";
 	if($result = mysqli_query($dbcon,$sql)){
 		$row   = mysqli_fetch_assoc($result);

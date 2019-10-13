@@ -16,13 +16,13 @@
 			<div class="container-fluid">
 
 					
-										<div class="row">
+			<div class="row">
 					<div class="col-xl-12">
 							<div class="breadcrumb-holder">
-                                    <h1 class="main-title float-left">Organization Wise Rawmaterial Input Data List</h1>
+                                    <h1 class="main-title float-left">Organization Wise Purchase Input Data List</h1>
                                     <ol class="breadcrumb float-right">
 										<li class="breadcrumb-item">Home</li>
-										<li class="breadcrumb-item active">Rawmaterial List</li>
+										<li class="breadcrumb-item active">Partner Entries List</li>
                                     </ol>
                                     <div class="clearfix"></div>
                             </div>
@@ -35,10 +35,10 @@
                             <div class="card mb-3">
                                 <div class="card-header">
 											<span class="pull-right">
-										<a href="addRawMatItemaster.php" class="btn btn-primary btn-sm">
+										<a href="addPartnerPurchaseEntries.php" class="btn btn-primary btn-sm">
 										<i class="fa fa-user-plus" aria-hidden="true"></i>
-										Add Rawmaterial Master</a></span>
-                                    <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"> List Rawmaterial Itemnames </i></h3>
+										Add Partner Purchase Entries</a></span>
+                                    <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"> List Partner Purchase Entries </i></h3>
                         </div>
 
 						<div class="form-row px-3 py-2">
@@ -50,8 +50,7 @@
                                             <option value="">Select Company</option>
                                             <?php 
 											include("database/db_conection.php");//make connection here
-											 $sql = "SELECT id as oid, orgid as orgid,concat(orgid,'-',orgname) as orgname,'self' as orgtype FROM comprofile
-                                            UNION SELECT id as oid, custid as orgid,concat(custid,'-',custname) as orgname,'outsourced' as orgtype FROM customerprofile 
+											 $sql = "SELECT id as oid, custid as orgid,concat(custid,'-',custname) as orgname,'outsourced' as orgtype FROM customerprofile 
 											WHERE custype='Partner'
 										    ORDER BY oid ASC;
 											";
@@ -79,9 +78,9 @@
                                     <thead>
                                         <tr>
                                             <th>id</th>
+											<th>Company Id</th>											
 											<th>Company Name</th>											
-                                            <th>Production Item</th>
-											<th>Product Name</th>											
+                                            <th>Purchased Item Code</th>
 											<th>Created By</th>
                                             <th>Actions</th>
                                         </tr>
@@ -91,30 +90,30 @@
                                         <?php												
                                         include("database/db_conection.php");//make connection here
 							
-											$sql = "select rw.handler as rawhandler,rw.*,c.*,s.* from rawitemaster rw ,salesitemaster2 s,(select orgid,orgname from comprofile union select custid as orgid, custname as orgname from customerprofile) as c ";
-											$sql.=" where rw.proditemcode=s.itemcode and rw.orgid=c.orgid";
-									        $sql.= $orgidUrl!="" ? " and rw.orgid='".$orgidUrl."' " : ""; 
+											$sql = "select pe.*,c.* from partnerentries pe ,customerprofile c ";
+											$sql.=" where c.custype='Partner' and pe.	pe_orgid=c.custid";
+									        $sql.= $orgidUrl!="" ? " and pe.pe_orgid='".$orgidUrl."' " : ""; 
 
 
                                         		$result = mysqli_query($dbcon,$sql);
 												if ($result->num_rows > 0){
 												while ($row =$result-> fetch_assoc()){
-													$row_id=$row['rw_code'];
+													$row_id=$row['pe_code'];
 												echo "<tr>";
 												echo '<td>' .$row['id']. '</td>';											
-												echo '<td>' .$row['orgid'].'-'.$row['orgname'].'</td>';
-												echo '<td>' .$row['proditemcode'].'-'.$row['itemname'].'</td>';
-												echo '<td>' .$row['itemname'].'</td>';
-												echo '<td>' .$row['rawhandler'].'</td>';
+												echo '<td>' .$row['pe_orgid'].'</td>';
+												echo '<td>' .$row['custname'].'</td>';
+												echo '<td>' .$row['pe_code'].'</td>';
+												echo '<td>' .$row['pe_handler'].'</td>';
 											
 
-                                                echo '<td><a href="addRawMatItemaster.php?rw_code=' . $row['rw_code'] . '&action=edit&type=rawitemaster&entrytype='.$row['entrytype'].'&orgid='.$row['orgid'].'" class="btn btn-primary btn-sm">
+                                                echo '<td><a href="addPartnerPurchaseEntries.php?pe_code=' . $row['pe_code'] . '&action=edit&type=partnerentries&entrytype='.$row['entrytype'].'&orgid='.$row['pe_orgid'].'" class="btn btn-primary btn-sm">
 														<i class="fa fa-pencil" aria-hidden="true"></i></a>
 
 													<a onclick="delete_record(this);" id="deleteItemCategory" data-id="' . $row_id . '" class="btn btn-danger btn-sm mr-1"  data-title="Delete">
 													<i class="fa fa-trash-o" aria-hidden="true"></i></a><a data-id="' . $row_id . '" class="btn btn-info btn-sm mr-1" onclick="setRawItems(this);"  data-toggle="modal" data-target="#itemsModal"  data-title="View">
 													<i class="fa fa-eye" aria-hidden="true"></i></a>';
-													echo '<a class="btn btn-secondary btn-sm" onclick="ToPrint(this);" data-code="'.$row['rw_code'].'" data-img="assets/images/logo.png"  data-id="po_print"><i class="fa fa-print" aria-hidden="true"></i></a></td>';
+													echo '<a class="btn btn-secondary btn-sm" onclick="ToPrint(this);" data-code="'.$row['pe_code'].'" data-img="assets/images/logo.png"  data-id="po_print"><i class="fa fa-print" aria-hidden="true"></i></a></td>';
                                                 echo "</tr>";
                                             }
                                         }
@@ -122,15 +121,14 @@
                                         <script>
 										        function ToPrint(el){
 												var code= $(el).attr('data-code');
-												window.location.href = 'assets/productRawitemsList.php?rw_code='+code;
+												window.location.href = 'assets/partnerEntriesListPrint.php?pe_code='+code;
                                               }
 
                                             function delete_record(x)
                                             {
-                                                console.log(x);
                                                  var row_id = $(x).attr('data-id');
                                                 if (confirm('Confirm delete')) {
-                                                  window.location.href = 'deleteProductRawItems.php?id='+row_id;
+                                                  window.location.href = 'deletePartnerEntries.php?id='+row_id;
                                                }
                                             }
 											 </script>   
@@ -147,7 +145,7 @@
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title">Raw Items List</h5>
+								<h5 class="modal-title">Purchased Items List</h5>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 										<span aria-hidden="true">&times;</span>
 									</button>
@@ -191,9 +189,9 @@
 	
 	function setRawItems(ele){
 
-	   var rw_code = $(ele).attr('data-id');
-	   var edit_data = Page.get_edit_vals(rw_code,"rawitemaster","rw_code");
-	   var items = JSON.parse(edit_data.raw_items);
+	   var pe_code = $(ele).attr('data-id');
+	   var edit_data = Page.get_edit_vals(pe_code,"partnerentries","pe_code");
+	   var items = JSON.parse(edit_data.pe_items);
 	   $('#modalCon').html('');
 	   var html = '<table class="table"><thead><tr><th>Item</th><th>Qty</th><th>Unit</th></tr></thead><tbody>';
 	   for(i=0;i<items.length;i++){
@@ -310,7 +308,7 @@
 		function redirectTo(ele){
 		 var orgid = $(ele).val();
 		 var orgtype = $(ele).find('option:selected').attr('data-orgtype');
-		 location.href='listProductRawItems.php?orgid='+orgid+'&orgtype='+orgtype;
+		 location.href='listPartnerPurchaseEntries.php?orgid='+orgid+'&orgtype='+orgtype;
 	    }
 
 

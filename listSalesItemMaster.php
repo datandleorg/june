@@ -63,7 +63,7 @@
                                                  $orgid=$row['orgid'];
 												 $orgname=$row['orgname'];
 												 $orgtype=$row['orgtype'];
-												if($orgidUrl!='' && $orgidUrl==$orgid){
+												if($orgidUrl!='' && $orgidUrl===$orgid){
 													echo '<option data-orgtype="'.$orgtype.'" selected  value="'.$orgid.'" >'.$orgname.' </option>';
 												}else{
 													echo '<option data-orgtype="'.$orgtype.'" value="'.$orgid.'" >'.$orgname.' </option>';
@@ -104,15 +104,15 @@
 
                                         }else if($orgType=="outsourced"){
                                             $sql = "SELECT s.*,c.*,c.custname as orgname,c.custid as orgid,s.handler as handler FROM salesitemaster2 s,customerprofile c ";
-                                            $sql.= $orgidUrl!==''  ? " WHERE s.custid='".$orgidUrl."' AND s.custid=c.custid " : " WHERE s.custid=c.custid";
+                                            $sql.= $orgidUrl!==''  ? " WHERE s.orgid='".$orgidUrl."' AND s.orgid=c.custid " : " WHERE s.orgid=c.custid";
                                             $sql.= " ORDER BY s.id ASC ";
 
                                         }else{
-                                            $sql = "select s.id as id, s.sales_taxmethod,s.itemcost,s.sales_taxrate,s.itemcode,c.orgname,s.itemname,s.sales_priceperqty,s.stockinqty,
+                                            $sql = "select s.entrytype as entrytype,s.id as id, s.sales_taxmethod,s.itemcost,s.sales_taxrate,s.itemcode,c.orgname,s.itemname,s.sales_priceperqty,s.stockinqty,
                                             s.handler from salesitemaster2 s, comprofile c where s.orgid=c.orgid
                                             union 
-                                            select s.id as id,s.sales_taxmethod,s.itemcost,s.sales_taxrate,s.itemcode,cus.custname,s.itemname,s.sales_priceperqty,s.stockinqty,
-                                            s.handler from salesitemaster2 s, customerprofile cus where s.custid=cus.custid";
+                                            select s.entrytype as entrytype,s.id as id,s.sales_taxmethod,s.itemcost,s.sales_taxrate,s.itemcode,cus.custname,s.itemname,s.sales_priceperqty,s.stockinqty,
+                                            s.handler from salesitemaster2 s, customerprofile cus where s.orgid=cus.custid";
                                             $sql.= " ORDER BY id ASC ";
 
                                         }
@@ -149,7 +149,7 @@
   </button>
   <div class="dropdown-menu">';
 
-                                                echo ' <a class="dropdown-item" href="addSalesItemMaster.php?itemcode=' . $row['itemcode'] . '&action=edit&type=salesitemaster2" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5"><i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit</a>';   
+                                                echo ' <a class="dropdown-item" href="addSalesItemMaster.php?itemcode=' . $row['itemcode'] . '&action=edit&type=salesitemaster2&entryType='.$row['entrytype'].'" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5"><i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit</a>';   
                                                 echo '
                                                         <a class="dropdown-item"  href="javascript:deleteRecord_8(' . $row['id'] . ');" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp; Delete</a>';
 

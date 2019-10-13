@@ -28,79 +28,107 @@ if (isset($_POST['array'])) {
 
             $return = update_query($dbcon,$array,$pro_code,$table,"prod_code");
             $return['code']= $pro_code;
-            // if($return['status']==true){
-            //     $obj = json_decode($array, true);
-            //     $items = json_decode($obj['prod_raw_items'], true); 
-                
-            //     for($i=0;$i<count($items);$i++){
-               
-            //         $sql4 = " UPDATE purchaseitemaster SET stockinqty =  stockinqty - ".$items[$i]['qty']."  WHERE itemcode='".$items[$i]['item']."' ;";
 
-            //         if (mysqli_query($dbcon,$sql4)) {
-            //             $return['status']=true;
-
-            //         }else{
-            //             $return['status']=false;
-            //             $return['error']=mysqli_error($dbcon);
-            //         }
-
-            //     }
-            // }
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);
         }
     }else{
 
-        // if($prod_status!=="Created"){
-        //     $past = findbyand($dbcon,$pro_code,$table,"prod_code");
-        
-        //     $val_arr = $past['values'];
-        //     $obj2 = json_decode($val_arr[0]['prod_raw_items'], true);
-        //     for($i=0;$i<count($obj2);$i++){
-                
-        //         $sql = " UPDATE purchaseitemaster SET stockinqty =  stockinqty + ".$obj2[$i]['qty']."  WHERE itemcode='".$obj2[$i]['item']."' AND orgid='".$prod_orgid."' ;";
-        //         if (mysqli_query($dbcon,$sql)) {
-        //             continue;
-        //         }else{
-        //             break;
-        //         }
-        //     }
-        // }
-
-
         $return = update_query($dbcon,$array,$pro_code,$table,"prod_code");
 
-        
         if($return['status']==true && $prod_status=="Completed"){
 
             $obj = json_decode($array, true);
             $items = json_decode($obj['prod_raw_items'], true); 
+
             
             for($i=0;$i<count($items);$i++){
            
-               $sql4 = " UPDATE purchaseitemaster SET stockinqty =  stockinqty - ".$items[$i]['qty']."  WHERE itemcode='".$items[$i]['item']."' AND orgid='".$prod_orgid."' ;";
+                $return = findbyand($dbcon,$items[$i]['item'],'purchaseitemaster','itemcode');
+                if($return['status']){  // get purchaseitemrow
+                  $sql4 = " UPDATE purchaseitemaster SET stockinqty =  stockinqty - ".$items[$i]['qty']."  WHERE itemcode='".$items[$i]['item']."' AND orgid='".$prod_orgid."' ;";
 
-                if (mysqli_query($dbcon,$sql4)) {
+                   if (mysqli_query($dbcon,$sql4)) {
+                        // purchase log insert
+                        $found_rows = $return['values'][0];
+                        $row = new stdClass();
+                        $row->entrytype =  $obj['entrytype'];
+                        $row->orgid =  $obj['orgid'];
+                        $row->itemcode =  $items[$i]['item'];
+                        $row->itemname =  $found_rows['itemname'];
+                        $row->qtyonhand =  $found_rows['stockinqty'];
+                        $row->newqty =  $found_rows['stockinqty'] - $items[$i]['qty'];
+                        $row->qtyadjusted =  $items[$i]['qty'];
+                        $row->uom =  $found_rows['stockinuom'];
+                        $row->handler =  $obj['prod_handler'];
+
+                        $return  = insertRow($dbcon,'purchaseitemlog',$row);
+
+                     if($return['status']){
+
+                        $return['status']=true;
+                        $return['code']= $pro_code;
+
+                     }else{
+                        $return['status']=false;
+                        $return['error']=mysqli_error($dbcon);    
+                        break;
+                     }
+
+                }else{
+                    $return['status']=false;
+                    $return['error']=mysqli_error($dbcon);
+                }
+
+                }else{
+                    $return['status']=false;
+                    $return['error']=mysqli_error($dbcon);
+                }
+            }
+
+            //  add to sales inventory 
+            $return = findbyand($dbcon,$obj['prod_item'],'salesitemaster2','itemcode');
+
+            if($return['status']){
+                $sql = " UPDATE salesitemaster2 SET stockinqty =  stockinqty + ".$obj['prod_qty']."  WHERE itemcode='".$obj['prod_item']."' ;";
+          
+                if (mysqli_query($dbcon,$sql)) {
+                    $sales_foundrows = $return['values'][0];
+
+                    // sales log insert 
+                    $salesrow = new stdClass();
+                    $salesrow->entrytype =  $obj['entrytype'];
+                    $salesrow->orgid =  $obj['orgid'];
+                    $salesrow->itemcode =  $obj['prod_item'];
+                    $salesrow->itemname =  $sales_foundrows['itemname'];
+                    $salesrow->qtyonhand =  $sales_foundrows['stockinqty'];
+                    $salesrow->newqty =  $sales_foundrows['stockinqty'] + $obj['prod_qty'];
+                    $salesrow->qtyadjusted =  $obj['prod_qty'];
+                    $salesrow->uom =  $sales_foundrows['sales_uom'];
+                    $salesrow->handler =  $obj['prod_handler'];
+
+                    $return  = insertRow($dbcon,'salesitemlognew',$salesrow);
+
+                    if($return['status']){
+
+                        $return['status']=true;
+                        $return['code']= $pro_code;
+
+                    }else{
+                        $return['status']=false;
+                        $return['error']=mysqli_error($dbcon);    
+                    }
+
+
                     $return['status']=true;
                     $return['code']= $pro_code;
                 }else{
                     $return['status']=false;
                     $return['error']=mysqli_error($dbcon);
                 }
-
             }
-
-            //  add to sales inventory 
-
-            $sql = " UPDATE salesitemaster2 SET stockinqty =  stockinqty + ".$obj['prod_qty']."  WHERE itemcode='".$obj['prod_item']."' ;";
-            if (mysqli_query($dbcon,$sql)) {
-                $return['status']=true;
-                $return['code']= $pro_code;
-            }else{
-                $return['status']=false;
-                $return['error']=mysqli_error($dbcon);
-            }
+  
 
         }
 
@@ -108,6 +136,7 @@ if (isset($_POST['array'])) {
 
 }
 
+$return['values'] = [];
 echo json_encode($return);
 
 

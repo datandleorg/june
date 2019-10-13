@@ -38,6 +38,8 @@ include('header.php');
                             <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"></i><b>  Goods Received Note list </b></h3>
                         </div>
 
+                        
+
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="grn_table" class="table table-bordered table-hover display">

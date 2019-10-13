@@ -692,6 +692,8 @@ View All
                             <li><a href="addPurchaseItemMaster.php"><i class="fa fa-plus-circle"></i>Product Inward</a></li>
                             <li><a href="listProductRawItems.php"><i class="fa fa-plus-circle-o"></i>Rawmaterial Data List</a></li>
                             <li><a href="addRawMatItemaster.php"><i class="fa fa-plus-circle"></i>Rawmaterial Data Form</a></li>
+                            <li><a href="listPartnerPurchaseEntries.php"><i class="fa fa-plus-circle-o"></i>Partner Purchases List</a></li>
+                            <li><a href="addPartnerPurchaseEntries.php"><i class="fa fa-plus-circle"></i>Partner Purchase Entry</a></li>
                             <li><a href="listSalesItemMaster.php"><i class="fa fa-circle-o"></i>list Product Outward</a></li>
                             <li><a href="addSalesItemMaster.php"><i class="fa fa-plus-circle"></i>Product Outward</a></li>
                             <li class="submenu">

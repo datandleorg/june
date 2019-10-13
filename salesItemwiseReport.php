@@ -11,13 +11,14 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
     }
 }
 
-function getSaleItemCountCols($getArr, $dbcon){
+function getSaleItemCountCols($getArr, $dbcon, $custid,$custype){
     $listsql = "SELECT * from salesitemaster2 ";
+    $listsql.= $custype=="Partner" && $custid!="" ? " WHERE orgid='".$custid."'  " : "";
     $listresult = mysqli_query($dbcon,$listsql);
     $listHtml = '';
     if ($listresult->num_rows > 0){
         while ($listrow = $listresult-> fetch_assoc()){
-             $listHtml.= '<td>'.getSaleItemCount($getArr,$listrow['id']).'</td>';                                                        
+             $listHtml.= '<td>'.getSaleItemCount($getArr,$listrow['id'],$custid).'</td>';                                                        
         }
     }
 
@@ -25,8 +26,10 @@ function getSaleItemCountCols($getArr, $dbcon){
 }
 
 
-function getSaleItemCountfootercols($dbcon){
+function getSaleItemCountfootercols($dbcon, $custid,$custype){
     $listsql = "SELECT * from salesitemaster2 ";
+    $listsql.= $custype=="Partner" && $custid!="" ? " WHERE orgid='".$custid."'  " : "";
+
     $listresult = mysqli_query($dbcon,$listsql);
     $listHtml = '';
     if ($listresult->num_rows > 0){
@@ -86,14 +89,14 @@ function getSaleItemCount($getArr, $itemCodeId) {
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-3">
-                                    <select id="custwise" class="form-control form-control-md" name="custwise">
+                                    <select id="custwise" class="form-control form-control-md select2" name="custwise">
                                         <option value=''>--Select Customer--</option>
                                         <?php
                                         $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
                                         while ($row = $sql->fetch_assoc()){	
                                             $custid=$row['custid'];
                                             $custname=$row['custname'];
-                                            echo '<option  value="'.$custid.'" >'.$custid.' '.$custname.'</option>';
+                                            echo '<option data-custype="'.$row['custype'].'"  value="'.$custid.'" >'.$custid.' '.$custname.'</option>';
                                         }
                                         ?>
                                     </select>
@@ -125,6 +128,7 @@ function getSaleItemCount($getArr, $itemCodeId) {
 
                                             <?php
                                               $listsql = "SELECT * from salesitemaster2 ";
+                                              $listsql.= $_GET['custype']=="Partner" && $_GET['custwise']!=="" ? " WHERE orgid='".$_GET['custwise']."' " : " ";
                                               $listresult = mysqli_query($dbcon,$listsql);
                                               $itemVals = array();
                                               if ($listresult->num_rows > 0){
@@ -190,7 +194,7 @@ function getSaleItemCount($getArr, $itemCodeId) {
                                                     <td>'.$row['inv_date'].'</td>
                                                     <td>'.$row['custname'].'</td>';
 
-                                                    echo getSaleItemCountCols($row['inv_items'],$dbcon);
+                                                    echo getSaleItemCountCols($row['inv_items'],$dbcon,isset($_GET['custwise'])? $_GET['custwise'] :"",isset($_GET['custype'])? $_GET['custype'] :"");
                                                     // if ($listresult->num_rows > 0){
                                                     //     echo "<td>".$listresult->num_rows."</td>";
                                                     //     while ($listrow = $listresult-> fetch_assoc()){
@@ -216,7 +220,7 @@ function getSaleItemCount($getArr, $itemCodeId) {
                                                 <th></th>
                                               
                                         <?php
-                                            echo getSaleItemCountfootercols($dbcon);
+                                            echo getSaleItemCountfootercols($dbcon,isset($_GET['custwise'])? $_GET['custwise'] :"",isset($_GET['custype'])? $_GET['custype'] :"");
                                         ?>
                                                 <th></th>
                                                 <th></th>
@@ -378,8 +382,11 @@ function getSaleItemCount($getArr, $itemCodeId) {
             end = date_range[1].replace(" ","");
         }
         var custwise = $('#custwise').val();
+        var custype = $('#custwise option:selected').data('custype');
+        console.log(custwise);
+        console.log(custype);
         var pstatuswise = $('#pstatuswise').val();
-        location.href="salesItemwiseReport.php?st="+st+"&end="+end+"&custwise="+custwise+"&pstatuswise="+pstatuswise;
+        location.href="salesItemwiseReport.php?st="+st+"&end="+end+"&custwise="+custwise+"&custype="+custype+"&pstatuswise="+pstatuswise;
     }
     function cb(start, end) {
         $('#daterange').val(start+ ' - ' + end);
