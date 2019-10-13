@@ -501,7 +501,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                     if(data.prod_status=="Completed"){
                         window.location.href = 'assets/production_print_html.php?prod_code='+response.code;
                     }else{
-                        window.location.href = 'listProductions.php';
+                           window.location.href = 'listProductions.php';
                     }
                 }
             }
