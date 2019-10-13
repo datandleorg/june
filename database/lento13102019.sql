@@ -1649,10 +1649,11 @@ DROP TABLE IF EXISTS `uom`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `uom` (
-  `id` int(11) NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) NOT NULL,
-  `description` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `description` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1661,7 +1662,7 @@ CREATE TABLE `uom` (
 
 LOCK TABLES `uom` WRITE;
 /*!40000 ALTER TABLE `uom` DISABLE KEYS */;
-INSERT INTO `uom` VALUES (1,'BAG','Bag'),(2,'BKT','Bucket'),(3,'BND','Bundle'),(4,'BOWL','Bowl'),(5,'BX','Box'),(6,'CRD','Card'),(7,'CAN','Cans'),(8,'CM','Centimeters'),(9,'CS','Case'),(10,'CTN','Carton'),(11,'DZ','Dozen'),(12,'DRM','Drums'),(13,'EA','Each'),(14,'FT','Foot'),(15,'GAL','Gallon'),(16,'GROSS','Gross'),(17,'IN','Inches'),(18,'KIT','Kit'),(19,'LOT','Lot'),(20,'M','Meter'),(21,'MM','Millimeter'),(22,'PC','Piece'),(23,'PK','Pack'),(24,'PK100','Pack 100'),(25,'PK50','Pack 50'),(26,'PR','Pair'),(27,'RACK','Rack'),(28,'RL','Roll'),(29,'SET','Set'),(30,'SET3','Set of 3'),(31,'SET4','Set of 4'),(32,'SET5','Set of 5'),(33,'SGL','Single'),(34,'SHT','Sheet'),(35,'SQFT','Square ft'),(36,'TUBE','Tube'),(37,'YD','Yard'),(38,'KGS','Kiliograms'),(39,'KLR','Kilolitter'),(40,'NOS','Numbers'),(41,'TON ','Tonnes'),(42,'TUB ','Tubes'),(43,'BTL','Bottles'),(44,'UNT','Units'),(45,'OTH','Others'),(1,'BAG','Bag'),(2,'BKT','Bucket'),(3,'BND','Bundle'),(4,'BOWL','Bowl'),(5,'BX','Box'),(6,'CRD','Card'),(7,'CAN','Cans'),(8,'CM','Centimeters'),(9,'CS','Case'),(10,'CTN','Carton'),(11,'DZ','Dozen'),(12,'DRM','Drums'),(13,'EA','Each'),(14,'FT','Foot'),(15,'GAL','Gallon'),(16,'GROSS','Gross'),(17,'IN','Inches'),(18,'KIT','Kit'),(19,'LOT','Lot'),(20,'M','Meter'),(21,'MM','Millimeter'),(22,'PC','Piece'),(23,'PK','Pack'),(24,'PK100','Pack 100'),(25,'PK50','Pack 50'),(26,'PR','Pair'),(27,'RACK','Rack'),(28,'RL','Roll'),(29,'SET','Set'),(30,'SET3','Set of 3'),(31,'SET4','Set of 4'),(32,'SET5','Set of 5'),(33,'SGL','Single'),(34,'SHT','Sheet'),(35,'SQFT','Square ft'),(36,'TUBE','Tube'),(37,'YD','Yard'),(38,'KGS','Kiliograms'),(39,'KLR','Kilolitter'),(40,'NOS','Numbers'),(41,'TON ','Tonnes'),(42,'TUB ','Tubes'),(43,'BTL','Bottles'),(44,'UNT','Units'),(45,'OTH','Others'),(1,'BAG','Bag'),(2,'BKT','Bucket'),(3,'BND','Bundle'),(4,'BOWL','Bowl'),(5,'BX','Box'),(6,'CRD','Card'),(7,'CAN','Cans'),(8,'CM','Centimeters'),(9,'CS','Case'),(10,'CTN','Carton'),(11,'DZ','Dozen'),(12,'DRM','Drums'),(13,'EA','Each'),(14,'FT','Foot'),(15,'GAL','Gallon'),(16,'GROSS','Gross'),(17,'IN','Inches'),(18,'KIT','Kit'),(19,'LOT','Lot'),(20,'M','Meter'),(21,'MM','Millimeter'),(22,'PC','Piece'),(23,'PK','Pack'),(24,'PK100','Pack 100'),(25,'PK50','Pack 50'),(26,'PR','Pair'),(27,'RACK','Rack'),(28,'RL','Roll'),(29,'SET','Set'),(30,'SET3','Set of 3'),(31,'SET4','Set of 4'),(32,'SET5','Set of 5'),(33,'SGL','Single'),(34,'SHT','Sheet'),(35,'SQFT','Square ft'),(36,'TUBE','Tube'),(37,'YD','Yard'),(38,'KGS','Kiliograms'),(39,'KLR','Kilolitter'),(40,'NOS','Numbers'),(41,'TON ','Tonnes'),(42,'TUB ','Tubes'),(43,'BTL','Bottles'),(44,'UNT','Units'),(45,'OTH','Others');
+INSERT INTO `uom` VALUES (1,'CVR','COVER'),(2,'BAG','Bag'),(3,'BKT','Bucket'),(4,'BND','Bundle'),(5,'BOWL','Bowl'),(6,'BX','Box'),(7,'CRD','Card'),(8,'CAN','Cans'),(9,'CM','Centimeters'),(10,'CS','Case'),(11,'CTN','Carton'),(12,'DZ','Dozen'),(13,'DRM','Drums'),(14,'EA','Each'),(15,'FT','Foot'),(16,'GAL','Gallon'),(17,'GROSS','Gross'),(18,'IN','Inches'),(19,'KIT','Kit'),(20,'LOT','Lot'),(21,'M','Meter'),(22,'MM','Millimeter'),(23,'PC','Piece'),(24,'PK','Pack'),(25,'PK100','Pack 100'),(26,'PK50','Pack 50'),(27,'PR','Pair'),(28,'RACK','Rack'),(29,'RL','Roll'),(30,'SET','Set'),(31,'SET3','Set of 3'),(32,'SET4','Set of 4'),(33,'SET5','Set of 5'),(34,'SGL','Single'),(35,'SHT','Sheet'),(36,'SQFT','Square ft'),(37,'TUBE','Tube'),(38,'YD','Yard'),(39,'KGS','Kiliograms'),(40,'KLR','Kilolitter'),(41,'NOS','Numbers'),(42,'TON ','Tonnes'),(43,'TUB ','Tubes'),(44,'BTL','Bottles'),(45,'UNT','Units'),(46,'OTH','Others'),(47,'CVR','COVER');
 /*!40000 ALTER TABLE `uom` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1673,10 +1674,11 @@ DROP TABLE IF EXISTS `uom_lookups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `uom_lookups` (
-  `id` int(11) NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) NOT NULL,
-  `description` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `description` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1685,7 +1687,7 @@ CREATE TABLE `uom_lookups` (
 
 LOCK TABLES `uom_lookups` WRITE;
 /*!40000 ALTER TABLE `uom_lookups` DISABLE KEYS */;
-INSERT INTO `uom_lookups` VALUES (1,'BAG','Bag'),(2,'BKT','Bucket'),(3,'BND','Bundle'),(4,'BOWL','Bowl'),(5,'BX','Box'),(6,'CRD','Card'),(7,'CAN','Cans'),(8,'CM','Centimeters'),(9,'CS','Case'),(10,'CTN','Carton'),(11,'DZ','Dozen'),(12,'DRM','Drums'),(13,'EA','Each'),(14,'FT','Foot'),(15,'GAL','Gallon'),(16,'GROSS','Gross'),(17,'IN','Inches'),(18,'KIT','Kit'),(19,'LOT','Lot'),(20,'M','Meter'),(21,'MM','Millimeter'),(22,'PC','Piece'),(23,'PK','Pack'),(24,'PK100','Pack 100'),(25,'PK50','Pack 50'),(26,'PR','Pair'),(27,'RACK','Rack'),(28,'RL','Roll'),(29,'SET','Set'),(30,'SET3','Set of 3'),(31,'SET4','Set of 4'),(32,'SET5','Set of 5'),(33,'SGL','Single'),(34,'SHT','Sheet'),(35,'SQFT','Square ft'),(36,'TUBE','Tube'),(37,'YD','Yard'),(38,'KGS','Kiliograms'),(39,'KLR','Kilolitter'),(40,'NOS','Numbers'),(41,'TON ','Tonnes'),(42,'TUB ','Tubes'),(43,'BTL','Bottles'),(44,'UNT','Units'),(45,'OTH','Others'),(1,'BAG','Bag'),(2,'BKT','Bucket'),(3,'BND','Bundle'),(4,'BOWL','Bowl'),(5,'BX','Box'),(6,'CRD','Card'),(7,'CAN','Cans'),(8,'CM','Centimeters'),(9,'CS','Case'),(10,'CTN','Carton'),(11,'DZ','Dozen'),(12,'DRM','Drums'),(13,'EA','Each'),(14,'FT','Foot'),(15,'GAL','Gallon'),(16,'GROSS','Gross'),(17,'IN','Inches'),(18,'KIT','Kit'),(19,'LOT','Lot'),(20,'M','Meter'),(21,'MM','Millimeter'),(22,'PC','Piece'),(23,'PK','Pack'),(24,'PK100','Pack 100'),(25,'PK50','Pack 50'),(26,'PR','Pair'),(27,'RACK','Rack'),(28,'RL','Roll'),(29,'SET','Set'),(30,'SET3','Set of 3'),(31,'SET4','Set of 4'),(32,'SET5','Set of 5'),(33,'SGL','Single'),(34,'SHT','Sheet'),(35,'SQFT','Square ft'),(36,'TUBE','Tube'),(37,'YD','Yard'),(38,'KGS','Kiliograms'),(39,'KLR','Kilolitter'),(40,'NOS','Numbers'),(41,'TON ','Tonnes'),(42,'TUB ','Tubes'),(43,'BTL','Bottles'),(44,'UNT','Units'),(45,'OTH','Others'),(1,'BAG','Bag'),(2,'BKT','Bucket'),(3,'BND','Bundle'),(4,'BOWL','Bowl'),(5,'BX','Box'),(6,'CRD','Card'),(7,'CAN','Cans'),(8,'CM','Centimeters'),(9,'CS','Case'),(10,'CTN','Carton'),(11,'DZ','Dozen'),(12,'DRM','Drums'),(13,'EA','Each'),(14,'FT','Foot'),(15,'GAL','Gallon'),(16,'GROSS','Gross'),(17,'IN','Inches'),(18,'KIT','Kit'),(19,'LOT','Lot'),(20,'M','Meter'),(21,'MM','Millimeter'),(22,'PC','Piece'),(23,'PK','Pack'),(24,'PK100','Pack 100'),(25,'PK50','Pack 50'),(26,'PR','Pair'),(27,'RACK','Rack'),(28,'RL','Roll'),(29,'SET','Set'),(30,'SET3','Set of 3'),(31,'SET4','Set of 4'),(32,'SET5','Set of 5'),(33,'SGL','Single'),(34,'SHT','Sheet'),(35,'SQFT','Square ft'),(36,'TUBE','Tube'),(37,'YD','Yard'),(38,'KGS','Kiliograms'),(39,'KLR','Kilolitter'),(40,'NOS','Numbers'),(41,'TON ','Tonnes'),(42,'TUB ','Tubes'),(43,'BTL','Bottles'),(44,'UNT','Units'),(45,'OTH','Others'),(0,'CVR','COVER'),(46,'CVR','COVER'),(46,'CVR','COVER'),(0,'CVR','COVER'),(0,'ML','Milliliters');
+INSERT INTO `uom_lookups` VALUES (1,'CVR','COVER'),(2,'BAG','Bag'),(3,'BKT','Bucket'),(4,'BND','Bundle'),(5,'BOWL','Bowl'),(6,'BX','Box'),(7,'CRD','Card'),(8,'CAN','Cans'),(9,'CM','Centimeters'),(10,'CS','Case'),(11,'CTN','Carton'),(12,'DZ','Dozen'),(13,'DRM','Drums'),(14,'EA','Each'),(15,'FT','Foot'),(16,'GAL','Gallon'),(17,'GROSS','Gross'),(18,'IN','Inches'),(19,'KIT','Kit'),(20,'LOT','Lot'),(21,'M','Meter'),(22,'MM','Millimeter'),(23,'PC','Piece'),(24,'PK','Pack'),(25,'PK100','Pack 100'),(26,'PK50','Pack 50'),(27,'PR','Pair'),(28,'RACK','Rack'),(29,'RL','Roll'),(30,'SET','Set'),(31,'SET3','Set of 3'),(32,'SET4','Set of 4'),(33,'SET5','Set of 5'),(34,'SGL','Single'),(35,'SHT','Sheet'),(36,'SQFT','Square ft'),(37,'TUBE','Tube'),(38,'YD','Yard'),(39,'KGS','Kiliograms'),(40,'KLR','Kilolitter'),(41,'NOS','Numbers'),(42,'TON ','Tonnes'),(43,'TUB ','Tubes'),(44,'BTL','Bottles'),(45,'UNT','Units'),(46,'OTH','Others'),(47,'CVR','COVER');
 /*!40000 ALTER TABLE `uom_lookups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2000,4 +2002,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-13  8:57:01
+-- Dump completed on 2019-10-13  9:14:50
