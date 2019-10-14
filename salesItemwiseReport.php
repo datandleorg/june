@@ -2,6 +2,15 @@
 include('header.php');
 include('workers/getters/functions.php');
 
+$custwise="";
+$custype="";
+if(isset($_GET['custype'])){
+    $custype = $_GET['custype'];
+}
+if(isset($_GET['custwise'])){
+    $custwise = $_GET['custwise'];
+}
+
 function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
     $curdate=strtotime($newdate);
     $mydate=strtotime('+'.$po_payterm.' day', strtotime($grn_date));
@@ -128,7 +137,7 @@ function getSaleItemCount($getArr, $itemCodeId) {
 
                                             <?php
                                               $listsql = "SELECT * from salesitemaster2 ";
-                                              $listsql.= $_GET['custype']=="Partner" && $_GET['custwise']!=="" ? " WHERE orgid='".$_GET['custwise']."' " : " ";
+                                              $listsql.= $custype=="Partner" && $custwise!=="" ? " WHERE orgid='".$custwise."' " : " ";
                                               $listresult = mysqli_query($dbcon,$listsql);
                                               $itemVals = array();
                                               if ($listresult->num_rows > 0){
