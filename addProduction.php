@@ -170,13 +170,13 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                          {
                                             echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
                                          }else{
-                                             echo ' class="form-control form-control-sm select2"  ';
+                                             echo ' class="form-control form-control-sm"  ';
                                          }
                                     ?>  
                                      name="prod_uom">
                                             <option value="">Open Unit</option>
                                             <?php 
-                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom limit 25");
+                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom");
                                             while ($row = $sql->fetch_assoc()){	
 
                                                 echo '<option  value="'.$row['code'].'">'.$row['description'].'</option>';

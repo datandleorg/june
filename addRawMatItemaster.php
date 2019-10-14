@@ -46,7 +46,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
 								<form id="add_rawmaterial_form" autocomplete="off" enctype="multipart/form-data" method="post">
 								
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-10">
 
                                         <label for="">Select Entry Type</label>
                                         <select name="entrytype"
@@ -69,7 +69,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                     </div>
 
 									<div class="form-row">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-10">
                                         <label for="inputState">Assign Company<i class="text-danger">*</i></label>
                                         <select data-entry="<?php echo $entryType;?>"
                                         
@@ -104,7 +104,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
 								 
 									
 								<div class="form-row">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-10">
                                         <label for="inputState">Assign Production Itemname<i class="text-danger">*</i></label>
                                         <select id="proditemcode" 
                                         onchange="checkForProduct(this.value);" 
@@ -172,7 +172,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                         <select class="form-control form-control-sm amount" id="uom" name="uom" style="line-height:1.5;">
                                             <option value="" selected>Open Unit</option>
                                             <?php 
-                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom limit 25 ");
+                                            $sql = mysqli_query($dbcon, "SELECT * FROM uom ");
                                             while ($row = $sql->fetch_assoc()){	
                                                 echo '<option  value="'.$row['code'].'">'.$row['description'].'</option>';
                                             }
