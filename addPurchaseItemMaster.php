@@ -377,7 +377,7 @@ if(isset($_GET['entrytype'])){
                                         <h5>Scrap Information</h5>
                                     </div>
                                 </div>
-
+<!-- 
                                 <div class="form-row">
                                     <div class="form-group col-md-3">									  
                                         <label>Scrap Qty <span><i class="text-danger"></i></span></label>
@@ -400,7 +400,7 @@ if(isset($_GET['entrytype'])){
                                             ?>
                                         </select>	
                                     </div>
-                                </div>
+                                </div> -->
 
 
                
