@@ -212,12 +212,12 @@ if(isset($_GET['entrytype'])){
                                         <label>UOM&nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" 
                                                            data-trigger="focus" data-placement="top" title="The Item will be measured in terms of this UNIT(e.g.:Kgs,dozen,box"></i>
                                             <span class="text-danger"></span></label>
-                                        <select id="uom" onchange="gettaxrate()"  class="form-control form-control-sm select2" name="uom">
+                                        <select id="uom" onchange="gettaxrate()"  class="form-control form-control-sm " name="uom">
                                             <option value="0" selected>Select UOM</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
 
-                                            $sql = mysqli_query($dbcon, "SELECT code,description FROM uom limit 25 ");
+                                            $sql = mysqli_query($dbcon, "SELECT code,description FROM uom ");
                                             while ($row = $sql->fetch_assoc()){	
                                                 $description=$row['description'];
                                                 $code=$row['code'];
@@ -254,7 +254,7 @@ if(isset($_GET['entrytype'])){
 
                                     <div class="form-group col-md-3">
                                         <label for="inputState">Tax Name</label>
-                                        <select id="taxid" onchange="gettaxrate();" required class="form-control form-control-sm select2" name="taxid">
+                                        <select id="taxid" onchange="gettaxrate();" required class="form-control form-control-sm " name="taxid">
                                             <option value="0" selected>Open Taxrate</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
@@ -333,7 +333,7 @@ if(isset($_GET['entrytype'])){
                                     <div class="form-group col-md-3" id="adjust_stock" style="display:none">
                                         <i class="fa fa-rupee fonts" aria-hidden="true"></i>
                                         <label>Adjust Stock</label>
-                                        <input type="number" step="any" onkeypress="adjustprice('stock');"  onkeyup="adjustprice('stock');" id="adjuststk" name="adjuststk" class="form-control form-control-sm"   />
+                                        <input type="number" step="any" onkeypress="adjustprice('stock');" value="0"  onkeyup="adjustprice('stock');" id="adjuststk" name="adjuststk" class="form-control form-control-sm"   />
                                     </div>
 
                                     
@@ -341,12 +341,12 @@ if(isset($_GET['entrytype'])){
                                         <label>UOM&nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" 
                                                            data-trigger="focus" data-placement="top" title="The Item will be measured in terms of this UNIT(e.g.:Kgs,dozen,box"></i>
                                             <span class="text-danger">*</span></label>
-                                        <select id="stockinuom" onchange="gettaxrate()" required class="form-control form-control-sm select2" name="stockinuom" id="stockinuom">
+                                        <select id="stockinuom" onchange="gettaxrate()" required class="form-control form-control-sm " name="stockinuom" id="stockinuom">
                                             <option value="0" selected>Select UOM</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
 
-                                            $sql = mysqli_query($dbcon, "SELECT code,description FROM uom_lookups ");
+                                            $sql = mysqli_query($dbcon, "SELECT code,description FROM uom");
                                             while ($row = $sql->fetch_assoc()){	
                                                 $description=$row['description'];
                                                 $code=$row['code'];
@@ -386,7 +386,7 @@ if(isset($_GET['entrytype'])){
 
                                     <div class="form-group col-md-3">
                                         <label for="inputState">UOM</label>									
-                                        <select id="scrapinuom" required class="form-control form-control-sm select2" name="scrapinuom">
+                                        <select id="scrapinuom" required class="form-control form-control-sm " name="scrapinuom">
                                             <option value="0" selected>Select UOM</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here

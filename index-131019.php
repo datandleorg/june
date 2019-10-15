@@ -116,70 +116,89 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
             <br/>
             <div class="row">
                 <div class="col-md-3">
+
                     <div class="card">
-                        <div class="card-body noradius noborder bg-default">
-                            <h5 class="card-title lead text-center text-white">PO PENDING APPROVALS</h5>
-                            <p class="m-b-20 text-white counter text-center text-white ">
+                        <div class="card-body">
+                            <h5 class="card-title lead text-center">PO PENDING APPROVALS</h5>
+                            <p class="display-4 card-text text-center text-success ">
                                 <?php echo get_po_count();?>
-                            </p>                          
+                            </p>
+                            <!--
+<a href="#" class="btn btn-primary">Go somewhere</a>
+-->
                         </div>
                     </div>
-                </div>
-                
-                
-               
 
-                
-                
-                
+                </div>
                 <div class="col-md-3">
+
                     <div class="card">
-                        <div class="card-body noradius noborder bg-warning">
-                            <h5 class="card-title lead text-center text-white">GRN PENDING APPROVALS</h5>
-                            <p class="m-b-20 text-white counter text-center text-white">
+                        <div class="card-body">
+                            <h5 class="card-title lead text-center">GRN PENDING APPROVALS</h5>
+                            <p class="display-4 card-text text-center text-danger">
                                 <?php echo get_grn_count();?>
 
                             </p>
+                            <!--
+<a href="#" class="btn btn-primary">Go somewhere</a>
+-->
                         </div>
                     </div>
+
                 </div>
 
                 <div class="col-md-3">
-                    <!--div class="card"-->
-                        <div class="card-box noradius noborder bg-info">
-                            <h5 class="card-title lead text-center text-white">SO PENDING APPROVALS</h5>
-                            <p class="m-b-20 text-white counter text-center text-white">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title lead text-center">SO PENDING APPROVALS</h5>
+                            <p class="display-4 card-text text-center text-warning">
                                 <?php echo get_so_count();?>
+
                             </p>
+                            <!--
+<a href="#" class="btn btn-primary">Go somewhere</a>
+-->
                         </div>
-                    <!--/div-->
+                    </div>
+
                 </div>
 
                 <div class="col-md-3">
-                        <div class="card-box noradius noborder bg-danger">
-                            <h5 class="card-title lead text-center text-white">UNPAID INVOICES</h5>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title lead text-center">UNPAID INVOICES</h5>
                             <br/>
-                            <p class="m-b-20 text-white counter text-center text-white">
+                            <p class="display-4 card-text text-center text-info">
                                 <?php echo get_inv_count();?>
+
                             </p>
+                            <!--
+<a href="#" class="btn btn-primary">Go somewhere</a>
+-->
+                        </div>
                     </div>
+
                 </div>
+
+
             </div>
             <hr>
             <div class="row">
                 <div class="col-md-6">
 
-                    <!--div class="card"-->
-                        <div class="card-box noradius noborder bg-info">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6" style="border-right:1px solid #cccccc;">
-                                    <h5 class="card-title lead text-center text-white">TOTAL RECIEVABLES</h5>
+                                    <h5 class="card-title lead text-center">TOTAL RECIEVABLES</h5>
                                     <br/>
                                     <p class="card-text text-center text-muted">
-                                        <span class="pull-right text-danger lead"><b>OVERDUE</b><br/>
+                                        <span class="pull-right text-danger lead">OVERDUE<br/>
                                              <b><span class="display-5 card-text text-center text-info"><?php echo get_recievables_overdue();?></span></b>
                                         </span>
-                                       <b> <span class="m-b-20 text-white counter text-center text-white ">
+                                       <b> <span class="display-5 card-text text-center text-info ">
                                             <?php
                                             echo get_recievables()." &#8377;";
                                             ?>
@@ -189,50 +208,50 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                                     </p>
                                 </div>
                                 <div class="col-md-5">
-                                    <h5 class="card-title lead text-center text-white">TOTAL PAYABLES</h5>
+                                    <h5 class="card-title lead text-center">TOTAL PAYABLES</h5>
                                     <br/>
                                     <p class="card-text text-center text-muted">
-                                        <span class="pull-right text-danger lead"><b>OVERDUE</b><br/>
+                                        <span class="pull-right text-danger lead">OVERDUE<br/>
                                             <b><span class="display-5 card-text text-center text-info"><?php echo get_payables_overdue();?></span></b>
                                         </span>
-                                       <b> <span class="m-b-20 text-white counter text-center text-white" >
+                                       <b> <span class="display-5 card-text text-center text-info" >
                                             <?php
                                             echo get_payables()." &#8377;";
                                             ?>
-                                        </span> </b></p>
+                                        </span> </b>
+
+
+                                    </p>
+
                                 </div>
 
                                 <!--
 <a href="#" class="btn btn-primary">Go somewhere</a>
 -->
-                            <!--/div-->
+                            </div>
                         </div>
 
                     </div>
                 </div>
 
                 <div class="col-md-3">
-                    <div class="card-box noradius noborder bg-default">
-                            <h5 class="card-title lead text-center text-white">USERS</h5>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title lead text-center">USERS</h5>
                             <br/>
-                            <p class="m-b-20 text-white counter text-center text-white"><?php  print_r(get_users_count());?></p>
+                            <p class="display-4 card-text text-center text-info"><?php  print_r(get_users_count());?></p>
+                            <!--
+<a href="#" class="btn btn-primary">Go somewhere</a>
+-->
+                        </div>
                     </div>
+
                 </div>
-                
-                <div class="col-xs-12 col-md-6 col-lg-6 col-xl-3">
-				    <div class="card-box noradius noborder bg-warning">
-                    <h6 class="m-b-20 text-white counter text-white"><a href="PaymentsRecievedReports.php" text-white>Receipts:&nbsp;&nbsp;</a><?php echo get_users_count();?></h6>
-                            <h6 class="m-b-20 text-white counter">Expenses:&nbsp;<?php echo get_users_count();?></h6>
-                            <h6 class="m-b-20 text-white counter">Bank Deposit:&nbsp;<?php echo get_users_count();?></h6>
-                            <h6 class="text-white">Cash on Hand:&nbsp;<?php echo get_users_count();?></h6>
-				    </div>
-				</div>
-                
+
             </div>
         </div>
     </div>
 
-        
-        
 
     <?php include('footer.php');?>

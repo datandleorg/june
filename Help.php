@@ -96,7 +96,7 @@ quantities, and agreed prices for products or services. It is used to control th
 <b><a style="color:darkgreen">Product inward Screen - </b> contains Product information,Price Information & Stock Information</a> </br>
 </br>
 
-<h5><a style="color:#008080">Goods Receipt Note(GRN) </a></h5>
+<h5><a style="color:#008080"> (GRN) </a></h5>
 <b>What is GRN?</b> - Your GRN acts as internal proof of goods received to process and match against your supplier 
 invoices/purchase orders. </br>Goods Receipt Notes. The goods receipt note is an internal document produced 
 after inspecting delivery for proof of order receipt. </br>Generally produced by your stores team.<br>

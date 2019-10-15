@@ -32,7 +32,7 @@
                                     </td>
                                     <td class="text-left"><i class="fa fa-shopping-cart"></i>&nbsp;Sales
                                     </td>
-                                    <td class="text-center"><i class="fa fa-truck smallfonts" aria-hidden="true"></i>&nbsp;Inventory&nbsp;&&nbsp;<i class="fa fa-list-alt bigfonts" aria-hidden="true"></i>&nbsp;Stock Transfers</td>
+                                    <td class="text-center"><i class="fa fa-truck smallfonts" aria-hidden="true"></i>&nbsp;Inventory</td>
                                     <td class="text-right"><i class="fa fa-th-large bigfonts" aria-hidden="true"></i>&nbsp;GENERAL
                                     </td>
                                 </tr>
@@ -70,11 +70,14 @@
                                         <!--a href="listInvoices.php">
 <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Sales by Sales Person</a-->
                                     </td>
-
-                                    <td class="text-center">
+<td class="text-center">
+                                        <a href="StockOutwardReports.php">
+                                            <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Inventory(Outward) Stock Report</a>
+                                    </td> 
+                                    <!--td class="text-center">
                                         <a href="StockTransfersReports.php">
                                             <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Stock Transfers(Inward to Locations) Report</a>
-                                    </td>                                                 
+                                    </td-->                                                 
 
                                 </tr>  
                                 
@@ -91,10 +94,10 @@
 <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Expenses by Payee c</a-->
                                     </td>
 
-                                    <td class="text-center">
+                                    <!--td class="text-center">
                                         <a href="StockOutwardReports.php">
                                             <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Inventory(Outward) Stock Report</a>&nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="Sales Item Master/Stock Outward Report."></i>
-                                    </td>
+                                    </td-->
                                 </tr>
                                 
                                 <tr>
@@ -133,7 +136,7 @@
 
                                     <td class="text-center">
                                         <a href="inventAdjOutwardReport.php">
-                                             <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Inventory Adjustment (Outward) Log Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added or updated manually or through GRN, the transaction log report is generated."></i>
+                                             <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Inventory(OUTWARD) Log Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added or updated manually or through GRN, the transaction log report is generated."></i>
                                     </td>
                                     
                                     <td class="text-left">
@@ -157,7 +160,7 @@
 
                                     <td class="text-center">
                                         <a href="VendorItemWise.php">
-                                             <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Vendor Wise Inventory(Inward) Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
+                                             <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Vendor Wise (Inward) Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
                                     </td>
 
 
@@ -250,7 +253,7 @@
                                             
                                             <td>
                                             <a href="salesItemwiseReport.php">
-                                                <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Sales Itemwise Report                                        
+                                                <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Customer/Item wise Sales Report                                        
                                             </a>&nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="Customer Outstanding Report."></i>
                                         </td>
 

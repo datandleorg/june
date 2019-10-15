@@ -172,7 +172,8 @@ if(isset($_SESSION['login_email'])){
                                                     
                                                     <tr>
                                                         <td><a  href="listGoodsReceiptNote.php">
-                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Goods Received Note</i></a></td>
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;GRN</i></a>|
+                                                             <a  href="listPartnerPurchaseEntries.php">GRN(Partners)</a></td>
                                                         <td class="text-right"><a href="listSalesOrders.php">
                                                             <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Sales Order</i></a></td>
                                                         
@@ -330,7 +331,7 @@ if(isset($_SESSION['login_email'])){
                                         <tr>
                                             <td><a href="listUserGroups.php">																		add Roles/Group</a></td>
                                             <td class="text-center"><a  href="listInvoicesacc.php">
-                                                Manual Invoice</a></td>
+                                                Scrap Invoice</a></td>
                                             <!--td class="text-center"><a  href="listInvoices.php">list Invoices</a>
 
 
@@ -347,7 +348,7 @@ if(isset($_SESSION['login_email'])){
 
                                             <td><a  href="listUsers.php">
                                                 Edit to Inactive User</a></td>
-                                            <td class="text-center"><a href="CustomerReceivablesReportsacc.php">Manual Inv Cust Bal Report</a></td>																			
+                                            <td class="text-center"><a href="CustomerReceivablesReportsacc.php">Scrap Customer Balance Report</a></td>																			
                                             <td class="text-center"></td>
                                             <td class="text-right"></td>
                                         </tr>
@@ -357,7 +358,7 @@ if(isset($_SESSION['login_email'])){
                                                 <a href="listCompanyBankDetails.php">Org Bank Details</a></td>
 
                                             <td class="text-center"><a href="PaymentsRecievedReportsacc.php">
-                                                Manual Inv Payments Made Report</a>
+                                                Scrap Cust Payments Made Report</a>
                                             </td>
                                             <!--td class="text-center">
 <a  href="listCustomerPayments.php">list Customer Payments Made</a>
