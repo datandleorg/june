@@ -16,13 +16,13 @@
 			<div class="container-fluid">
 
 					
-			<div class="row">
+										<div class="row">
 					<div class="col-xl-12">
 							<div class="breadcrumb-holder">
-                                    <h1 class="main-title float-left">Organization Wise Purchase Input Data List</h1>
+                                    <h1 class="main-title float-left">Organization Wise Scrap Input Data List</h1>
                                     <ol class="breadcrumb float-right">
 										<li class="breadcrumb-item">Home</li>
-										<li class="breadcrumb-item active">Partner Entries List</li>
+										<li class="breadcrumb-item active">Rawmaterial List</li>
                                     </ol>
                                     <div class="clearfix"></div>
                             </div>
@@ -35,10 +35,10 @@
                             <div class="card mb-3">
                                 <div class="card-header">
 											<span class="pull-right">
-										<a href="addPartnerPurchaseEntries.php" class="btn btn-primary btn-sm">
+										<a href="addScrapItemMaster.php" class="btn btn-primary btn-sm">
 										<i class="fa fa-user-plus" aria-hidden="true"></i>
-										Add Partner Purchase Entries</a></span>
-                                    <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"> List Partner Purchase Entries </i></h3>
+										Add Scrap Master</a></span>
+                                    <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"> List Scrap Itemnames </i></h3>
                         </div>
 
 						<div class="form-row px-3 py-2">
@@ -50,7 +50,8 @@
                                             <option value="">Select Company</option>
                                             <?php 
 											include("database/db_conection.php");//make connection here
-											 $sql = "SELECT id as oid, custid as orgid,concat(custid,'-',custname) as orgname,'outsourced' as orgtype FROM customerprofile 
+											 $sql = "SELECT id as oid, orgid as orgid,concat(orgid,'-',orgname) as orgname,'self' as orgtype FROM comprofile
+                                            UNION SELECT id as oid, custid as orgid,concat(custid,'-',custname) as orgname,'outsourced' as orgtype FROM customerprofile 
 											WHERE custype='Partner'
 										    ORDER BY oid ASC;
 											";
@@ -78,65 +79,46 @@
                                     <thead>
                                         <tr>
                                             <th>id</th>
-											<th>Company Id</th>											
 											<th>Company Name</th>											
-                                            <th>Purchased Date</th>
-                                            <th>Status</th>
+                                            <th>Scrap Item Code</th>
+                                            <th>Scrap Source Itemname</th>
+											<th>Scrap Item</th>											
+											<th>Scrap Ratio</th>											
+											<th>Scrap in hand</th>											
 											<th>Created By</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>										
                                     <tbody>
 
-										<?php				
-										
-										
-                                        function status_code($status){
-                                            if($status=="Approved"){
-                                                $status_text = ' <span class="text-muted">'.$status.'</span>';  
-                                                return $status_text;  
-                                            }
-                                            if($status=="Created"){
-                                                $status_text = ' <span class="text-primary">'.$status.'</span>';  
-                                                return $status_text;  
-                                            } 
-
-                                            if($status=="Completed"){
-                                                $status_text = ' <span class="text-info">'.$status.'</span>';  
-                                                return $status_text;  
-                                            } 
-										}
-										
+                                        <?php												
                                         include("database/db_conection.php");//make connection here
 							
-											$sql = "select pe.*,c.* from partnerentries pe ,customerprofile c ";
-											$sql.=" where c.custype='Partner' and pe.	pe_orgid=c.custid";
-									        $sql.= $orgidUrl!="" ? " and pe.pe_orgid='".$orgidUrl."' " : ""; 
+											$sql = "select s.*,c.*,p.* from scrapinventory s ,purchaseitemaster p,(select orgid,orgname from comprofile union select custid as orgid, custname as orgname from customerprofile) as c ";
+											$sql.=" where s.scrap_from_itemcode=p.itemcode and s.scrap_orgid=c.orgid";
+									        $sql.= $orgidUrl!="" ? " and s.scrap_orgid='".$orgidUrl."' " : ""; 
 
 
                                         		$result = mysqli_query($dbcon,$sql);
 												if ($result->num_rows > 0){
 												while ($row =$result-> fetch_assoc()){
-													$row_id=$row['pe_code'];
+													$row_id=$row['scrap_itemcode'];
 												echo "<tr>";
 												echo '<td>' .$row['id']. '</td>';											
-												echo '<td>' .$row['pe_orgid'].'</td>';
-												echo '<td>' .$row['custname'].'</td>';
-												echo '<td>' .date_format(date_create($row['pe_updatedon']),"Y/m/d").'</td>';
-												echo '<td>' .status_code($row['pe_status']).'</td>';
-												echo '<td>' .$row['pe_handler'].'</td>';
-											    echo '<td>';
-                                                if($row['pe_status']==="Created"){
-													echo '<a href="addPartnerPurchaseEntries.php?pe_code=' . $row['pe_code'] . '&action=edit&type=partnerentries&entrytype='.$row['entrytype'].'&orgid='.$row['pe_orgid'].'" class="btn btn-primary btn-sm">
-													<i class="fa fa-pencil" aria-hidden="true"></i></a>';
+												echo '<td>' .$row['scrap_orgid'].'-'.$row['orgname'].'</td>';
+												echo '<td>' .$row['scrap_itemcode'].'</td>';
+												echo '<td>' .$row['itemname'].'</td>';
+												echo '<td>' .$row['scrap_itemname'].'</td>';
+												echo '<td>' .$row['scrap_qty'].' '.$row['scrap_uom'].' of '.$row['scrap_from_qty'].' '.$row['scrap_from_uom'].'</td>';
+												echo '<td>' .$row['scrap_inventory_qty'].' '.$row['scrap_inventory_uom'].'</td>';
+												echo '<td>' .$row['handler'].'</td>';
+											
 
-										         	echo '<a onclick="delete_record(this);" id="deleteItemCategory" data-id="' . $row_id . '" class="btn btn-danger btn-sm mr-1"  data-title="Delete">
-												<i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+                                                echo '<td><a href="addScrapItemMaster.php?scrap_itemcode=' . $row['scrap_itemcode'] . '&action=edit&type=scrapinventory&entrytype='.$row['entrytype'].'&orgid='.$row['scrap_orgid'].'" class="btn btn-primary btn-sm">
+														<i class="fa fa-pencil" aria-hidden="true"></i></a>
 
-												}
-												echo '<a data-id="' . $row_id . '" class="btn btn-info btn-sm mr-1" onclick="setRawItems(this);"  data-toggle="modal" data-target="#itemsModal"  data-title="View">
-													<i class="fa fa-eye" aria-hidden="true"></i></a>';
-											    echo '<a class="btn btn-secondary btn-sm" onclick="ToPrint(this);" data-code="'.$row['pe_code'].'" data-img="assets/images/logo.png"  data-id="po_print"><i class="fa fa-print" aria-hidden="true"></i></a></td>';
+													<a onclick="delete_record(this);" id="deleteItemCategory" data-id="' . $row_id . '" class="btn btn-danger btn-sm mr-1"  data-title="Delete">
+													<i class="fa fa-trash-o" aria-hidden="true"></i></a>';
                                                 echo "</tr>";
                                             }
                                         }
@@ -144,14 +126,15 @@
                                         <script>
 										        function ToPrint(el){
 												var code= $(el).attr('data-code');
-												window.location.href = 'assets/partnerEntriesListPrint.php?pe_code='+code;
+												window.location.href = 'assets/productRawitemsList.php?rw_code='+code;
                                               }
 
                                             function delete_record(x)
                                             {
+                                                console.log(x);
                                                  var row_id = $(x).attr('data-id');
                                                 if (confirm('Confirm delete')) {
-                                                  window.location.href = 'deletePartnerEntries.php?id='+row_id;
+                                                  window.location.href = 'deleteScrapItem.php?id='+row_id;
                                                }
                                             }
 											 </script>   
@@ -168,7 +151,7 @@
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title">Purchased Items List</h5>
+								<h5 class="modal-title">Raw Items List</h5>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 										<span aria-hidden="true">&times;</span>
 									</button>
@@ -212,9 +195,9 @@
 	
 	function setRawItems(ele){
 
-	   var pe_code = $(ele).attr('data-id');
-	   var edit_data = Page.get_edit_vals(pe_code,"partnerentries","pe_code");
-	   var items = JSON.parse(edit_data.pe_items);
+	   var rw_code = $(ele).attr('data-id');
+	   var edit_data = Page.get_edit_vals(rw_code,"rawitemaster","rw_code");
+	   var items = JSON.parse(edit_data.raw_items);
 	   $('#modalCon').html('');
 	   var html = '<table class="table"><thead><tr><th>Item</th><th>Qty</th><th>Unit</th></tr></thead><tbody>';
 	   for(i=0;i<items.length;i++){
@@ -331,7 +314,7 @@
 		function redirectTo(ele){
 		 var orgid = $(ele).val();
 		 var orgtype = $(ele).find('option:selected').attr('data-orgtype');
-		 location.href='listPartnerPurchaseEntries.php?orgid='+orgid+'&orgtype='+orgtype;
+		 location.href='listScrapItemMaster.php?orgid='+orgid+'&orgtype='+orgtype;
 	    }
 
 

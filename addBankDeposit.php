@@ -155,7 +155,8 @@ if(isset($_POST['submit']))
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="inputState">Account Number</label>
-                                            <input type="text" class="form-control form-control-sm" name="acctno" id="acctno" readonly class="form-control form-control-sm"  />
+                                            <input type="text" class="form-control form-control-sm" 
+                                            name="acctno" id="acctno" readonly class="form-control form-control-sm"  />
 
                                         </div>
                                     </div>									

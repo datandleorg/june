@@ -136,9 +136,16 @@
                                             } 
                                         }
 
-                                        $sql = "SELECT i.*,c.* FROM invoices i,customerprofile c where c.custid=i.inv_customer ";
-                                        $sql.= $orgidUrl!=='' ? " and c.custid='".$orgidUrl."' " : "";
-                                        $sql.="ORDER BY i.id DESC ";
+                                        if(isset($_GET['customer_credits_custid'])&&isset($_GET['customer_credits_id'])){
+                                            $sql = "SELECT i.*,c.* FROM invoices i,customerprofile c where c.custid=i.inv_customer ";
+                                            $sql.= $_GET['customer_credits_custid']!=='' ? " and c.custid='".$_GET['customer_credits_custid']."' " : "";
+                                            $sql.="ORDER BY i.id DESC ";
+                                        }else{
+                                            $sql = "SELECT i.*,c.* FROM invoices i,customerprofile c where c.custid=i.inv_customer ";
+                                            $sql.= $orgidUrl!=='' ? " and c.custid='".$orgidUrl."' " : "";
+                                            $sql.="ORDER BY i.id DESC ";
+    
+                                        }
                                         
                                         $result = mysqli_query($dbcon,$sql);
                                         if ($result->num_rows > 0){
@@ -190,14 +197,18 @@
                                                 }
 
                                                 if($row['inv_status']=="Approved" && $row['inv_balance_amt']>0){
+                                                    if(isset($_GET['customer_credits_id'])){
+                                                        echo '
+                                                        <a class="dropdown-item"  href="addCustomerReceipts.php?customer_credits_id='.$_GET['customer_credits_id'].'&customer_credits_custid='.$_GET['customer_credits_custid'].'&inv_code=' . $row['inv_code'] . '&action=add&type=customer_payments" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="Recieve Payment"><i class="fa fa-exchange" aria-hidden="true"></i>&nbsp; Recieve payment</a>';
 
-
-
-                                                    echo '
+                                                    }else{
+                                                        echo '
                                                         <a class="dropdown-item"  href="addCustomerReceipts.php?inv_code=' . $row['inv_code'] . '&action=add&type=customer_payments" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="Recieve Payment"><i class="fa fa-exchange" aria-hidden="true"></i>&nbsp; Recieve payment</a>';
 
                                                     echo '
                                                         <a class="dropdown-item"  href="addCreditNotes.php?inv_code=' . $row['inv_code'] . '&action=add&type=creditnotes" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="  Create CreditNote"><i class="fa fa-exchange" aria-hidden="true"></i>&nbsp; Create CreditNote</a>';
+
+                                                    }
 
                                                 }
 

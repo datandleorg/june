@@ -113,7 +113,7 @@
 
                                             <div class="form-group col-md-4">
                                                 <label ><span class="text-danger">Payment Mode*</span></label>
-                                                <select required id="cust_payment_mode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="cust_payment_mode" >
+                                                <select onchange="modifyRefNoField(this.value)" required id="cust_payment_mode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="cust_payment_mode" >
                                                     <option value="">-- Select Payment Mode --</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Cheque">Cheque</option>
@@ -251,13 +251,13 @@
             var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
             var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
             var page_cust_payment_inv_code = "<?php if(isset($_GET['inv_code'])){ echo $_GET['inv_code']; } ?>";
-            var page_cust_payment_v_credits_id = "<?php if(isset($_GET['v_credits_id'])){ echo $_GET['v_credits_id']; } ?>";
+            var page_cust_payment_v_credits_id = "<?php if(isset($_GET['customer_credits_id'])){ echo $_GET['customer_credits_id']; } ?>";
 
             $(function(){
                 var customer_params =[];
                 Page.load_select_options('cust_payment_customer',customer_params,'customerprofile','Customer','custid','custname'); 
 
-                if(page_action=="add"&&page_cust_payment_inv_code!=''){
+                if(page_action=="add" && page_cust_payment_inv_code!=''){
                     var edit_data = Page.get_edit_vals(page_cust_payment_inv_code,"invoices","inv_code");
                     $('#cust_payment_customer').val(edit_data.inv_customer);
                     customer_select(edit_data.inv_customer);
@@ -269,6 +269,14 @@
 
             });
 
+            function modifyRefNoField(modeOfPayment){
+                if(modeOfPayment!=="Cash"){
+                    $('#cust_payment_ref_no').attr("required",true);
+                }else{
+                    $('#cust_payment_ref_no').attr("required",false);
+                }
+            }
+
             function customer_select(val){
 
                 $.ajax ({
@@ -279,21 +287,20 @@
                     dataType: 'json',
                     success:function(response){
                         Page.plant("cust_payment_invoice_no",response.status,response.values,"inv_code",null,null,"Invoices");
-
                     }
 
 
                 });
 
                 if(page_cust_payment_v_credits_id!=''){
-                    var credits_data = Page.get_edit_vals(page_cust_payment_v_credits_id,'vendorcredits','v_credits_id');
+                    var credits_data = Page.get_edit_vals(page_cust_payment_v_credits_id,'customercredits','customer_credits_id');
 
-                    $('#credit_balance').text(credits_data.v_credits_availcredits);   
+                    $('#credit_balance').text(credits_data.customer_credits_availcredits);   
                     $('#credit_balance_div').show();   
-                    if(credits_data.v_credits_availcredits>0){
+                    if(credits_data.customer_credits_availcredits>0){
                         show_credits_input();
                         $('#show_credit_div').show();
-                        $('#cust_payment_amount_credit').val(credits_data.v_credits_availcredits); 
+                        $('#cust_payment_amount_credit').val(credits_data.customer_credits_availcredits); 
                         show_credits_input();
                     }
                 }

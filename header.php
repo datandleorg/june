@@ -229,7 +229,7 @@ if(isset($_SESSION['login_email'])){
                                                             
                                                             <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Rawmaterials Assigned List</i></a></td>
                                                             
-                                                        <td class="text-right"><a  href="listofrecordExpenses.php">
+                                                        <td class="text-right"><a  href="listRecordExpenses.php">
                                                             <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Record Expenses</i></a></td>
                                                         
                                                         
@@ -697,6 +697,8 @@ View All
                             <li><a href="addPartnerPurchaseEntries.php"><i class="fa fa-plus-circle"></i>Partner Purchase Entry</a></li>
                             <li><a href="listSalesItemMaster.php"><i class="fa fa-circle-o"></i>list Product Outward</a></li>
                             <li><a href="addSalesItemMaster.php"><i class="fa fa-plus-circle"></i>Product Outward</a></li>
+                            <li><a href="listScrapItemMaster.php"><i class="fa fa-circle-o"></i>list Scrap Materials</a></li>
+                            <li><a href="addScrapItemMaster.php"><i class="fa fa-plus-circle"></i>add Scrap Material</a></li>
                             <li class="submenu">
                                 <a href="#" >STOCK TRANSFERS<span class="menu-arrow"></span> </a>
                                 <ul class="list-unstyled">	

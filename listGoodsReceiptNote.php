@@ -98,7 +98,9 @@ include('header.php');
                                         include("database/db_conection.php");//make connection here
 
                                         if(isset($_GET['v_credits_vendorid'])&&isset($_GET['v_credits_id'])){
-                                             $sql = "SELECT g.*,v.* from grn_notes g ,vendorprofile v where g.grn_po_vendor = '".$_GET['v_credits_vendorid']."' and v.vendorid = '".$_GET['v_credits_vendorid']."'
+                                             $sql = "SELECT g.*,v.* from grn_notes g ,vendorprofile v where
+                                              g.grn_po_vendor = '".$_GET['v_credits_vendorid']."' and 
+                                              v.vendorid = '".$_GET['v_credits_vendorid']."'
 										ORDER BY g.id DESC";     
                                         }else{
                                             $sql = "SELECT g.*,v.supname from grn_notes g,vendorprofile v where g.grn_po_vendor=v.vendorid ORDER BY g.id DESC;";    

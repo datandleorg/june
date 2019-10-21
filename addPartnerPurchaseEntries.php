@@ -126,6 +126,16 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                     </tr>
                                 </table>
 
+                                <div class="form-row">                                
+                                    <div class="form-group col-md-4">									
+                                        <label for="inputState">Status<span class="text-danger">*</span></label>
+                                        <select class="form-control form-control-sm select2" required name="pe_status"  id="pe_status">
+                                            <option value="Created">Created</option>
+                                            <option value="Approved">Approved</option>
+                                        </select>	
+                                    </div>
+                                </div>		
+
                                 
 								<div class="form-row">
                                     <div class="form-group col-md-12">
@@ -319,7 +329,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                     dataType: 'json',
                     success:function(response){
                         if(response.status){
-                          location.href="listPartnerPurchaseEntries.php";
+                             location.href="listPartnerPurchaseEntries.php";
                         }
                     }
 

@@ -140,7 +140,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                             <option selected value="">--Select item--</option>
                                             <?php 
                                             include("database/db_conection.php");//make connection here
-                                             $sql = "SELECT itemcode,concat(itemcode,'-',itemname) as itemname FROM salesitemaster2 s where s.orgid='".$orgidUrl."' ";
+                                             $sql = "SELECT itemcode,concat(itemcode,'-',itemname) as itemname FROM salesitemaster2 s where s.orgid='".$orgidUrl."' AND (SELECT COUNT(*) FROM rawitemaster where proditemcode=s.itemcode )>0 ";
                                             
                                              $exe = mysqli_query($dbcon,$sql);
                                             while ($row = $exe->fetch_assoc()){	
@@ -151,8 +151,9 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                              
                                             ?>
                                         </select>
-
+                                    
                                     </div>
+
                                     <div class="form-group col-md-2">
                                         <label for="inputState">Qty</label>
                                         <input type="text" placeholder="Qty"
@@ -161,7 +162,9 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                                            echo  $_GET['action']=="edit" ? "readonly" : "";
                                          }
                                         ?>  
-                                        name="prod_qty" id="prod_qty" class="form-control form-control-sm"> 
+                                        name="prod_qty" id="prod_qty" 
+                                        onkeyup="updateRawMaterialsQty(this.value)" onkeypress="updateRawMaterialsQty(this.value)"
+                                        class="form-control form-control-sm"> 
                                     </div>
                                     <div class="form-group col-md-2">
                                     <label>Unit</label>
@@ -368,9 +371,13 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
         }
     });
 
-    
+    function updateRawMaterialsQty(entered_prod_qty){
+            let qty = +entered_prod_qty;
+            let prod_item = $('#prod_item').val();
+            post_rawItems(prod_item,qty);
+    }
 
-    function post_rawItems(productId){
+    function post_rawItems(productId, qty=1){
         console.log(productId);
         if(productId!=""){
         var prod_company = $('#prod_company').val();
@@ -381,8 +388,16 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
         }
 
         $("#tb").find("tr:gt(1)").remove();
+
+        let rawItems = JSON.parse(rawItemList.raw_items).map((item)=>{
+             let itemEle = item;
+             itemEle.qty = (+item.qty * qty).toString();
+             return itemEle;
+        })
         
-        set_math_vals(JSON.parse(rawItemList.raw_items));
+        console.log(rawItems);
+        
+        set_math_vals(rawItems);
 
         }else{
             $("#tb").find("tr:gt(1)").remove();
@@ -501,7 +516,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
                     if(data.prod_status=="Completed"){
                         window.location.href = 'assets/production_print_html.php?prod_code='+response.code;
                     }else{
-                           window.location.href = 'listProductions.php';
+                        window.location.href = 'listProductions.php';
                     }
                 }
             }

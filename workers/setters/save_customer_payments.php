@@ -50,10 +50,10 @@ if (isset($_POST['array'])) {
                 $return = updatebyand($dbcon,"UnPaid","invoices","inv_payment_status","inv_code",$cust_payment_inv_id);
             }
 
-            /*            if($page_payment_v_credits_id!=""){
-                $now = findbyand($dbcon,$payment_id,"payments","payment_id");
-                $now_refund_amount = $now['values'][0]['payment_credits_used'];
-                $sql90 = " UPDATE vendorcredits SET v_credits_availcredits =  v_credits_availcredits - ".$now_refund_amount."  WHERE v_credits_id='".$page_payment_v_credits_id."' ;";
+            if($page_cust_payment_v_credits_id!=""){
+                $now = findbyand($dbcon,$cust_payment_id,"customer_payments","cust_payment_id");
+                $now_refund_amount = $now['values'][0]['cust_payment_credits_used'];
+                $sql90 = " UPDATE customercredits SET customer_credits_availcredits =  customer_credits_availcredits - ".$now_refund_amount."  WHERE customer_credits_id='".$page_cust_payment_v_credits_id."' ;";
 
                 if (mysqli_query($dbcon,$sql90)) {
                     $return['status']=true;
@@ -61,7 +61,7 @@ if (isset($_POST['array'])) {
                     $return['status']=false;
                     $return['error']=mysqli_error($dbcon);
                 }
-            }*/
+            }
 
         }else{
             $return['status']=false;

@@ -11,10 +11,10 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="breadcrumb-holder">
-                        <h1 class="main-title float-left">Invoice list</h1>
+                        <h1 class="main-title float-left">Expenses list</h1>
                         <ol class="breadcrumb float-right">
                             <li class="breadcrumb-item">Home</li>
-                            <li class="breadcrumb-item active">List Invoice Items</li>
+                            <li class="breadcrumb-item active">List Expenses</li>
                         </ol>
                         <div class="clearfix"></div>
                     </div>
@@ -32,7 +32,7 @@
                                 <a href="recordExpenses.php" class="btn btn-primary btn-sm"><i class="fa fa-user-plus" aria-hidden="true"></i>
                                     Add Expenses</a></span>
 
-                            <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"></i><b>Expenses List </b></h3>
+                            <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"></i>&nbsp;<b>Expenses List </b></h3>
                         </div>
 
                         <div class="card-body">
@@ -95,17 +95,17 @@
                                             } 
                                         }
 
-                                        $sql = "SELECT * FROM expenses_master";
+                                        $sql = "SELECT * FROM expenses";
                                         $result = mysqli_query($dbcon,$sql);
                                         if ($result->num_rows > 0){
                                             while ($row =$result-> fetch_assoc()){
                                                 echo "<tr>";                                                
-                                                echo '<td>'.$row['id'].' </td>';
-                                                echo '<td>'.$row['createddate'].' </td>';
-                                                echo '<td>'.$row['payee'].' </td>';
-                                                echo '<td>'.$row['inv_no'].' </td>';
-                                                echo '<td>'.$row['inv_no'].' </td>';
-                                                 echo '<td>'.$row['createdby'].' </td>';
+                                                echo '<td>'.$row['expense_no'].' </td>';
+                                                echo '<td>'.$row['expense_date'].' </td>';
+                                                echo '<td>'.$row['expense_payee'].' </td>';
+                                                echo '<td>'.$row['expense_invoice_no'].' </td>';
+                                                echo '<td>'.$row['expense_total_amount'].' </td>';
+                                                 echo '<td>'.$row['expense_handler'].' </td>';
                                         ?>
 
 
@@ -118,8 +118,19 @@
   <button type="button" class="btn btn-light btn-xs dropdown-toggle" data-toggle="dropdown" style="width: 100%;">
 
   </button>
+
   <div class="dropdown-menu">
-    <a class="dropdown-item"  href="#" onclick="printContent(this);" data-template="vocher" data-code="'.$row['id'].'" data-img="assets/images/logo.png"  data-id="po_print"><i class="fa fa-print" aria-hidden="true"></i>&nbsp; Print</a>   <a class="dropdown-item"  href="#" onclick="printContent(this);" data-template="dc_print" data-code="'.$row['id'].'" data-img="assets/images/logo.png"  data-id="po_print"><i class="fa fa-print" aria-hidden="true"></i>&nbsp; DC Print</a>';
+
+  <a class="dropdown-item"  href="recordExpenses.php?expense_no=' . $row['expense_no'] . '&action=edit&type=expenses">
+  <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit</a> 
+
+    <a class="dropdown-item"  href="#" onclick="printContent(this);" data-template="vocher"
+     data-code="'.$row['expense_no'].'" data-img="assets/images/logo.png"  data-id="po_print">
+     <i class="fa fa-print" aria-hidden="true"></i>&nbsp; Print</a>   
+     
+      <a class="dropdown-item"  href="#" onclick="printContent(this);" 
+      data-template="dc_print" data-code="'.$row['expense_no'].'" data-img="assets/images/logo.png" 
+       data-id="po_print"><i class="fa fa-print" aria-hidden="true"></i>&nbsp; DC Print</a>';
 											
 
                                                

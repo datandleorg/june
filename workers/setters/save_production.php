@@ -67,8 +67,17 @@ if (isset($_POST['array'])) {
 
                      if($return['status']){
 
-                        $return['status']=true;
-                        $return['code']= $pro_code;
+                      $sql4 = " UPDATE scrapinventory SET scrap_inventory_qty =  scrap_inventory_qty + (scrap_qty*".$items[$i]['qty'].")  WHERE scrap_from_itemcode='".$items[$i]['item']."'  ;";
+                         
+                        if (mysqli_query($dbcon,$sql4)) {
+                            $return['status']=true;
+                            $return['code']= $pro_code;
+    
+                        }else{
+                            $return['status']=false;
+                            $return['error']=mysqli_error($dbcon);
+                            break;        
+                        }
 
                      }else{
                         $return['status']=false;

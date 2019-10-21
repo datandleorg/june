@@ -7,7 +7,7 @@ $past = findbyand($dbcon,$pe_code,"partnerentries","pe_code");
 $val_arr = $past['values'][0];
 $obj2 = json_decode($val_arr['pe_items'], true);
 for($i=0;$i<count($obj2);$i++){
-    $sql = " UPDATE purchaseitemaster  SET stockinqty =  stockinqty - ".$obj2[$i]['qty']."  WHERE id='".$obj2[$i]['item']."' ";
+   echo $sql = " UPDATE purchaseitemaster  SET stockinqty =  stockinqty - ".$obj2[$i]['qty']."  WHERE itemcode='".$obj2[$i]['item']."' ";
     if (mysqli_query($dbcon,$sql)) {
         continue;
     }else{

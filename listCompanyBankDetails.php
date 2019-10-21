@@ -49,7 +49,7 @@
 										
 										
 								
-									<h3<i class="fa fa-bank smallfonts" aria-hidden="true"></i><b> List Company Bank Details</b></div></h3>
+									<h3><i class="fa fa-bank smallfonts" aria-hidden="true"></i><b> List Company Bank Details</b></div></h3>
 								
 										
 										<!-- end card-header -->	
@@ -57,9 +57,6 @@
 									
 													
 										<div class="card-body">
-										
-												
-												
 															
 												<div class="table-responsive">	
 												<table class="table table-bordered">
@@ -81,9 +78,9 @@
 													include("database/db_conection.php");//make connection here
 													$sql = "SELECT * FROM compbank";
 													$result = mysqli_query($dbcon,$sql);
-													
+													 
 													if ($result->num_rows > 0){
-													while ($row =$result-> fetch_assoc()){
+													while ($row = $result->fetch_assoc()){
 														$row_id=$row['id'];
 													echo "<tr>";
 													echo '<td>' . $row['orgid'] . '</td>';

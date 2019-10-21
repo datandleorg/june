@@ -38,19 +38,19 @@
                         <div class="card-body">
 
                             <!--form autocomplete="off" action="#"-->
-                            <form action=""  id="addrefund_form" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+                            <form action=""  id="addcustomerrefund_form" enctype="multipart/form-data" method="post" accept-charset="utf-8">
 
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         Credit Ref#<label ></label><span class="text-danger">*</span>
-                                        <input type="text" id="v_refund_creditsid" class="form-control form-control-sm" readonly name="v_refund_creditsid">
+                                        <input type="text" id="customer_refund_creditsid" class="form-control form-control-sm" readonly name="customer_refund_creditsid">
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label for="datepicker1"><span class="text-danger">Refunded On*</span></label>
-                                        <input type="date" class="form-control form-control-sm"  name="v_refund_paymentdate" id="v_refund_paymentdate" value="<?php echo date("Y-m-d");?>">									
+                                        <input type="date" class="form-control form-control-sm"  name="customer_refund_paymentdate" id="customer_refund_paymentdate" value="<?php echo date("Y-m-d");?>">									
                                     </div>
                                 </div>
 
@@ -58,7 +58,7 @@
                                 <div class="form-row">      
                                     <div class="form-group col-md-12">
                                         <label><span class="text-danger">Payment Mode*</span></label>
-                                        <select required id="v_refund_paymentmode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="v_refund_paymentmode" >
+                                        <select required id="customer_refund_paymentmode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="customer_refund_paymentmode" >
                                             <option value="">-- Select Payment Mode --</option>
                                             <option value="Cash">Cash</option>
                                             <option value="Cheque">Cheque</option>
@@ -73,7 +73,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         Reference #<label ></label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control form-control-sm" name="v_refund_refno" id="v_refund_refno" placeholder="" autocomplete="off" required>
+                                        <input type="text" class="form-control form-control-sm" name="customer_refund_refno" id="customer_refund_refno" placeholder="" autocomplete="off" required>
                                     </div>
                                 </div>							
 
@@ -82,7 +82,7 @@
                                     <label><span class="text-danger">Amount<span class="text-danger">*</span></label>
                                     <div class="input-group mb-2 mr-sm-2 mb-sm-0">								  								  
                                         <div class="input-group-addon">INR</span></div>
-                                        <input type="text" name="v_refund_amount" class="form-control form-control-sm" id="v_refund_amount" placeholder="Enter Amount" required>
+                                        <input type="text" name="customer_refund_amount" class="form-control form-control-sm" id="customer_refund_amount" placeholder="Enter Amount" required>
                                        &nbsp;&nbsp; <input type="checkbox" id="paymentemail" name="paymentemail" value="payment_email">
                                      <label for="subscribeNews">&nbsp;Refund Full Credits(<i class="fa fa-rupee fonts" aria-hidden="true"></i>&nbsp;)</label>									
                                             
@@ -93,14 +93,14 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label for="inputState">Handler</label>
-                                        <input type="text" class="form-control form-control-sm" name="v_refund_handler" id="v_refund_handler" readonly class="form-control form-control-sm" value="<?php echo $session_user; ?>" required />
+                                        <input type="text" class="form-control form-control-sm" name="customer_refund_handler" id="customer_refund_handler" readonly class="form-control form-control-sm" value="<?php echo $session_user; ?>" required />
                                     </div>
                                 </div>									
 
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label>Refund Notes</label>
-                                        <textarea cols="20" rows="2" class="form-control tip redactor" name="v_refund_notes" id="v_refund_notes" placeholder="Max 200 Characters "></textarea>
+                                        <textarea cols="20" rows="2" class="form-control tip redactor" name="customer_refund_notes" id="customer_refund_notes" placeholder="Max 200 Characters "></textarea>
                                     </div> 
                                 </div>
 
@@ -124,7 +124,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                     <h5>Customer Credits details</h5>
 
-                    <p>Customer ID :&nbsp;<span id="show_vendorid"></span></p>
+                    <p>Customer ID :&nbsp;<span id="show_customerid"></span></p>
                     <p>Intial Credit Amount : &nbsp;<span id="show_amount"></span></p>
                     <p>Credit Balance : &nbsp;<span id="show_amount_bal"></span></p>
                     <p><span id="show_error"></span></p>
@@ -143,18 +143,18 @@
 
         var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
         var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
-        var page_v_credits_id = "<?php if(isset($_GET['v_credits_id'])){ echo $_GET['v_credits_id']; } ?>";
-        var page_v_refund_id = "<?php if(isset($_GET['v_refund_id'])){ echo $_GET['v_refund_id']; } ?>";
+        var page_customer_credits_id = "<?php if(isset($_GET['customer_credits_id'])){ echo $_GET['customer_credits_id']; } ?>";
+        var page_customer_refund_id = "<?php if(isset($_GET['customer_refund_id'])){ echo $_GET['customer_refund_id']; } ?>";
 
 
         $(function(){
-            if(page_action=="add"&&page_v_credits_id){
+            if(page_action=="add"&&page_customer_credits_id){
 
-                $('#v_refund_creditsid').val(page_v_credits_id);               
-                var credits_data = Page.get_edit_vals(page_v_credits_id,"vendorcredits","v_credits_id");
-                $('#show_vendorid').text(credits_data.v_credits_vendorid);               
-                $('#show_amount').text(credits_data.v_credits_amount);               
-                $('#show_amount_bal').text(credits_data.v_credits_availcredits);               
+                $('#customer_refund_creditsid').val(page_customer_credits_id);               
+                var credits_data = Page.get_edit_vals(page_customer_credits_id,"customercredits","customer_credits_id");
+                $('#show_customerid').text(credits_data.customer_credits_vendorid);               
+                $('#show_amount').text(credits_data.customer_credits_amount);               
+                $('#show_amount_bal').text(credits_data.customer_credits_availcredits);               
 
             }
 
@@ -180,7 +180,7 @@
             var indexed_array = {};
 
             $.map(unindexed_array, function(n, i){
-                if(n['name']=="id"||n['name']=="v_credits_email_notification"){
+                if(n['name']=="id"||n['name']=="customer_credits_email_notification"){
 
                 }else{
                     indexed_array[n['name']] = n['value'];
@@ -192,10 +192,10 @@
 
 
         $("#cancel-form").click(function(){
-            location.href="listVendorCredits.php";
+            location.href="listCustomerCredits.php";
         });
 
-        $("form#addrefund_form").submit(function(e){
+        $("form#addcustomerrefund_form").submit(function(e){
             e.preventDefault();
 
 
@@ -205,20 +205,24 @@
             var data = getFormData($form);
             var credits_amount = $('#show_amount_bal').text();
             // console.log(credits_amount);
-            if(eval(data.v_refund_amount)>eval(credits_amount)){
+            if(eval(data.customer_refund_amount)>eval(credits_amount)){
 
                 alert('Refund Amount cannot be greater than Credit amount ');
                 return false;
             }else{
-                data.table = "vendor_refund";
+                data.table = "customer_refund";
 
                 $.ajax ({
-                    url: 'workers/setters/save_vendorrefund.php',
+                    url: 'workers/setters/save_customerrefund.php',
                     type: 'post',
-                    data: {array : JSON.stringify(data),v_refund_id:page_v_refund_id,v_credits_id:page_v_credits_id,action:page_action?page_action:"add",table:"vendor_refund"},
+                    data: {
+                        array : JSON.stringify(data),
+                        customer_refund_id:page_customer_refund_id,
+                        customer_credits_id:page_customer_credits_id,
+                        action:page_action?page_action:"add",table:"customer_refund"},
                     dataType: 'json',
                     success:function(response){
-                        location.href="listVendorCredits.php";
+                         location.href="listCustomerCredits.php";
                     }
 
 

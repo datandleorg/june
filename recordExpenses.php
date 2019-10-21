@@ -1,98 +1,5 @@
 <?php
 include("database/db_conection.php");//make connection here
-
-if(isset($_POST['submit'])){	
-	$expdate=$_POST['expdate'];//same
-    $expacctname=$_POST['expacctname'];//same
-	$payee=$_POST['payee'];//same
-	$payeetype=$_POST['payeetype'];//same
-	$paymentype=$_POST['paymentype'];//same
-	$notes=$_POST['notes'];//same
-	//$image=$_POST['image'];//same
-	$createdby = $_POST['createdby'];
-	$amount = $_POST['amount'];//same
-			
-
-//$image =base64_encode($image);	
-$target_dir = "upload/";
-$target_file = $target_dir . basename($_FILES["image"]["name"]);
-$uploadOk = 1;
-$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-// Check if image file is a actual image or fake image
-    $check = getimagesize($_FILES["image"]["tmp_name"]);
-    if($check !== false) {
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-        //echo "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
-    } else {
-        echo "Sorry, there was an error uploading your file.";
-    }
-		
-	} else {
-        echo "File is not an image.";
-        $uploadOk = 0;
-    }
-	
-	$voucherid ="";
-	$prefix = "0000";
-	
-	//Generating VoucherIDS
-	$sql="SELECT MAX(id) as latest_id FROM recordexpense ORDER BY id DESC";
-	if($result = mysqli_query($dbcon,$sql)){
-		$row   = mysqli_fetch_assoc($result);
-		if(mysqli_num_rows($result)>0){
-			$maxid = $row['latest_id'];
-			$maxid+=1;			
-			$voucherid = $prefix.$maxid;
-		}else{
-			$maxid = 0;
-			$maxid+=1;
-			$voucherid = $prefix.$maxid;
-		}
-	}
-
-	$sql="INSERT INTO recordexpense(`voucherid`, 	
-									`date`, 	
-									`accountname`, 	
-									`payee`, 	
-									`payeetype`, 	
-									`paymentype`,
-									`amount`,														
-									`notes`, 	
-									`image`,
-									`createdby`)
-							VALUES ('$voucherid',
-									'$expdate',
-									'$expacctname',
-									'$payee',
-									'$payeetype',
-									'$paymentype',
-									'$amount',
-									'$notes',
-									'$target_file',
-									'$createdby')";													    
-					
-	//echo "$insert_recordexpense";
-	// Inserting Log details into ExpenseNoteslog
-	$sql1= "INSERT into expensenoteslog(`voucherid`,
-										`notes`,
-										`createdby`,
-										`createdon`)
-								  VALUES('$voucherid',
-								         '$notes',
-										 '$createdby',
-										 '$expdate')";
-										
-	if(mysqli_query($dbcon,$sql)&& mysqli_query($dbcon,$sql1))
-	{
-		echo "<script>alert('Expense Master creation Successful ')</script>";
-		header("location:listExpenses.php");
-    } else {
-		die('Error: ' . mysqli_error($dbcon));
-		exit;
-		echo "<script>alert('Transport Master creation  unsuccessful ')</script>";
-	}
-	
-}
 ?>
 <?php include('header.php');?>
 <div class="content-page">
@@ -122,13 +29,11 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 					<div class="col-xs-12 col-sm-12 col-md-120 col-lg-12 col-xl-12">						
 						<div class="card mb-3">
 							<div class="card-header">
-								<!--h3><i class="fa fa-check-square-o"></i>Create Company </h3-->
-								 <h3>
-								 </h3>
 								
-								<!--h3><class="fa-hover col-md-12 col-sm-12"><i class="fa fa-cart-plus smallfonts" aria-hidden="true">
-								</i>Add Transport Master Details
-								</h3-->
+								
+								<h3 class="fa-hover col-md-12 col-sm-12"><i class="fa fa-cart-plus smallfonts" aria-hidden="true">
+								</i>&nbsp;&nbsp;Add Expense
+								</h3>
 								
 							</div>
 								
@@ -136,7 +41,7 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 							<div class="card-body">
 								
 								<!--form autocomplete="off" action="#"-->
-								<form action=""  enctype="multipart/form-data" method="post" accept-charset="utf-8">
+								<form id="add_expense_form" method="post" accept-charset="utf-8">
 								
 								
 								
@@ -144,50 +49,16 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 									<div class="form-group col-md-6">
 									   <label for="datepicker1">Date</label><span class="text-danger">*</span>
 									  <!--input type="date" class="form-control" name="date" value="<?php echo date("d/m/Y") ?>"/-->
-									  <input type="date" class="form-control form-control-sm"  name="expdate" value="<?php echo date("Y-m-d");?>">									
+									  <input type="date" class="form-control form-control-sm"  id="expense_date" name="expense_date" value="<?php echo date("Y-m-d");?>">									
 									</div>
 									</div>
-									
-									<!--<div class="form-row">										
-										 <div class="form-group col-md-6">
-									  <label for="inputState">Expense Account</label>
-									
-										<select name="expaccount" class="form-control expaccount" onchange="rowitem.set_itemrow(this,'purchase');" id="item_select">
-                                                <option value="" name="expaccount" selected>--Select Expense Account--</option>
-                                                <?php $qr  = "SELECT id,accountname FROM expenseacctmaster ";
-                                                $exc = mysqli_query($dbcon,$qr)or die();
-                                                while($r = mysqli_fetch_array($exc)){ ?>
-                                                <option value="<?php echo $r['id']; ?>"><?php echo  $r['accountname']; ?></option>
-                                                <?php
-                                                                                    }
-                                                ?>
-                                            </select>
-											</div>
-									 
-									</div>-->
-									
-									 
-									
-								<!--	 <div class="form-row">
-									<div class="form-group col-md-2">
-									 Tax<label ></label><span class="text-danger">%</span>
-									  <input type="text" class="form-control form-control-sm" name="taxrate" placeholder="Ex 18,6,12,28" autocomplete="off" required>
-									</div>
-										 <div class="form-group col-md-2">
-									 Tax amount<label ></label><span class="text-danger"></span>
-									  <input type="text" class="form-control form-control-sm" name="taxamount" placeholder="Enter Tax Amt" autocomplete="off" required>
-									</div>
-										 <div class="form-group col-md-2">
-									 Enter Amount<label ></label><span class="text-danger">*</span>
-									  <input type="text" class="form-control form-control-sm" name="amount" placeholder="Enter Total Amt" autocomplete="off" required>
-									</div>
-									</div>-->
 									
 									
 									<div class="form-row">
 									<div class="form-group col-md-6">
 									  <label >Paid Through</label>
-									 <select required id="paymentype" data-parsley-trigger="change"  class="form-control form-control-sm"  name="paymentype" >
+									 <select required id="expense_paid_thru" name="expense_paid_thru" data-parsley-trigger="change" 
+									  class="form-control form-control-sm"  name="paymentype" >
 										<option value="">--Select Paid Through--</option>
 										<option value="Cash">Petty Cash</option>
 										<option value="Cheque">Prepaid Expenses</option>
@@ -205,7 +76,8 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 									<div class="form-row">
 									<div class="form-group col-md-6">
 									 <label >Payee type</label><span class="text-danger">*</span>
-									 <select required id="payeetype" data-parsley-trigger="change"  class="form-control form-control-sm"  name="payeetype" >
+									 <select required id="expense_payee_type"
+									 name="expense_payee_type" data-parsley-trigger="change"  class="form-control form-control-sm"  name="payeetype" >
 										<option value="">Choose Type</option>
 										<option value="Vendor">Vendor</option>
 										<option value="Customer">Customer</option>
@@ -218,14 +90,15 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 									<div class="form-row">
 									<div class="form-group col-md-6">
 									 <label >Payee</label><span class="icon lpanel-icon text-danger">*</span>
-									  <input type="text" class="form-control form-control-sm" name="payee" placeholder="Enter Name of Supplier/Employee/Customer/Others" autocomplete="off" required>
+									  <input type="text" class="form-control form-control-sm" name="expense_payee"
+									  id="expense_payee" placeholder="Enter Name of Supplier/Employee/Customer/Others" autocomplete="off" required>
 									</div>
 									</div>
                                     
                                     <div class="form-row">
 									<div class="form-group col-md-6">
 									<label > Invoice#</label><span class="text-danger"></span>
-									  <input type="text" class="form-control form-control-sm" name="invoiceno" placeholder="Bill nos,..." autocomplete="off">
+									  <input type="text" class="form-control form-control-sm" id="expense_invoice_no" name="expense_invoice_no" placeholder="Bill nos,..." autocomplete="off">
 									</div>
 									</div>									
 									
@@ -243,14 +116,27 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 														//$count = mysqli_num_rows($result);
 														$rs = mysqli_fetch_assoc($result);
 													?>
-									   <input type="text" class="form-control form-control-sm" name="createdby" readonly class="form-control form-control-sm" value="<?php echo $rs['username']; ?>" />
+									   <input type="text" class="form-control form-control-sm" name="expense_handler"
+									   id="expense_handler" readonly class="form-control form-control-sm" value="<?php echo $rs['username']; ?>" />
 									
 									 </div>
 									</div>
+
+
+                                    
+                                <div class="form-row">                                
+                                    <div class="form-group col-md-4">									
+                                        <label for="inputState">Status<span class="text-danger">*</span></label>
+                                        <select class="form-control form-control-sm select2" required name="expense_status"  id="expense_status">
+                                            <option value="Created">Created</option>
+                                            <option value="Approved">Approved</option>
+                                        </select>	
+                                    </div>
+                                </div>		
 									
 									<div class="form-row">
 									<div class="form-group col-md-6">
-                                        <textarea rows="3" class="form-control" name="exp_notes"  id="exp_notes" required placeholder="Add Expense  Notes"></textarea>
+                                        <textarea rows="3" class="form-control" name="expense_notes"  id="expense_notes" required placeholder="Add Expense  Notes"></textarea>
                                     </div>
 									</div>
 									
@@ -277,15 +163,15 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 <table  class="table table-hover small-text" id="tb">
 <tr class="tr-header">
 <th width="30%">Expense Category</th>
-<th width="25%">Description</th>
-<th width="10%">Qty</th>
-<th width="15%"><i class="fa fa-rupee fonts" aria-hidden="true"><b>&nbsp;Rate</i></th>
-<th width="15%" > <i class="fa fa-rupee fonts" aria-hidden="true"><b>&nbsp;Amount</b></i></th>
+<th width="35%">Description</th>
+<!-- <th width="10%">Qty</th> -->
+<!-- <th width="15%"><i class="fa fa-rupee fonts" aria-hidden="true"><b>&nbsp;Rate</i></th> -->
+<th width="30%" > <i class="fa fa-rupee fonts" aria-hidden="true"><b>&nbsp;Amount</b></i></th>
 <!-- <th width="8%"> <i class="fa fa-rupee fonts" aria-hidden="true"><b>&nbsp;Discount</b></i></th>-->
-<th width="20%"> GST@%</th> 
+<!-- <th width="20%"> GST@%</th>  -->
 <!--th width="20%"> <i class="fa fa-rupee fonts" aria-hidden="true"><b>&nbsp;Total</b></i></th-->
 <th><a href="javascript:void(0);" style="font-size:18px;" id="addMore" title="Add More Person">
-<span class="glyphicon glyphicon-plus"></span>+</a></th>
+<span class="fa fa-plus"></span></a></th>
 
 </tr>
 <tr>
@@ -303,7 +189,7 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 			<option value="Sticker">Sticker</option>
 		</select-->
         
-        <select name="accountname" class="form-control itemcode">
+        <select name="expense_category" id="expense_category" class="form-control itemcode">
             <option value="" name="accountname" selected>-Select Category--</option>
   <optgroup label="OPERATING EXPENSE">
        <option value="Advertising & Marketting">Advertising & Marketting</option>
@@ -354,72 +240,16 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 </select>
         
         
-        
-
-  
-
-
-<!DOCTYPE html>
-<!--html>
-<head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script type="text/javascript">
-        var subcategory = {
-            Mobile: ["Nokia", "Redmi", "Samsung"],
-            Clothes: ["Shirt", "Pant", "T-shirt"]
-        }
-
-        function makeSubmenu(value) {
-            if (value.length == 0) document.getElementById("categorySelect").innerHTML = "<option></option>";
-            else {
-                var citiesOptions = "";
-                for (categoryId in subcategory[value]) {
-                    citiesOptions += "<option>" + subcategory[value][categoryId] + "</option>";
-                }
-                document.getElementById("categorySelect").innerHTML = citiesOptions;
-            }
-        }
-
-        function displaySelected() {
-            var country = document.getElementById("category").value;
-            var city = document.getElementById("categorySelect").value;
-            alert(country + "\n" + city);
-        }
-
-        function resetSelection() {
-            document.getElementById("category").selectedIndex = 0;
-            document.getElementById("categorySelect").selectedIndex = 0;
-        }
-    </script>
-</head>
-<body onload="resetSelection()">
-    <select id="category" size="1" onchange="makeSubmenu(this.value)">
-<option value="" disabled selected>Choose Category</option>
-<option>Mobile</option>
-<option>Clothes</option>
-</select>
-    <select id="categorySelect" size="1">
-<option value="" disabled selected>Choose Subcategory</option>
-<option></option>
-</select>
-    <button onclick="displaySelected()">show selected</button>
-</body>
-</html-->
-
-        
 	</td>
 								
 									  
 								  
-	<!--td><input type="text" name="description" placeholder="Item Name" class="form-control"></td
-	<td><input type="text" name="itemcode" placeholder="Item Details" class="form-control"></td>-->
-	<td><input type="text" name="desc[]" placeholder="Description"    data-id="" class="form-control hsncode"></td>
-	<td><input type="text" name="qty[]"   placeholder="Qty" data-id="" class="form-control qty"></td>
-	<td><input type="text" name="price[]" placeholder="Rate/Qty"    data-id="" class="form-control price"></td>
-	<td><input type="text" name="amount[]" placeholder="qtyXRate" data-id="" class="form-control amount"></td>
+	<td><input type="text" name="expense_desc" id="expense_desc" placeholder="Description"    data-id="" class="form-control hsncode"></td>
+	<!-- <td><input type="text" name="qty"   placeholder="Qty" data-id="" class="form-control qty"></td>
+	<td><input type="text" name="price" placeholder="Rate/Qty"    data-id="" class="form-control price"></td> -->
+	<td><input type="text" name="expense_amount" id="expense_amount" placeholder="Amount" data-id="" class="form-control amount"></td>
 	
-	<td>                       
+	<!-- <td>                       
                                             <select class="form-control amount" id="taxname"  onchange="rowitem.update_math_vals('po');"; name="taxname" style="line-height:1.5;">
                                                 <option data-type="single" value="0" selected>Open Taxrate</option>
                                                 <?php 
@@ -434,12 +264,12 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
                                                 }
                                                 ?>
                                             </select>
-                                        </td>
+                                        </td> -->
 	
 	<!-- <td><input type="text" name="discount[]" class="form-control discount" placeholder="Itm wise Disc"></td> -->
 	<!--<td><input type="text" name="gst[]" placeholder="GST Rate%" data-id=""  class="form-control gst" ></td>
 	<!--td><input type="text" name="total[]" class="form-control total" data-id="" placeholder="Item Total"></td-->
-	<td><a href='javascript:void(0);'  class='remove'><span class='glyphicon glyphicon-remove'></span>-</a></td>
+	<td><a href='javascript:void(0);'  class='remove'><span class='fa fa-trash'></span></a></td>
 </tr>
 </table>
 
@@ -496,13 +326,24 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 								
 									
 									
-										<div class="form-row">
+								<div class="form-row">
 										<div class="form-group col-md-6">
+										<?php if(isset($_GET['action'])&&$_GET['action']=='edit'){
+                                      //    echo "<img src='upload/".$_GET['expense_no'].".jpg' width='100%' height='100px'/>";
+										}?>
                                         <label> <div class="fa-hover col-md-12 col-sm-12">
                                            <span class="text-danger"><i class="fa fa-paperclip bigfonts" aria-hidden="true"></span></i>&nbsp;Attach Receipt<span class="text-danger">(not more than 1MB)</span></div>
                                         </label> 
-                                        &nbsp;&nbsp;<input type="file" name="image" class="form-control">
-                                    </div>										
+                                        &nbsp;&nbsp;<input type="file" name="expense_file_src" id="expense_file_src"  name="image" class="form-control">
+                                    </div>	
+								
+                                </div>
+
+                                <div class="form-row mb-4">
+                                <div class="col-md-6">
+                                       <button type="button" id="expense_file_preview_btn" class="btn btn-danger mb-3">Remove</button>
+                                       <img width="100%" id="expense_file_preview" height="0px" />
+                                    </div>	
                                 </div>
 									
 									
@@ -512,7 +353,7 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
                                                        &nbsp;&nbsp;&nbsp;&nbsp; <button class="btn btn-primary" name="submit" type="submit">
                                                             Submit
                                                         </button>
-                                                        <button type="reset" name="cancel" class="btn btn-secondary m-l-5">
+                                                        <button type="reset" onclick="location.href='listRecordExpenses.php'" name="cancel" class="btn btn-secondary m-l-5">
                                                             Cancel
                                                         </button>
                                                     </div>
@@ -538,48 +379,52 @@ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 	<!-- END content-page -->
 	
 	
-<!--?php include('footer.php');?-->
-<footer class="footer">
-		<span class="text-right">
-		Copyright@<a target="_blank" href="#">Dhiraj Agro Products Pvt. Ltd.,</a>
-		</span>
-		<span class="float-right">
-		Powered by <a target="_blank" href=""><span>e-Schoolz</span> </a>
-		</span>
-	</footer>
+<?php include('footer.php');?>
 
 </div>
 <!-- END main -->
 
-<script src="assets/js/modernizr.min.js"></script>
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/moment.min.js"></script>
-
-<script src="assets/js/popper.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
-
-<script src="assets/js/detect.js"></script>
-<script src="assets/js/fastclick.js"></script>
-<script src="assets/js/jquery.blockUI.js"></script>
-<script src="assets/js/jquery.nicescroll.js"></script>
-<script src="assets/js/jquery.scrollTo.min.js"></script>
-<script src="assets/plugins/switchery/switchery.min.js"></script>
-
-<!-- App js -->
-<script src="assets/js/pikeadmin.js"></script>
-
-<!-- BEGIN Java Script for this page -->
-
-<!-- END Java Script for this page -->
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> 
 <script>
-$(function(){
+
+    var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
+    var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
+    var page_expense_no = "<?php if(isset($_GET['expense_no'])){ echo $_GET['expense_no']; } ?>";
+    $('#expense_file_preview_btn').hide();
+
+
+    var expense_bill = "";
+
+
+$(function(){   
+
+	$('#expense_file_src').change(function(e){
+            expense_bill = e.target.files[0];
+            if(expense_bill.size<20000000){
+                let blobUrl =  URL.createObjectURL(expense_bill);
+                $('#expense_file_preview').attr('src',blobUrl);
+                $('#expense_file_preview').css('height','200px');
+                $('#expense_file_preview_btn').show();
+            }else{
+                $('#expense_file_preview').css('height','0px');
+                alert("image size greater than 20MB. coompress image and upload");
+            }            
+    });
+
+    $('#expense_file_preview_btn').click(function(e){
+            $('#expense_file_src').val('');
+            expense_bill = "";
+            $('#expense_file_preview').attr('src',"");
+            $('#expense_file_preview_btn').hide();
+            $('#expense_file_preview').css('height','0px');
+
+    });
+
+
     $('#addMore').on('click', function() {
               var data = $("#tb tr:eq(1)").clone(true).appendTo("#tb");
               data.find("input").val('');
      });
+
      $(document).on('click', '.remove', function() {
          var trIndex = $(this).closest("tr").index();
             if(trIndex>1) {
@@ -588,5 +433,119 @@ $(function(){
              alert("Sorry!! Can't remove first row!");
            }
       });
+
+	  if(page_action=="edit"){
+            var edit_data = Page.get_edit_vals(page_expense_no,page_table,"expense_no");
+            set_form_data(edit_data);
+            if(edit_data.expense_file_src!=''){
+                $('#expense_file_preview').attr('src',edit_data.expense_file_src);
+                $('#expense_file_preview_btn').show();
+                $('#expense_file_preview').css('height','200px');
+            }
+
+            $("#cancel-form").click(function(){
+                if(page_action=="edit"){
+                  location.href="listProductRawItems.php";
+                }
+            });
+        }
+
+
+		function set_form_data(data){
+
+			$.each(data, function(index, value) {
+
+				if(index=="id"||index=="expense_category"||index=="expense_desc"||index=="expense_amount" ||index=="expense_file_src"){
+				}else if(index=="expense_items"){
+					set_math_vals(JSON.parse(value));
+				}else{
+					$('#'+index).val(value);
+				}
+			}); 
+		}
+
+        function set_math_vals(po_items_json){
+            var itemrowCount = po_items_json.length;
+            var rowCount = $('#tb tr').length;
+            var totalamt = 0;
+                for(r=0;r<itemrowCount;r++){
+                    if(r<itemrowCount-1){
+                      var dataRow = $("#tb tr:eq(1)").clone(true).appendTo("#tb");
+                    }
+                    $('#tb tr').eq(r+1).find('#expense_category').val(po_items_json[r].expense_category);
+                    $('#tb tr').eq(r+1).find('#expense_desc').val(po_items_json[r].expense_desc);
+                    $('#tb tr').eq(r+1).find('#expense_amount').val(po_items_json[r].expense_amount);
+
+                }
+        }
+
+	  $("form#add_expense_form").submit(function(e){
+        e.preventDefault();
+
+        var rowCount = $('#tb tr').length;
+        var expense_items = [];
+
+        for(i=1;i<rowCount;i++){ 
+
+            var expense_category = $('#tb tr').eq(i).find('#expense_category option:selected').text();
+            var expense_desc = $('#tb tr').eq(i).find('#expense_desc').val();
+            var expense_amount = $('#tb tr').eq(i).find('#expense_amount').val();
+
+			expense_items_ele = {
+				expense_category:expense_category,
+				expense_desc:expense_desc,
+				expense_amount:expense_amount
+			}
+
+			expense_items[expense_items.length] = expense_items_ele;
+		}
+
+	  var $form = $("#add_expense_form");
+      var data = getFormData($form);
+
+        function getFormData($form){
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function(n, i){
+                if(n['name']=="expense_amount"||n['name']=="expense_desc"||n['name']=="expense_category"){
+
+                }else{
+                    indexed_array[n['name']] = n['value'];
+                }
+            }); 
+
+            return indexed_array;
+        }
+
+        data.expense_items = JSON.stringify(expense_items);
+
+        var formData = new FormData();
+
+        Object.keys(data).map((k)=>{
+            formData.append(k,data[k])
+        })
+
+        formData.append("expense_file_src",expense_bill);
+	    formData.append("expense_no",page_expense_no);
+	    formData.append("action",page_action?page_action:"add");
+	    formData.append("table","expenses");
+
+		
+        $.ajax ({
+            url: 'workers/setters/save_expense.php',
+            data: formData,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success:function(response){
+                if(JSON.parse(response).status){
+                   console.log(response);
+                   //location.href="listRecordExpenses.php";
+                 }
+			}
+        });
+	  });
+
 });      
 </script>

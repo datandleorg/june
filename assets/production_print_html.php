@@ -139,41 +139,7 @@ function get_itemDetails($dbcon,$code){
                         </table>
                     </td>
                 </tr>
-                <table width="100%" style="">
-                    <thead style="border:1px solid #000;text-align:center;">
-                        <th style=" width:10%;padding:10px;border:1px solid #000;">Item No.</th>
-                        <th style="width:50%;padding:10px;border:1px solid #000;">Item Details</th>
-                        <th style="width:15%;padding:10px;border:1px solid #000;">Qty</th>
-                        <th style="width:10%;padding:10px;border:1px solid #000;">Unit</th>
-                    </thead>
-                    <tbody>
-                        <?php
-                        for($i=0;$i<count($prod_raw_items_arr);$i++){
-                        ?>
-                        <tr style="border-right:1px solid #000;border-left:1px solid #000;">
-                            <td style="padding:10px;padding-left:5%;border-right:1px solid #000;">
-                                <?php echo $i+1;?>
-                            </td>     
-                            <td style="padding:10px;padding-left:5%;border-right:1px solid #000;">
-                                <?php echo get_itemDetails($dbcon,$prod_raw_items_arr[$i]->item);?>
-                            </td>    
-                            <td style="padding:10px;padding-left:5%;border-right:1px solid #000;">
-                                <?php echo $prod_raw_items_arr[$i]->qty;?>
-
-                            </td>    
-                            <td style="padding:10px;padding-left:1%;border-right:1px solid #000;">
-                                <?php echo $prod_raw_items_arr[$i]->uom;?>
-
-                            </td>    
-                  
-                        </tr>
-                        <?php
-                        }
-                        ?>
-
-                    </tbody>
-                </table>
-             
+                 
                         </tr>
                     </tbody>
                 </table>

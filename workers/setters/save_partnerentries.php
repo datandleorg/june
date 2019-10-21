@@ -50,7 +50,40 @@ if (isset($_POST['array'])) {
             $return['error']=mysqli_error($dbcon);
         }
     }else{
+
+        $past = findbyand($dbcon,$pe_code,$table,"pe_code");
+
+        $val_arr = $past['values'];
+        $obj2 = json_decode($val_arr[0]['pe_items'], true);
+        for($i=0;$i<count($obj2);$i++){
+            
+            $sql = " UPDATE purchaseitemaster SET stockinqty =  stockinqty - ".$obj2[$i]['qty']." WHERE itemcode='".$obj2[$i]['item']."' AND orgid='".$pe_orgid."' ;";
+            if (mysqli_query($dbcon,$sql)) {
+                continue;
+            }else{
+                break;
+            }
+        }
+
         $return = update_query($dbcon,$array,$pe_code,$table,"pe_code");
+
+                    if($return['status']){
+                        $obj = json_decode($array, true);
+                        $items = json_decode($obj['pe_items'], true); 
+
+                        for($i=0;$i<count($items);$i++){
+                            $sql4 = " UPDATE purchaseitemaster SET stockinqty =  stockinqty + ".$items[$i]['qty']."  WHERE itemcode='".$items[$i]['item']."' AND orgid='".$pe_orgid."' ;";
+                            if (mysqli_query($dbcon,$sql4)) {
+                                $return['status']=true;
+                    
+                            }else{
+                                $return['status']=false;
+                                $return['error']=mysqli_error($dbcon);            
+                                break;
+                            }
+                        }
+                    }
+
     }
 
 }

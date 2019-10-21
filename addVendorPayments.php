@@ -81,7 +81,6 @@
 
                                         <div class="form-row" id="show_credit_div" style="display:none;">
 
-
                                             <div class="form-group col-md-4">
                                                 <label for="inputState">Total Amount</label>
                                                 <p id="total_amount"></p>
@@ -89,7 +88,9 @@
 
                                             <div class="form-group col-md-4">										
                                                 <label>Enter Credit Amount <span class="text-danger">*&nbsp;</span><i class="fa fa-rupee fonts" aria-hidden="true"></i>&nbsp;[INR]</label>
-                                                <input onkeypress="show_credits_input();"   onkeyup="show_credits_input();" type="text" class="form-control form-control-sm" id="payment_amount_credit" placeholder="Enter Credit Amount" class="form-control" autocomplete="off" />
+                                                <input onkeypress="show_credits_input();"   onkeyup="show_credits_input();" 
+                                                type="text" class="form-control form-control-sm" id="payment_amount_credit" 
+                                                placeholder="Enter Credit Amount" class="form-control" autocomplete="off" />
                                             </div>
 
                                         </div>

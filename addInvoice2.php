@@ -2,6 +2,121 @@
 include('header.php');
 ?>
 
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Scrap Customer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="submitcustomer">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="inputState">Title</label>
+                    <select required="" id="title" class="form-control form-control-sm" name="title">
+                        
+                    <option value="">Salutation</option>
+                    <option value="M/S.">MS.</option>
+                    <option value="Mr.">Mr.</option>
+                    <option value="Mrs.">Mrs.</option>
+                    <option value="Mrs.">Dr.</option>
+                    </select>
+                </div>
+                
+                
+                <div class="form-group col-md-8">
+                    <label>Name<span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-sm" name="custname" id="custname" placeholder="Customer Full Name/Display Name" required="" autocomplete="off">
+                </div>
+            </div>
+
+            <p>Customer Address</p>
+            <div class="form-group row">
+                <div class="col-md-11"> 
+                    <input type="text" placeholder="No,Street *" id="address" name="address" required="" class="form-control form-control-sm"> 
+                </div>
+			</div>
+
+            <div class="form-row">
+                <div class="form-group col-md-11">
+                     <input type="text" class="form-control form-control-sm" required="" name="city" id="city" placeholder="City/town/village *">
+                </div>
+			</div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <select required id="state" class="form-control form-control-sm" name="state">
+                        <span class="text-muted">  <option value="">State/Union Territory *</option> </span>
+                        <?php 
+                        include("database/db_conection.php");//make connection here
+
+                        $sql = mysqli_query($dbcon, "SELECT code,description FROM state");
+                        while ($row = $sql->fetch_assoc()){	
+                            $code=$row['code'];
+                            $description=$row['description'];
+                        echo '<option  value="'.$code.'" >'.$description.'</option>';                                                      
+                        }
+                        ?>
+                    </select>
+                </div>	
+
+                <div class="form-group col-md-4">
+                        <select required id="country" onchange="onlocode(this)"  class="form-control form-control-sm" name="country">
+                            <span class="text-muted"> <option value="">Country *</option> </span>
+                            <?php 
+                            include("database/db_conection.php");//make connection here
+
+                            $sql = mysqli_query($dbcon, "SELECT code,description FROM country");
+                            while ($row = $sql->fetch_assoc()){	
+                                $code=$row['code'];
+                                $description=$row['description'];
+                            echo '<option  value="'.$code.'" >'.$description.'</option>';        
+                            }
+                            ?>
+                        </select>
+                </div>
+                
+                <div class="form-group col-md-3">
+                    <input type="text" class="form-control form-control-sm" name="zip" id="zip"  required placeholder="Zip/Postal Code *">
+                </div>
+									
+			   </div>
+
+               <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label> Work Phone</label>
+                        <input type="text" class="form-control form-control-sm" name="workphone" id="workphone" placeholder="Landline">
+                    </div>
+									
+                    <div class="form-group col-md-3">
+                        <label> Mobile <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" name="mobile" id="mobile" required="" placeholder="9677573737">
+                    </div>
+                    
+                    <div class="form-group col-md-5">
+                        <label> Email<span class="text-danger"></span></label>
+                        <input type="email" class="form-control form-control-sm" name="email" id="email" placeholder="Optional" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                   <div class="form-group">
+                       <button type="submit" class="btn btn-primary">Create Customer</button>
+                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                   </div>
+                </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- End Sidebar -->
 
 <div class="content-page">
@@ -63,7 +178,6 @@ include('header.php');
                                                 $orgid=$row['orgid'];
                                                 $orgname=$row['orgname'];
                                                 echo '<option  value="'.$orgid.'" >'.$orgid.' '.$orgname.'</option>';
-
                                             }
                                             ?>
                                         </select>
@@ -74,10 +188,10 @@ include('header.php');
                                 <div class="form-row">
                                     <div class="form-group col-md-8">
                                         <label for="inputState"><span class="text-danger">Customer Name*</span></label>
-                                        <select id="inv_customer" onchange="post_address(this.value);" class="form-control form-control-sm " name="inv_customer" required>
+                                        <select id="inv_customer" onchange="post_address(this.value);" class="form-control form-control-sm" name="inv_customer" required>
                                             <option selected>--Select Customer--</option>
                                             <?php
-                                            $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
+                                            $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile where custype='Scrap' ");
                                             while ($row = $sql->fetch_assoc()){	
                                                 $custid=$row['custid'];
                                                 $custname=$row['custname'];
@@ -85,7 +199,9 @@ include('header.php');
                                             }
                                             ?>
                                         </select>
-
+                                        <button type="button" class="btn btn-link btn-sm" data-toggle="modal" data-target="#exampleModal">
+                                          <i class="fa fa-user-plus"></i>  Add Scrap Customer
+                                        </button>                                   
                                     </div>
                                 </div>
 
@@ -301,10 +417,9 @@ include('header.php');
                                 <!--link  rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" /-->
                                 <table  class="table table-hover small-text" id="tb">
                                     <tr class="tr-header">
-                                        <th width="20%">Item Details</th>
-                                        <th width="12%">HSN/SAC</th>
-                                        <th width="11%">Qty</th>
-                                        <th width="12%">Unit</th>
+                                        <th width="30%">Item Details</th>
+                                        <th width="15%">Qty</th>
+                                        <th width="15%">Unit</th>
                                         <th width="15%"><i class="fa fa-rupee fonts" aria-hidden="true"></i>&nbsp;Rate</th>
                                         <th width="15%" > <i class="fa fa-rupee fonts" aria-hidden="true"></i>&nbsp;Amount</th>
                                         <!-- <th width="8%"> <i class="fa fa-rupee fonts" aria-hidden="true"><b>&nbsp;Discount</b></i></th>-->
@@ -318,10 +433,10 @@ include('header.php');
                                         <td>
                                             <select name="itemcode" class="form-control itemcode" onchange="sales_rowitem.set_itemrow(this,'sales','manual');" id="item_select">
                                                 <option value="" name="itemcode" selected>Item Code</option>
-                                                <?php $qr  = "select * from salesitemaster2;";
+                                                <?php $qr  = "select * from scrapinventory;";
                                                 $exc = mysqli_query($dbcon,$qr)or die();
                                                 while($r = mysqli_fetch_array($exc)){ ?>
-                                                <option value="<?php echo $r['id']; ?>"><?php echo "[".$r['itemcode']."] ".$r['itemname']; ?></option>
+                                                <option value="<?php echo $r['scrap_itemcode']; ?>"><?php echo "[".$r['scrap_itemcode']."] ".$r['scrap_itemname']; ?></option>
                                                 <?php
                                                                                     }
                                                 ?>
@@ -331,8 +446,7 @@ include('header.php');
 
                                         <!--td><input type="text" name="description" placeholder="Item Name" class="form-control"></td
 <td><input type="text" name="itemcode" placeholder="Item Details" class="form-control"></td>-->
-                                        <td><input id="hsncode" type="text" name="hsncode" placeholder="hsncode"    data-id="" class="form-control hsncode"></td>
-                                        <td><input id="qty" type="text" name="qty" onkeypress="sales_rowitem.update_math_vals_for_manual();sales_rowitem.stkalert(this);"   onkeyup="sales_rowitem.update_math_vals_for_manual();sales_rowitem.stkalert(this);" placeholder="Qty" data-id="" class="form-control qty"></td>                                        <td>
+                                            <td><input id="qty" type="text" name="qty" onkeypress="sales_rowitem.update_math_vals_for_manual();sales_rowitem.stkalert(this);"   onkeyup="sales_rowitem.update_math_vals_for_manual();sales_rowitem.stkalert(this);" placeholder="Qty" data-id="" class="form-control qty"></td>                                        <td>
                                         <select class="form-control amount" id="uom"  onchange="sales_rowitem.update_math_vals_for_manual();"; name="uom" style="line-height:1.5;">
                                             <option value="" selected>Open Unit</option>
                                             <?php 
@@ -484,14 +598,7 @@ include('header.php');
 
 
         <?php include('footer.php');?>
-        <!--footer class="footer">
-            <span class="text-right">
-                Copyright@<a target="_blank" href="#">Dhiraj Agro Products Pvt. Ltd.,</a>
-            </span>
-            <span class="float-right">
-                Powered by <a target="_blank" href=""><span>e-Schoolz</span> </a>
-            </span>
-        </footer-->
+   
 
     </div>
     <!-- END main -->
@@ -507,25 +614,6 @@ include('header.php');
         }
     </style>
 
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-
-    <script src="assets/js/detect.js"></script>
-    <script src="assets/js/fastclick.js"></script>
-    <script src="assets/js/jquery.blockUI.js"></script>
-    <script src="assets/js/jquery.nicescroll.js"></script>
-    <script src="assets/js/jquery.scrollTo.min.js"></script>
-    <script src="assets/plugins/switchery/switchery.min.js"></script>
-
-    <!-- App js -->
-    <script src="assets/js/pikeadmin.js"></script>
-
-    <!-- BEGIN Java Script for this page -->
-
-    <!-- END Java Script for this page -->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> 
     <script>       
         var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
         var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
@@ -607,6 +695,48 @@ include('header.php');
                             $('#customModal').modal('toggle');
                         }else{
                             alert('Error in inserting new Payment Term,try another Payment Term');
+                        }
+                    }
+
+                });
+
+            });
+
+                        //addGroupnames_ajax.php
+            $('#submitcustomer').submit(function(e){
+                e.preventDefault();
+
+                 var customerInputs = {
+                    title: $('#submitcustomer #title').val(),
+                    custname: $('#submitcustomer #custname').val(),
+                    blocation: '',
+                    address: $('#submitcustomer #address').val(),
+                    city: $('#submitcustomer #city').val(),
+                    country: $('#submitcustomer #country').val(),
+                    state: $('#submitcustomer #state').val(),
+                    zip: $('#submitcustomer #zip').val(),
+                    workphone: $('#submitcustomer #workphone').val(),
+                    mobile: $('#submitcustomer #mobile').val(),
+                    email: $('#submitcustomer #email').val(),
+                    web:'',
+                    gstin:'',
+                    custype: 'Scrap'
+                 }
+
+
+
+                $.ajax ({
+                    url: 'workers/setters/save_customer.php',
+                    type: 'post',
+                    data: {
+                        array:JSON.stringify(customerInputs),
+                        custid:'',
+                        action:'add',
+                        table:"customerprofile"
+                    },
+                    success:function(response){
+                        if(JSON.parse(response).status){
+                            location.reload();
                         }
                     }
 
@@ -898,6 +1028,7 @@ include('header.php');
                         },
                     dataType: 'json',
                     success:function(response){
+                        console.log(response);
                        location.href="listInvoicesacc.php";
                     }
 
