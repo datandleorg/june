@@ -159,8 +159,10 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <a href="VendorItemWise.php">
-                                             <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Vendor Wise (Inward) Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
+                                    <a href="VendorItemWise.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Vendor Wise (Inward) Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
+                                    <a href="SummaryReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Summary Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
+                                    <a href="BankDepositReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Bank Deposit Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
+                                    <a href="ExpensesReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Expenses Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
                                     </td>
 
 
