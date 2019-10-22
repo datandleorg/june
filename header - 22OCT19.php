@@ -29,7 +29,7 @@ if(isset($_SESSION['login_email'])){
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>Lento Foods India Private Limited</title>
+        <title>Lento Agro Private Limited</title>
         <meta name="description" content="Online GST Accounting Software">
         <meta name="author" content="">
 
@@ -133,43 +133,138 @@ if(isset($_SESSION['login_email'])){
 
                     </div>
                     <div class="modal-body">
-                        <div class="row">						
-							<div class="fa fa-shopping-basket col">Purchases<br><br><br>
-							<a href="listPurchaseOrders.php"><class="col">Purchase Order</a><br><br><br>
-							<a href="listGoodsReceiptNote.php"><class="col">GRN(Self)</a><br><br><br>
-							<a href="listPartnerPurchaseEntries.php"><class="col">GRN(Outsourced)</a><br><br><br>
-							<a href="addVendorPayments.php"><class="col">Make Vendor Payments</a><br><br><br>
-							<a href="listDebitNotes.php"><class="col">Debit Note</a><br><br><br>
-							<a href="listPaymentsMade.php"><class="col">Payments Made</a><br><br><br>
-						</div>
-						
-						<div class="fa fa-shopping-cart col">Sales<br><br><br>
-							<a href="listEstimates.php"><class="col">Estimates</a><br><br><br>
-							<a href="listSalesOrders.php"><class="col">Sales Order</a><br><br><br>
-							<a href="listInvoices.php"><class="col">Invoices</a><br><br><br>							
-							<a href="listCustomerCredits.php"><class="col">Customer Credits</a><br><br><br>										
-							<a href="addCustomerReceipts.php"><class="col">Receive Payments</a><br><br><br>
-							<a href="addCashMemo.php"><class="col">Cash Memo</a><br><br><br>
-							<!--a href="PaymentsRecievedReports.php"><class="col">Payments Received</a><br><br><br-->
-						</div>
-						<div class="fa fa-shopping-basket col">Inventory<br><br><br>
-							<a href="listPurchaseItemMaster.php"><class="col-md5">Purchas(Inward)</a><br><br><br>
-							<a href="listSalesItemMaster.php"><class="col">Sales(Outward)</a><br><br><br>
-							<a href="listScrapItemMaster.php"><class="col">Scrap-INVENTORY</a><br><br><br>	
-						</div>
-						<div class="fa fa-shopping-cart col">Production<br><br><br>
-							<a href="listProductRawItems.php"><class="col-md5">Assign Rawmaterials</a><br><br><br>
-							<a href="listProductions.php"><class="col">Production</a><br><br><br>
-						</div>
-						<div class="fa fa-th-large bigfonts col">General<br><br><br>
-							<a href="listCustomerProfile.php"><class="col-md5">Customers</a><br><br><br>
-							<a href="listVendorProfile.php"><class="col">Vendors/Suppliers</a><br><br><br>							
-							<a href="addSupplierBankDetails.php"><class="col-md5">Vendor Bank</a><br><br><br>
-							<a href="addCreditNotes.php"><class="col">Credit Notes</a><br><br><br>
-							<a href="listRecordExpenses.php"><class="col">Expenses</a><br><br><br>
-							<a href="listBankDeposit.php"><class="col">Bank Deposit</a><br><br><br>
-						</div>
-                          
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-condensed">
+                                                <thead>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="fa fa-shopping-basket" aria-hidden="true"></i>&nbsp;Purchases
+                                                        </td>
+                                                        <td class="text-right"><i class="fa fa-shopping-cart"></i>&nbsp;Sales
+                                                        </td>
+                                                        <td class="text-center"><i class="fa fa-truck smallfonts" aria-hidden="true"></i>&nbsp;Inventory/Stock Transfers</td>
+                                                        <td class="text-right"><i class="fa fa-th-large bigfonts" aria-hidden="true"></i>&nbsp;General
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><a href="listPurchaseOrders.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Purchase Order</i></a></td>
+                                                        <td class="text-right"><a href="listEstimates.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Estimates</i></a></td>
+                                                        <td class="text-left"><a  href="listPurchaseItemMaster.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Inventory -INWARD</i></a></td>
+                                                        
+                                                        
+                                                        
+                                                        
+                                                        <td class="text-right"><a  href="listCustomerProfile.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Customer</i></a></td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                        <td><a  href="listGoodsReceiptNote.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;GRN</i></a>|
+                                                             <a  href="listPartnerPurchaseEntries.php">GRN(Partners)</a></td>
+                                                        <td class="text-right"><a href="listSalesOrders.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Sales Order</i></a></td>
+                                                        
+                                                        <td class="text-left"><a  href="addProduction.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;
+                                                              Add Production</i></a> | <a  href="listProductions.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;
+                                                              Produced List</i></a></td>
+                                                        <td class="text-right"><a href="listVendorProfile.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Vendor</i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="addVendorPayments.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Make Vendor Payments </i></a></td>  
+
+                                                        <td class="text-right"><a href="listInvoices.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Invoices</i></a></td>
+                                                        
+                                                        
+                                                        
+                                                        <td class="text-left"><a  href="listSalesItemMaster.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Inventory - OUTWARD</i></a></td>
+                                                        <td class="text-right"><a href="addSupplierBankDetails.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true"></i>&nbsp;Vendor Bank</a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+
+
+                                                        <td><a  href="listVendorCredits.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Vendor Credits</i></a></td>
+                                                       <!-- <td class="text-right"><a  href="listInvoices.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Print Delivery Challan</i></a></td>-->
+                                                        
+                                                        <td class="text-right"><a  href="addCustomerReceipts.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Receive Cust Payments</i></a></td>
+                                                        
+                                                        
+                                                        
+
+                                                        <td class="text-left"><a  href="listSalesItemMaster.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Adjust Qty/Price(Outward Items)</i></a></td>
+                                                        <td class="text-right"><a  href="addCreditNotes.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;add Credit Notes</i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a  href="listDebitNotes.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Print Debit Note</i></a></td>
+                                                        <td class="text-right"><a  href="addCashMemo.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Cash Memo/Retail Invoice</i></a></td>
+                                                        <td class="text-left"><a href="listProductRawItems.php">
+                                                            <!--i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Stock Transfers(Inward to Locations)</i></a></td-->
+                                                            
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Rawmaterials Assigned List</i></a></td>
+                                                            
+                                                        <td class="text-right"><a  href="listRecordExpenses.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Record Expenses</i></a></td>
+                                                        
+                                                        
+                                                        
+
+
+
+                                                        <!--td class="text-right"><a  href="Reports.php">
+<i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Reports</i></a></td-->
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="listPaymentsMade.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Vendor Payments Made</i></a></td> 
+                                                        <!--td class="text-right"><a  href="listCustomerPayments.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Customer Payments Made</i></a></td-->
+                                                        <!--td class="text-left"><a href="transferProductInward.php">
+                                                            <i class="fa fa-plus bigfonts" aria-hidden="true">&nbsp;Stock Transfers(Inward to Outward)</i></a></td-->
+                                                        <td class="text-right"></td>
+                                                    </tr>
+
+                                                    <!--tr>
+<td><a  href="addExpenses.php"></a></td>
+<td class="text-right"><a href="addCreditNotes.php">
+<i class="fa fa-plus bigfonts" aria-hidden="true"></i>&nbsp;Credit Notes</a></td>
+<td class="text-center"></td>
+<td class="text-right"></td>
+</tr-->
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -337,7 +432,7 @@ if(isset($_SESSION['login_email'])){
 
         <!-- LOGO -->
         <div class="headerbar-left">
-            <a href="index.php" class="logo"><!--img alt="Logo" src="assets/images/logo.jpg" /--> <font color="yellow"><span><b>Lento Foods Pvt. Ltd.</b></span></font></a>
+            <a href="index.php" class="logo"><!--img alt="Logo" src="assets/images/logo.jpg" /--> <font color="yellow"><span><b>Lento Agro Pvt. Ltd.</b></span></font></a>
         </div>
 
 

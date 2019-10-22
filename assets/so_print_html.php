@@ -153,7 +153,7 @@ function convertNumberToWordsForIndia($number){
     <body onload="printInit();">  
         <h5 >
         <img src="images/logo.png" width="50px" height="50px"/>
-             <div style="text-align:center">Dhiraj Agro Private Linited</div> </h5>
+             <div style="text-align:center">Lento Foods India Private Linited</div> </h5>
         <h3>
             <div style="text-align:center">SALES ORDER</div>
         </h3>
@@ -480,7 +480,7 @@ function convertNumberToWordsForIndia($number){
  
                             </td>
                             <td width="50%" style="border:1px solid #000;padding-top:10px;padding-left:10px;">
-                            <p style="text-align: center;"><b>For Dhiraj Agro Private Limited</b></p>
+                            <p style="text-align: center;"><b>For Lento Foods India Pvt. Ltd.</b></p>
                             <br/>
                             <br/>
                             <p style="text-align: center;"><b>Authorized Signatory</b></p>

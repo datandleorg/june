@@ -100,8 +100,7 @@ function convertNumberToWord($num = false)
     <body onload="printInit();">
         <h5 > 
         <img src="images/logo.png" width="200px" height="100px"/>    
-        <div style="text-align:center">DHIRAJ AGRO PRIVATE LIMITED <br>
-		(A Franchisee of Parle Agro Pvt Ltd)</div> </h5>
+        <div style="text-align:center">Lento Foods India Pvt. Ltd. </div> </h5>
 		
          <h3>   <div style="text-align:center">TAX INVOICE</div>
         </h3>

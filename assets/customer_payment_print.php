@@ -56,7 +56,7 @@ function get_itemDetails($dbcon,$code){
         
         <h5 > 
         <img src="images/logo.png" width="50px" height="50px"/>    
-        <div style="text-align:center">DHIRAJ AGRO PRIVATE LIMITED <br>
+        <div style="text-align:center">Lento Foods India Pvt. Ltd., <br>
 		(A Franchisee of Parle Agro Pvt Ltd)</div> </h5>
         <h3><div style="text-align:center">CUSTOMER PAYMENTS RECEIVED VOUCHER</div></h3> 
 
@@ -296,7 +296,7 @@ function get_itemDetails($dbcon,$code){
 
                             </td> 
                             <td width="200" style="padding:20px;">
-                               <b>For Dhiraj Agro Pvt. Ltd <!--<?php echo $row1['orgname']; ?>--></b><br/><br><br>
+                               <b>For Lento Foods India Pvt. Ltd.<!--<?php echo $row1['orgname']; ?>--></b><br/><br><br>
                                 &nbsp;&nbsp;<b>Authorized Signatory</b>
                             </td>
                         </tr>

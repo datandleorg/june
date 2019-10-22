@@ -1,6 +1,6 @@
 <footer class="footer">
     <span class="text-right">
-        Copyright@<a target="_blank" href="#">Lento Agro Private Limited | Version1.0</a>
+        Copyright@<a target="_blank" href="#">Lento Foods India Private Limited | Version1.0</a>
     </span>
     <span class="float-right">
         Powered by <a target="_blank" href=""><span>e-Schoolz</span> </a>

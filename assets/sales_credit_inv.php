@@ -115,8 +115,7 @@ function print_duedate($payterm, $payterm_desc, $inv_date){
     <body onload="printInit();">
         <h5 > 
         <img src="images/logo.png" width="200px" height="100px"/>    
-        <div style="text-align:center">DHIRAJ AGRO PRIVATE LIMITED <br>
-		(A Franchisee of Parle Agro Pvt Ltd)</div> </h5>
+        <div style="text-align:center">Lento Foods India Pvt. Ltd.</div> </h5>
 		
          <h3>   <div style="text-align:center">TAX INVOICE</div>
         </h3>
@@ -447,7 +446,7 @@ function print_duedate($payterm, $payterm_desc, $inv_date){
  
                             </td>
                             <td width="50%" style="border:1px solid #000;padding-top:10px;padding-left:10px;">
-                            <p style="text-align: center;"><b>For Dhiraj Agro Private Limited</b></p>
+                            <p style="text-align: center;"><b>For Lento Foods India Private Limited</b></p>
                             <br/>
                             <br/>
                             <p style="text-align: center;"><b>Authorized Signatory</b></p>

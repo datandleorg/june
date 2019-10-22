@@ -221,7 +221,7 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                 
                 <div class="col-xs-12 col-md-6 col-lg-6 col-xl-3">
 				    <div class="card-box noradius noborder bg-warning">
-                    <h6 class="m-b-20 text-white counter text-white"><a href="PaymentsRecievedReports.php" text-white>Receipts:&nbsp;&nbsp;</a><?php echo get_users_count();?></h6>
+                    <h6 class="m-b-20 text-white counter">Income:&nbsp;&nbsp;</a><?php echo get_users_count();?></h6>
                             <h6 class="m-b-20 text-white counter">Expenses:&nbsp;<?php echo get_users_count();?></h6>
                             <h6 class="m-b-20 text-white counter">Bank Deposit:&nbsp;<?php echo get_users_count();?></h6>
                             <h6 class="text-white">Cash on Hand:&nbsp;<?php echo get_users_count();?></h6>

@@ -99,7 +99,7 @@ function convertNumberToWord($num = false)
     </head>
     <body onload="printInit();">
              <img src="images/logo.png" width="200px" height="100px"/>
-       <h5 > <div style="text-align:center">Dhiraj Agro Private Linited<br>
+       <h5 > <div style="text-align:center">Lento Foods India Private Limited<br>
 		(A Franchisee of Parle Agro Pvt Ltd)</div> </h5>
         <h3>
             <div style="text-align:center;">PURCHASE ORDER</div>
