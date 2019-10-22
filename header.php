@@ -235,8 +235,9 @@ if(isset($_SESSION['login_email'])){
                                         </tr>
                                         <tr>
                                             <td><a href="listUserGroups.php">																		add Roles/Group</a></td>
-                                            <td class="text-center"><a  href="listInvoicesacc.php">
-                                                Scrap Invoice</a></td>
+                                            <td class="text-center">
+                                            <a  href="listInvoicesacc.php">Scrap Invoice</a>
+                                                </td>
                                             <!--td class="text-center"><a  href="listInvoices.php">list Invoices</a>
 
 

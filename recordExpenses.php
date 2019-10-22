@@ -484,6 +484,7 @@ $(function(){
 
         var rowCount = $('#tb tr').length;
         var expense_items = [];
+        var expense_total_amount = 0;
 
         for(i=1;i<rowCount;i++){ 
 
@@ -498,6 +499,8 @@ $(function(){
 			}
 
 			expense_items[expense_items.length] = expense_items_ele;
+
+            expense_total_amount+=expense_amount;
 		}
 
 	  var $form = $("#add_expense_form");
@@ -530,6 +533,8 @@ $(function(){
 	    formData.append("expense_no",page_expense_no);
 	    formData.append("action",page_action?page_action:"add");
 	    formData.append("table","expenses");
+	    formData.append("expense_total_amount","expense_total_amount");
+        
 
 		
         $.ajax ({
@@ -539,6 +544,7 @@ $(function(){
             contentType: false,
             type: 'POST',
             success:function(response){
+                console.log(response);
                 if(JSON.parse(response).status){
                    console.log(response);
                    //location.href="listRecordExpenses.php";
