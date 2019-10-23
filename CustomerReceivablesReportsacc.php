@@ -152,8 +152,8 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
                                                 <td>'.$row['inv_so_code'].'</td>
                                                 <td>'.$row['inv_date'].'</td>
                                                 <td>'.$row['custname'].'</td>
-                                                <td>'.nf(($row['inv_value']-gettaxamt_total($row['inv_items']))).'</td>
-                                                <td>'.nf(gettaxamt_total($row['inv_items'])).'</td>
+                                                <td>'.nf(($row['inv_value'])).'</td>
+                                                <td>'.nf(0).'</td>
                                                 <td>'.nf($row['inv_value']).'</td>
                                                 <td>'.nf($row['inv_value']-$row['inv_balance_amt']).'</td>
                                                 <td>'.nf($row['inv_balance_amt']).'</td>

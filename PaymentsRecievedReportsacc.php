@@ -50,11 +50,11 @@ include('workers/getters/functions.php');
                                     <select id="custwise" class="form-control form-control-sm" name="custwise">
                                         <option selected>--Select Customer--</option>
                                         <?php
-                                        $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
+                                        $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile where custype='Scrap' ");
                                         while ($row = $sql->fetch_assoc()){	
                                             $custid=$row['custid'];
                                             $custname=$row['custname'];
-                                            echo '<option  value="'.$custid.'" >'.$custid.' '.$custname.'</option>';
+                                            echo '<option data-type="'.$row['custype'].'"  value="'.$custid.'" >'.$custid.' '.$custname.'</option>';
 
                                         }
                                         ?>

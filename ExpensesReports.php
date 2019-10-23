@@ -36,9 +36,10 @@ include('workers/getters/functions.php');
 
                         <div class="card-body">
                             <div class="form-group row">
+                               
                                 <div class="col-sm-3">
                                     <div class="input-group">
-                                        <input type="text" id="daterange" class="form-control-sm" placeholder="Select Date Range">
+                                        <input type="text" id="daterange" class="form-control form-control-sm" placeholder="Select Date Range">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" id="reset-date">
                                                 <i class="fa fa-times"></i>
@@ -46,21 +47,18 @@ include('workers/getters/functions.php');
                                         </span>
                                     </div>
                                 </div>
-                                <!-- <div class="form-group col-sm-3">
-                                    <select id="custwise" class="form-control form-control-sm" name="custwise">
-                                        <option selected>--Select Customer--</option>
-                                        <?php
-                                        // $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
-                                        // while ($row = $sql->fetch_assoc()){	
-                                        //     $custid=$row['custid'];
-                                        //     $custname=$row['custname'];
-                                        //     echo '<option  value="'.$custid.'" >'.$custid.' '.$custname.'</option>';
+                        
+                                <div class="form-group col-md-3">
+                                        <select required id="payment_mode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="payment_mode" >
+                                            <option value="">-- Select Payment Mode --</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Cheque">Cheque</option>
+                                            <option value="Credit Card">Credit Card</option>
+                                            <option value="Bank Transfer">Bank Transfer</option>
+                                            <option value="Bank Remittance">Bank Remittance</option>
+                                        </select>
+                                </div>
 
-                                        // }
-                                        ?>
-                                    </select>
-
-                                </div> -->
                                 <div class="col-sm-2">
                                     <button type="button" class="btn btn-primary btn-sm" onclick="get_cp_reports();">Run Report</button>
                                 </div>
@@ -77,7 +75,7 @@ include('workers/getters/functions.php');
                                                 <th>Date</th>
                                                 <th>Payee</th>
                                                 <th>Payee Type</th>
-                                                <th>Payee Through</th>
+                                                <th>Payment Mode</th>
                                                 <th>Invoice No#</th>
                                                 <th>Amount</th>
                                                 <th>Created by</th>
@@ -85,7 +83,7 @@ include('workers/getters/functions.php');
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if((isset($_GET['st'])&&$_GET['st']!='')||(isset($_GET['end'])&&$_GET['end']!='')){ 
+                                            if((isset($_GET['st'])&&$_GET['st']!='')||(isset($_GET['end'])&&$_GET['end']!='') ||(isset($_GET['payment_mode']))){ 
 
                                                 $timestamp = strtotime($_GET['st']);
                                                 $st = date('Y-m-d', $timestamp);
@@ -99,6 +97,11 @@ include('workers/getters/functions.php');
                                                     }else{
                                                         $sql.=" and (ex.expense_date BETWEEN '$st' AND '$end') ";   
                                                     }
+                                                }
+
+                                                if($_GET['payment_mode']!=''){
+                                                    $sql.= " and ex.expense_paid_thru='".$_GET['payment_mode']."' ";   
+
                                                 }
 
                                             }else{
@@ -158,13 +161,14 @@ include('workers/getters/functions.php');
 
 <script>
    // var page_custwise = "<?php if(isset($_GET['custwise'])){ echo $_GET['custwise']; } ?>";
-    var page_st = "<?php if(isset($_GET['st'])){ echo $_GET['st']; } ?>";
+    var page_payment_mode = "<?php if(isset($_GET['payment_mode'])){ echo $_GET['payment_mode']; } ?>";
+   var page_st = "<?php if(isset($_GET['st'])){ echo $_GET['st']; } ?>";
     var page_end = "<?php if(isset($_GET['end'])){ echo $_GET['end']; } ?>";
 
     $(document).ready(function() {
        // var vendor_params =[];
        // Page.load_select_options('custwise',vendor_params,'customerprofile',' Customer','custid','custname');
-       // $('#custwise').val(page_custwise);
+       $('#payment_mode').val(page_payment_mode);
         $("#reset-date").hide();
 
         $('#daterange').daterangepicker({
@@ -205,9 +209,15 @@ include('workers/getters/functions.php');
         // var cust_name = cust_name_json.custname;
         var printhead = '';
         printhead+= date_range!=''?'<p><b>Date : </b>'+date_range+'</p>':'';
+        printhead+= '';
+        printhead+= page_payment_mode!=''?'<p><b>Payment Mode : </b>'+page_payment_mode+'</p>':'';
         var excel_printhead = '';
         excel_printhead+= '  ';
         excel_printhead+= date_range!=''?'Date : '+date_range:'';
+        excel_printhead+= '  ';
+        excel_printhead+= page_payment_mode!=''?'Payment Mode : '+page_payment_mode+'':'';
+
+
 
         var table = $('#po_reports').DataTable( {
             lengthChange: false,
@@ -300,8 +310,8 @@ include('workers/getters/functions.php');
             st = date_range[0].replace(" ","");
             end = date_range[1].replace(" ","");
         }
-        var custwise = $('#custwise').val();
-        location.href="ExpensesReports.php?st="+st+"&end="+end;
+        var payment_mode = $('#payment_mode').val();
+        location.href="ExpensesReports.php?st="+st+"&end="+end+"&payment_mode="+payment_mode;
     }
 
     function cb(start, end) {

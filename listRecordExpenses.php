@@ -124,17 +124,9 @@
   <a class="dropdown-item"  href="recordExpenses.php?expense_no=' . $row['expense_no'] . '&action=edit&type=expenses">
   <i class="fa fa-pencil" aria-hidden="true"></i>&nbsp; Edit</a> 
 
-    <a class="dropdown-item"  href="#" onclick="printContent(this);" data-template="vocher"
+    <a class="dropdown-item" onclick="ToPrint(this);" data-template="expenses_print"
      data-code="'.$row['expense_no'].'" data-img="assets/images/logo.png"  data-id="po_print">
-     <i class="fa fa-print" aria-hidden="true"></i>&nbsp; Print</a>   
-     
-      <a class="dropdown-item"  href="#" onclick="printContent(this);" 
-      data-template="dc_print" data-code="'.$row['expense_no'].'" data-img="assets/images/logo.png" 
-       data-id="po_print"><i class="fa fa-print" aria-hidden="true"></i>&nbsp; DC Print</a>';
-											
-
-                                               
-
+     <i class="fa fa-print" aria-hidden="true"></i>&nbsp; Print</a>';
 
                                                 echo ' </td>';
                                                 echo "</tr>";
@@ -157,46 +149,15 @@
 
                         </div>														
                     </div><!-- end card-->	
-                    <div id="po_print" style="display:;">
-
-
-                    </div>
                 </div>
 
 
                 <script>
-                    $('#po_print').hide();
 
-                    function get_print_html(inv_code,img,template){
-                        $.ajax ({
-                            url: 'assets/'+template+'.php',
-                            type: 'post',
-                            async :false,
-                            data: {
-                                inv_code:inv_code,
-                            },
-                            //dataType: 'json',
-                            success:function(response){
-                                if(response!=0 || response!=""){
-                                    $('#po_print').html(response);
-                                    $('#po_print').prepend('<img src="'+img+'" width="50px" height="50px"/>');
-
-                                }else{
-                                    alert('Something went wrong');
-                                }
-                            }
-
-                        });
+                    function ToPrint(el){
+                        var code= $(el).attr('data-code');
+                        window.location.href = 'assets/expenses_print_html.php?expense_no='+code;
                     }
-                    var beforePrint = function () {
-                        $('#po_print').show();
-                    };
-
-                    var afterPrint = function () {
-                        location.reload();
-                        $('#po_print').hide();
-
-                    };
 
                     function printContent(el){
                         var id= $(el).attr('data-id');

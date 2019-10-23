@@ -737,7 +737,6 @@
         stkalert:function(x){
             //alert();
             var itemcode = $(x).closest('td').prev('td').find('#item_select').val();
-            console.log(itemcode);
             var item_det = Page.get_edit_vals(itemcode,'scrapinventory','scrap_itemcode');
             var inQty = eval($(x).val());
             if(inQty>eval(item_det.scrap_inventory_qty)){
@@ -755,5 +754,24 @@
             }
 
 
+        },
+        update_math_vals_for_scrap: function(){
+
+            var item_select = $('#tb tr').eq(1).find('#expense_category').val();
+            console.log(item_select);
+            if(item_select!=''){
+                var rowCount = $('#tb tr').length;
+                var posubtotal = 0;
+                var taxarray = [];
+                for(i=1;i<rowCount;i++){ 
+                    var expense_amount = $('#tb tr').eq(i).find('#expense_amount').val();
+                    
+                    posubtotal+= +expense_amount;
+                }
+
+                $('#posubtotal').text(eval(posubtotal).toFixed(2));
+                $('#grandtotal').text(eval(posubtotal).toFixed(2));
+
+            }
         }
     }

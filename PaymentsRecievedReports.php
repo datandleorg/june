@@ -46,11 +46,12 @@ include('workers/getters/functions.php');
                                         </span>
                                     </div>
                                 </div>
+
                                 <div class="form-group col-sm-3">
                                     <select id="custwise" class="form-control form-control-sm" name="custwise">
                                         <option selected>--Select Customer--</option>
                                         <?php
-                                        $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
+                                        $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile where custype!='Scrap'");
                                         while ($row = $sql->fetch_assoc()){	
                                             $custid=$row['custid'];
                                             $custname=$row['custname'];
@@ -59,8 +60,20 @@ include('workers/getters/functions.php');
                                         }
                                         ?>
                                     </select>
-
                                 </div>
+
+                                <div class="form-group col-md-3">
+                                        <select required id="payment_mode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="payment_mode" >
+                                            <option value="">-- Select Payment Mode --</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Cheque">Cheque</option>
+                                            <option value="Credit Card">Credit Card</option>
+                                            <option value="Bank Transfer">Bank Transfer</option>
+                                            <option value="Bank Remittance">Bank Remittance</option>
+                                        </select>
+                                </div>
+
+
                                 <div class="col-sm-2">
                                     <button type="button" class="btn btn-primary btn-sm" onclick="get_cp_reports();">Run Report</button>
                                 </div>
@@ -76,6 +89,7 @@ include('workers/getters/functions.php');
                                                 <th>Recipt ID</th>
                                                 <th>Invoice#</th>
                                                 <th>Received On</th>
+                                                <th>Payment Mode</th>
                                                 <th>Customer</th>
                                                 <th>Tax</th>
                                                 <th>Total</th>
@@ -84,7 +98,7 @@ include('workers/getters/functions.php');
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if((isset($_GET['st'])&&$_GET['st']!='')||(isset($_GET['end'])&&$_GET['end']!='')||(isset($_GET['custwise'])&&$_GET['custwise'])){ 
+                                            if((isset($_GET['st'])&&$_GET['st']!='')||(isset($_GET['end'])&&$_GET['end']!='')||(isset($_GET['custwise'])&&$_GET['custwise'])||(isset($_GET['paymentmode'])&&$_GET['paymentmode'])){ 
 
                                                 $timestamp = strtotime($_GET['st']);
                                                 $st = date('Y-m-d', $timestamp);
@@ -92,7 +106,7 @@ include('workers/getters/functions.php');
                                                 $end = date('Y-m-d', $timestamp);
                                                 $custwise = $_GET['custwise'];
 
-                                             echo   $sql = "SELECT * from customer_payments cp,customerprofile c,invoices i where 1=1 ";
+                                               $sql = "SELECT * from customer_payments cp,customerprofile c,invoices i where 1=1 ";
                                                 if($_GET['st']!=''){
                                                     if($st==$end){
                                                         $sql.= " and cp.cust_payment_date='$st' ";   
@@ -106,7 +120,11 @@ include('workers/getters/functions.php');
                                                     $sql.=" and cp.cust_payment_customer='".$_GET['custwise']."'";    
                                                 }
 
-                                                $sql.=" and cp.cust_payment_customer=c.custid and i.inv_code=cp.cust_payment_invoice_no;";    
+                                                if(isset($_GET['paymentmode'])&&$_GET['paymentmode']!=''){
+                                                    $sql.=" and cp.cust_payment_mode='".$_GET['paymentmode']."'";    
+                                                }
+
+                                               $sql.=" and cp.cust_payment_customer=c.custid and i.inv_code=cp.cust_payment_invoice_no;";    
 
                                             }else{
                                                 $sql = "SELECT * from customer_payments cp,customerprofile c,invoices i where cp.cust_payment_customer=c.custid and i.inv_code=cp.cust_payment_invoice_no;";    
@@ -121,6 +139,7 @@ include('workers/getters/functions.php');
                                                 <td>'.$row['cust_payment_id'].'</td>
                                                 <td>'.$row['cust_payment_invoice_no'].'</td>
                                                 <td>'.$row['cust_payment_date'].'</td>
+                                                <td>'.$row['cust_payment_mode'].'</td>
                                                 <td>'.$row['custname'].'</td>
                                                 <td>'.nf((get_total($inv_items_arr))-nf(get_total_notax($inv_items_arr))).'</td>
                                                 <td>'.nf($row['cust_payment_amount']).'</td>
@@ -138,6 +157,7 @@ include('workers/getters/functions.php');
                                         </tbody>
                                         <tfoot>
                                             <tr>
+                                                <th></th>
                                                 <th></th>
                                                 <th></th>
                                                 <th></th>
@@ -167,6 +187,7 @@ include('workers/getters/functions.php');
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 <script>
+    var page_paymentmode = "<?php if(isset($_GET['paymentmode'])){ echo $_GET['paymentmode']; } ?>";
     var page_custwise = "<?php if(isset($_GET['custwise'])){ echo $_GET['custwise']; } ?>";
     var page_st = "<?php if(isset($_GET['st'])){ echo $_GET['st']; } ?>";
     var page_end = "<?php if(isset($_GET['end'])){ echo $_GET['end']; } ?>";
@@ -175,6 +196,7 @@ include('workers/getters/functions.php');
         var vendor_params =[];
         Page.load_select_options('custwise',vendor_params,'customerprofile',' Customer','custid','custname');
         $('#custwise').val(page_custwise);
+        $('#payment_mode').val(page_paymentmode);
         $("#reset-date").hide();
 
         $('#daterange').daterangepicker({
@@ -215,9 +237,13 @@ include('workers/getters/functions.php');
         var cust_name = cust_name_json.custname;
         var printhead = cust_var!=''?'<p><b>Customer : </b>'+cust_name+'</p>':'';
         printhead+= date_range!=''?'<p><b>Date : </b>'+date_range+'</p>':'';
+        printhead+= page_paymentmode!=''?'<p><b>Payment mode : </b>'+page_paymentmode+'</p>':'';
         var excel_printhead = cust_var!=''?'Customer : '+cust_name:'';
         excel_printhead+= '  ';
         excel_printhead+= date_range!=''?'Date : '+date_range:'';
+        excel_printhead+= '  ';
+        excel_printhead+= page_paymentmode!=''?'Payment mode : '+page_paymentmode+' ':'';
+
 
         var table = $('#po_reports').DataTable( {
             lengthChange: false,
@@ -230,14 +256,14 @@ include('workers/getters/functions.php');
                         i : 0;
                 };
                 var grossval = api
-                .column( 5 )
+                .column( 6 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 ).toFixed(2);
 
                 var taxgrossval = api
-                .column( 4 )
+                .column( 5 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
@@ -247,8 +273,8 @@ include('workers/getters/functions.php');
 
 
                 $( api.column( 0 ).footer() ).html('Total');
-                $( api.column( 5 ).footer() ).html(grossval);
-                $( api.column( 4 ).footer() ).html(taxgrossval);
+                $( api.column( 6 ).footer() ).html(grossval);
+                $( api.column( 5 ).footer() ).html(taxgrossval);
                 //   $( api.column( 5 ).footer() ).html(taxamt);
                 //   $( api.column( 7 ).footer() ).html(netval);
                 //  $( api.column( 8 ).footer() ).html(bal);
@@ -314,7 +340,8 @@ include('workers/getters/functions.php');
             end = date_range[1].replace(" ","");
         }
         var custwise = $('#custwise').val();
-        location.href="PaymentsRecievedReports.php?st="+st+"&end="+end+"&custwise="+custwise;
+        var paymentmode = $('#payment_mode').val();
+        location.href="PaymentsRecievedReports.php?st="+st+"&end="+end+"&custwise="+custwise+"&paymentmode="+paymentmode;
     }
 
     function cb(start, end) {

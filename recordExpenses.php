@@ -247,7 +247,9 @@ include("database/db_conection.php");//make connection here
 	<td><input type="text" name="expense_desc" id="expense_desc" placeholder="Description"    data-id="" class="form-control hsncode"></td>
 	<!-- <td><input type="text" name="qty"   placeholder="Qty" data-id="" class="form-control qty"></td>
 	<td><input type="text" name="price" placeholder="Rate/Qty"    data-id="" class="form-control price"></td> -->
-	<td><input type="text" name="expense_amount" id="expense_amount" placeholder="Amount" data-id="" class="form-control amount"></td>
+	<td><input type="text" name="expense_amount" id="expense_amount" placeholder="Amount" data-id="" 
+    onkeypress="scrap_rowitem.update_math_vals_for_scrap();"   
+    onkeyup="scrap_rowitem.update_math_vals_for_scrap();" class="form-control amount"></td>
 	
 	<!-- <td>                       
                                             <select class="form-control amount" id="taxname"  onchange="rowitem.update_math_vals('po');"; name="taxname" style="line-height:1.5;">
@@ -477,6 +479,8 @@ $(function(){
                     $('#tb tr').eq(r+1).find('#expense_amount').val(po_items_json[r].expense_amount);
 
                 }
+
+                scrap_rowitem.update_math_vals_for_scrap();
         }
 
 	  $("form#add_expense_form").submit(function(e){
@@ -495,12 +499,12 @@ $(function(){
 			expense_items_ele = {
 				expense_category:expense_category,
 				expense_desc:expense_desc,
-				expense_amount:expense_amount
+				expense_amount:+expense_amount
 			}
 
 			expense_items[expense_items.length] = expense_items_ele;
 
-            expense_total_amount+=expense_amount;
+            expense_total_amount+= +expense_amount;
 		}
 
 	  var $form = $("#add_expense_form");
