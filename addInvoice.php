@@ -93,7 +93,7 @@ include('header.php');
                                         name="inv_customer" required>
                                             <option selected>--Select Customer--</option>
                                             <?php
-                                            $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
+                                            $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile where custype!='Scrap'");
                                             while ($row = $sql->fetch_assoc()){	
                                                 $custid=$row['custid'];
                                                 $custname=$row['custname'];

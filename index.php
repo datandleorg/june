@@ -1,6 +1,41 @@
 <?php 
 include('header.php');
 include('workers/getters/functions.php');
+
+function getpaymentstotal(){
+    global $dbcon;
+    $sql_q = "SELECT SUM(cust_payment_amount) as cust_payments from customer_payments ";
+    $exc_q = mysqli_query($dbcon,$sql_q)or die("Error");
+
+    $row=mysqli_fetch_assoc($exc_q);
+    return $row['cust_payments']?$row['cust_payments']:0;
+
+}
+
+function getExpensestotal(){
+    global $dbcon;
+    $sql_q = "SELECT SUM(expense_total_amount) as totalexpense from expenses  ";
+    $exc_q = mysqli_query($dbcon,$sql_q)or die("Error");
+
+    $row=mysqli_fetch_assoc($exc_q);
+    return $row['totalexpense']?$row['totalexpense']:0;
+
+}
+
+function getDepositstotal(){
+    global $dbcon;
+    $sql_q = "SELECT SUM(amount) as total_bankdeposits from bankdeposit ";
+    $exc_q = mysqli_query($dbcon,$sql_q)or die("Error");
+
+    $row=mysqli_fetch_assoc($exc_q);
+    return $row['total_bankdeposits']?$row['total_bankdeposits']:0;
+
+}
+
+function getCashOnHand(){
+     return getpaymentstotal()-getExpensestotal()-getDepositstotal();
+}
+
 function get_users_count(){
     global $dbcon;
     $sql_q = "select id from userprofile where status=1";
@@ -221,15 +256,17 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                 
                 <div class="col-xs-12 col-md-6 col-lg-6 col-xl-3">
 				    <div class="card-box noradius noborder bg-warning">
-                    <h6 class="m-b-20 text-white counter">Income:&nbsp;&nbsp;</a><?php echo get_users_count();?></h6>
-                            <h6 class="m-b-20 text-white counter">Expenses:&nbsp;<?php echo get_users_count();?></h6>
-                            <h6 class="m-b-20 text-white counter">Bank Deposit:&nbsp;<?php echo get_users_count();?></h6>
-                            <h6 class="text-white">Cash on Hand:&nbsp;<?php echo get_users_count();?></h6>
+                    <h6 class="m-b-20 text-white counter">Income:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
+                            <h6 class="m-b-20 text-white counter">Expenses:&nbsp;<?php echo getExpensestotal();?></h6>
+                            <h6 class="m-b-20 text-white counter">Bank Deposit:&nbsp;<?php echo getDepositstotal();?></h6>
+                            <h6 class="text-white">Cash on Hand:&nbsp;<?php echo getCashOnHand();?></h6>
 				    </div>
 				</div>
                 
             </div>
+
         </div>
+
     </div>
 
         

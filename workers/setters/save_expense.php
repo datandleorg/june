@@ -33,7 +33,7 @@ function uploadBill($file,$expense_no){
 
     if (file_exists($target_file)) {
 
-        echo $path = $_SERVER['DOCUMENT_ROOT'].'upload/';
+       $path = $_SERVER['DOCUMENT_ROOT'].'upload/';
         //unlink($path);
     }
 

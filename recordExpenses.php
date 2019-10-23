@@ -533,7 +533,7 @@ $(function(){
 	    formData.append("expense_no",page_expense_no);
 	    formData.append("action",page_action?page_action:"add");
 	    formData.append("table","expenses");
-	    formData.append("expense_total_amount","expense_total_amount");
+	    formData.append("expense_total_amount",expense_total_amount);
         
 
 		
@@ -544,10 +544,8 @@ $(function(){
             contentType: false,
             type: 'POST',
             success:function(response){
-                console.log(response);
                 if(JSON.parse(response).status){
-                   console.log(response);
-                   //location.href="listRecordExpenses.php";
+                   location.href="listRecordExpenses.php";
                  }
 			}
         });
