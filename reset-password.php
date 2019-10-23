@@ -16,7 +16,7 @@ if(isset($_POST['reset_submit'])){
 		$message = "
 		<html>
 		<head>
-		<title>Reset your e-Schoolz Account Password</title>
+		<title>Reset your Lento User Account Password</title>
 		</head>
 		<body>
 		<tr>
@@ -26,11 +26,11 @@ if(isset($_POST['reset_submit'])){
 			<td>We have received your request to reset your account password associated with this email address. If you have not placed this request, you can safely ignore this email and we assure you that your account is completely secure.</td>
 		</tr>
 		<tr><td>If you do need to change your password, you can use the link given below</td></tr>
-		<tr><td><a href='http://www.e-schoolz.in/dhirajtrial/confirm-password.php?fgtpwd=".md5(strtotime("now"))."' target='_blank'>RESET PASSWORD</a></td></tr>
+		<tr><td><a href='http://www.eschoolzerp.com/lento/confirm-password.php?fgtpwd=".md5(strtotime("now"))."' target='_blank'>RESET PASSWORD</a></td></tr>
 		<tr><td>Please contact support@e-schoolz.in for any quries regarding this</td></tr>
 		<tr><td>Cheers</td></tr>
 		<tr><td>e-Schoolz Team</td></tr>
-		<tr><td>www.e-schoolz.in</td></tr>
+		<tr><td>www.eschoolzerp.com</td></tr>
 		</table>
 		</body> 
 		</html>
@@ -40,7 +40,7 @@ if(isset($_POST['reset_submit'])){
 		$headers = "MIME-Version: 1.0" . "\r\n";
 		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 		// More headers
-		$headers .= 'From: <info@e-schoolz.in>' . "\r\n";
+		$headers .= 'From: <noreply@eschoolzerp.com>' . "\r\n";
 		// $headers .= 'Cc: test@e-schoolz.in' . "\r\n";
 		//echo '<pre>';
 		//echo 'to '. $to.' subject '.$subject.' message '.$message;
@@ -133,7 +133,7 @@ if(isset($_POST['reset_submit'])){
 
 <footer class="footer">
 	<div class="container">
-    <span class="text-muted">Copyright@Dhiraj Agro Private Limited</span>
+    <span class="text-muted">Copyright@ Lento Foods India Private Limited</span>
     </div>
 </footer>
 	

@@ -119,7 +119,7 @@ reConfirmPassword.onkeyup = validatePassword;
 
 <footer class="footer">
 	<div class="container">
-    <span class="text-muted">Copyright@Dhiraj Agro Private Limited</span>
+    <span class="text-muted">Copyright@Lento Foods India Private Limited</span>
     </div>
 </footer>
 	
