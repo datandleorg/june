@@ -73,9 +73,9 @@ include('workers/getters/functions.php');
                                     <table id="po_reports" class="table table-bordered" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>Total Customer Payments </th>
-                                                <th>Total Expenses</th>
-                                                <th>Total Bank Deposits</th>
+                                                <th>Payments Received </th>
+                                                <th>Expenses</th>
+                                                <th>Bank Deposits</th>
                                                 <th>Cash on Hand</th>
                                             </tr>
                                         </thead>

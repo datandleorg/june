@@ -52,15 +52,15 @@
 
                                     <td class="text-right">  <a  href="listRecordPayments.php">
                                         <i class="fa fa-angle-right bigfonts" aria-hidden="true">&nbsp;</i>Payments Transactions </a>
-                                        &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="Manual Payments Received Transactions Report."></i>
-                                    </td>
+                                        &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="Manual Payments Received Transactions Report."></i><br>
+                                     <a href="BankDepositReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Bank Deposit Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when  amount is deposited into company's bank Report is generated."></i>
+									</td>
                                 </tr> 
 
 
                                 <tr>
                                     <td>
-                                        <a href="listExpenses.php">
-                                            <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Expenses by Payee Type</a>
+                                       <a href="ExpensesReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Expenses Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Expense is recorded  Report is generated."></i>
                                     </td>      
                                     
                                     
@@ -159,11 +159,8 @@
                                     </td>
 
                                     <td class="text-center">
-                                    <a href="VendorItemWise.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Vendor Wise (Inward) Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
-                                    <a href="SummaryReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Summary Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
-                                    <a href="BankDepositReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Bank Deposit Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
-                                    <a href="ExpensesReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Expenses Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i>
-                                    </td>
+                                    <a href="VendorItemWise.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Vendor Wise (Inward) Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when Inward qty is added through GRN, vendor wise Item purchased Report is generated."></i><br><br>
+                                     </td>
 
 
                             </tbody>
@@ -256,8 +253,10 @@
                                             <td>
                                             <a href="salesItemwiseReport.php">
                                                 <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Customer/Item wise Sales Report                                        
-                                            </a>&nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="Customer Outstanding Report."></i>
-                                        </td>
+                                            </a>&nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="Customer Outstanding Report."></i><br><br>
+<a href="SummaryReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Collection Balance Summary Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="collection epenses bank deposit and cash on hand Report"></i><br>
+                                                                         
+									   </td>
 
                                     </tr>
 

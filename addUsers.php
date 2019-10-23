@@ -115,7 +115,7 @@ include("database/db_conection.php");//make connection here
                                         <!--option selected>Open Org ID</option-->
                                         <?php 
                                         include("database/db_conection.php");//make connection here
-                                        $sql = mysqli_query($dbcon,"SELECT orgid,concat(orgid,'-',orgname) as orgname FROM comprofile WHERE orgid='001'
+                                        $sql = mysqli_query($dbcon,"SELECT orgid,concat(orgid,'-',orgname) as orgname FROM comprofile WHERE orgid='COMP001'
                                                 ORDER BY id ASC	");
                                        
                                         
