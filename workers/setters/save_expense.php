@@ -79,7 +79,7 @@ if (isset($_POST['expense_payee'])) {
     $table=$_POST['table'];
 
 
-    $bill =  $_FILES['expense_file_src'];
+    $bill =  isset($_FILES['expense_file_src']) ? $_FILES['expense_file_src'] : "";
     
     $return=array();
     $new_array=array();

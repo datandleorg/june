@@ -731,3 +731,29 @@
         }
 
     };
+
+    var scrap_rowitem = {
+        scrap_entry:true,
+        stkalert:function(x){
+            //alert();
+            var itemcode = $(x).closest('td').prev('td').find('#item_select').val();
+            console.log(itemcode);
+            var item_det = Page.get_edit_vals(itemcode,'scrapinventory','scrap_itemcode');
+            var inQty = eval($(x).val());
+            if(inQty>eval(item_det.scrap_inventory_qty)){
+                error='<span class="text-danger">The Qty entered is greater than the available stock '+item_det.scrap_inventory_qty+' ,please enter lesser qty</span>';
+                $('#show_errors').show();
+                $('#show_errors').html(error);
+                $(x).css('border','1px solid red');
+                scrap_rowitem.scrap_entry=false;
+            }else{
+                $('#show_errors').hide();
+                $('#show_errors').html('');
+                $(x).css('border','inherit');
+                scrap_rowitem.scrap_entry=true;
+
+            }
+
+
+        }
+    }

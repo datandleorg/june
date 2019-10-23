@@ -446,7 +446,7 @@ include('header.php');
 
                                         <!--td><input type="text" name="description" placeholder="Item Name" class="form-control"></td
 <td><input type="text" name="itemcode" placeholder="Item Details" class="form-control"></td>-->
-                                            <td><input id="qty" type="text" name="qty" onkeypress="sales_rowitem.update_math_vals_for_manual();sales_rowitem.stkalert(this);"   onkeyup="sales_rowitem.update_math_vals_for_manual();sales_rowitem.stkalert(this);" placeholder="Qty" data-id="" class="form-control qty"></td>                                        <td>
+                                            <td><input id="qty" type="text" name="qty" onkeypress="sales_rowitem.update_math_vals_for_manual();scrap_rowitem.stkalert(this);"   onkeyup="sales_rowitem.update_math_vals_for_manual();scrap_rowitem.stkalert(this);" placeholder="Qty" data-id="" class="form-control qty"></td>                                        <td>
                                         <select class="form-control amount" id="uom"  onchange="sales_rowitem.update_math_vals_for_manual();"; name="uom" style="line-height:1.5;">
                                             <option value="" selected>Open Unit</option>
                                             <?php 
@@ -1012,7 +1012,7 @@ include('header.php');
             }
 
 
-            if (sales_rowitem.sales_entry){
+            if (scrap_rowitem.scrap_entry){
 
                 $.ajax ({
                     url: 'workers/setters/save_inv_acc.php',
@@ -1035,6 +1035,7 @@ include('header.php');
 
                 });
             }else{
+               // alert("error in entries");
                 return false;
             }
 
