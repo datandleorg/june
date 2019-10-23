@@ -29,7 +29,7 @@
 
 
                             <span class="pull-right">
-                                <a href="addVendorCredits.php" class="btn btn-primary btn-sm"><i class="fa fa-user-plus" aria-hidden="true"></i>
+                                <a href="addCustomerCredits.php" class="btn btn-primary btn-sm"><i class="fa fa-user-plus" aria-hidden="true"></i>
                                     Add Customer Credits</a></span>
 
                             <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"></i><b> Customer Credits list </b></h3>
@@ -43,7 +43,7 @@
                                             <th>Credit No.</th>												
                                             <th>Credit Date</th>												
                                             <th>Status</th>												
-                                            <th>Vendor</th>
+                                            <th>Customer</th>
                                             <th>Amount</th>												
                                             <th>Credit Balance</th>												
                                             <th>User</th>												
@@ -55,7 +55,7 @@
 
 
                                         include("database/db_conection.php");//make connection here
-                                        $sql = "SELECT c.*,cust.custname
+                                        $sql = "SELECT c.*,concat(cust.custid,' ',custname) as custname
 										FROM customercredits c,customerprofile cust
 										WHERE c.customer_credits_custid=cust.custid
                                         ORDER BY c.id DESC ";

@@ -56,8 +56,8 @@ function get_itemDetails($dbcon,$code){
         
         <h5 > 
         <img src="images/logo.png" width="50px" height="50px"/>    
-        <div style="text-align:center">Lento Foods India Pvt. Ltd., <br>
-		(A Franchisee of Parle Agro Pvt Ltd)</div> </h5>
+        <div style="text-align:center">Lento Foods India Pvt. Ltd.,
+		</div> </h5>
         <h3><div style="text-align:center">CUSTOMER PAYMENTS RECEIVED VOUCHER</div></h3> 
 
         <table class="p_table" width="100%" style="border:1px solid #000;padding:10px;">
