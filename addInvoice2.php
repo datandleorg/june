@@ -188,7 +188,7 @@ include('header.php');
                                 <div class="form-row">
                                     <div class="form-group col-md-8">
                                         <label for="inputState"><span class="text-danger">Customer Name*</span></label>
-                                        <select id="inv_customer" onchange="post_address(this.value);" class="form-control form-control-sm" name="inv_customer" required>
+                                        <select id="inv_customer" onchange="post_address(this.value);" class="select2 form-control form-control-sm" name="inv_customer" required>
                                             <option selected>--Select Customer--</option>
                                             <?php
                                             $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile where custype='Scrap' ");
@@ -282,11 +282,11 @@ include('header.php');
                                  <!-- truck no and driver name --->
                                  <div class="form-row">	
                                     <div class="form-group col-md-4">
-                                        <input type="text" placeholder="Truck no."  name="inv_truck_no" id="inv_truck_no" required class="form-control form-control-sm" > 
+                                        <input type="text" placeholder="Truck no.(optional)"  name="inv_truck_no" id="inv_truck_no"  class="form-control form-control-sm" > 
                                     </div>
 
                                     <div class="form-group col-md-4">
-                                        <input type="text" placeholder="Driver Name" name="inv_driver_name" id="inv_driver_name" required class="form-control form-control-sm"  > 
+                                        <input type="text" placeholder="Driver Name(optional)" name="inv_driver_name" id="inv_driver_name" class="form-control form-control-sm"  > 
                                     </div>
                                 </div>
 

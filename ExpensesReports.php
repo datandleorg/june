@@ -251,7 +251,7 @@ include('workers/getters/functions.php');
                         $(win.document.body)
                             .css( 'font-size', '10pt' )
                             .prepend(
-                            '<p><img src="<?php echo $baseurl;?>assets/images/logo.png" style="width:50px;height:50px;" /></p><p class="lead text-center"><b>Payments Received</b><br/></p>'+printhead+'</div>'
+                            '<p><img src="<?php echo $baseurl;?>assets/images/logo.png" style="width:50px;height:50px;" /></p><p class="lead text-center"><b>Expenses Report</b><br/></p>'+printhead+'</div>'
                         );
 
                         $(win.document.body).find( 'table' )

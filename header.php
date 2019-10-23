@@ -153,8 +153,8 @@ if(isset($_SESSION['login_email'])){
 							<!--a href="PaymentsRecievedReports.php"><class="col">Payments Received</a><br><br><br-->
 						</div>
 						<div class="fa fa-shopping-basket col">Inventory<br><br><br>
-							<a href="listPurchaseItemMaster.php"><class="col-md5">Purchas(Inward)</a><br><br><br>
-							<a href="listSalesItemMaster.php"><class="col">Sales(Outward)</a><br><br><br>
+							<a href="listPurchaseItemMaster.php"><class="col-md5">Item Master(Purchase)</a><br><br><br>
+							<a href="listSalesItemMaster.php"><class="col">Item Master(Sales)</a><br><br><br>
 							<a href="listScrapItemMaster.php"><class="col">Scrap-INVENTORY</a><br><br><br>	
 						</div>
 						<div class="fa fa-shopping-cart col">Production<br><br><br>

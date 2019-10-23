@@ -110,7 +110,7 @@ if(isset($_GET['orgid'])){ $orgidUrl = $_GET['orgid']; }
 									
                                 
                                 <div class="form-row">
-                                        <div class="form-group col-md-8">
+                                        <div class="form-group col-md-10">
                                             <label>Scrap Item Name<span class="text-danger">*</span></label>
                                             <input type="text"
                                             onkeyup="checkForProduct(this.value)"

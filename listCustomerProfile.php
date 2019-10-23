@@ -44,7 +44,7 @@
 													<th style="width:50px">Customer ID</th>
 													<th style="width:230px">Name</th>
 													<!--th style="width:40px">Type</th-->
-													<th style="width:40px">Location</th>
+													<th style="width:40px">Cust. Type</th>
 													<th style="width:20px">Email</th>
 													<th style="width:20px">Mobile</th>
 													<th style="width:20px">Open Balance</th>
@@ -59,7 +59,7 @@
 													
 													//$sql = "select image,compcode,concat(title,name) as name,
 													//ctype,location,email,mobile,id from comprofile";
-													$sql = "SELECT custid, concat(title,' ',custname) as custname,blocation,email,
+													$sql = "SELECT custid, concat(title,' ',custname) as custname,custype,email,
 													mobile,status,cust_opening_bal,handler,id from customerprofile
 													order by id asc";
 													$result = mysqli_query($dbcon,$sql);
@@ -71,7 +71,7 @@
 													echo '<td><a href="editCustomerProfile.php?id='.$row_id.'" >'.$row['custid'] .'</a></td>';
 													echo '<td>'.$row['custname'].'<br /></td>';
 													//echo '<td>'.$row['custype'].'</td>';
-													echo '<td>'.$row['blocation'].'</td>';
+													echo '<td>'.$row['custype'].'</td>';
 													echo '<td>'.$row['email'].'</td>';
 													echo '<td>'.$row['mobile'].'</td>';
 													echo '<td>'.$row['cust_opening_bal'].'</td>';
