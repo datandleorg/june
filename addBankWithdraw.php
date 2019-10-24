@@ -16,7 +16,7 @@ if(isset($_POST['submit']))
     
 
     $transid ="";
-    $prefix = "CR";
+    $prefix = "DR";
 
 
     $sql="SELECT MAX(id) as latest_id FROM bankdeposit ORDER BY id DESC";
@@ -36,14 +36,14 @@ if(isset($_POST['submit']))
 
     //$image =base64_encode($image);		
 
-    $insert_bankdeposit="INSERT INTO bankdeposit(`transid`,`depositdate`,`compcode`,`bankname`,`acctno`,`amount`,`paymethod`,`paytype`,`referenceno`,`notes`,`createdby`)
+    $insert_bankdeposit="INSERT INTO bankwithdrawels(`transid`,`depositdate`,`compcode`,`bankname`,`acctno`,`amount`,`paymethod`,`paytype`,`referenceno`,`notes`,`createdby`)
 	VALUES('$transid','$depositdate','$compcode','$bankname','$acctno','$amount','$paymethod','$paytype','$referenceno','$notes','$createdby')";
 
     echo "$insert_bankdeposit";
     if(mysqli_query($dbcon,$insert_bankdeposit))
     {
         echo "<script>alert('Bank Deposit Added Successfully ')</script>";
-        header("location:listBankDeposit.php");
+        header("location:listBankWithdrawels.php");
     } else {  die('Error: ' . mysqli_error($dbcon));
             echo "<script>alert('Bank Deposit creation unsuccessful ')</script>";
            }
@@ -66,10 +66,10 @@ if(isset($_POST['submit']))
             <div class="row">
                 <div class="col-xl-12">
                     <div class="breadcrumb-holder">
-                        <h1 class="main-title float-left">Bank Credits/Deposit</h1>
+                        <h1 class="main-title float-left">Bank Withdrawel</h1>
                         <ol class="breadcrumb float-right">
                             <a  href="index.php"><li class="breadcrumb-item">Home</a></li>
-                        <li class="breadcrumb-item active">Bank Credits/Deposit</li>
+                        <li class="breadcrumb-item active">Bank Withdrawels</li>
                         </ol>
                     <div class="clearfix"></div>
                 </div>
@@ -94,7 +94,7 @@ if(isset($_POST['submit']))
                     <div class="card-header">
                         <!--h3><i class="fa fa-check-square-o"></i>Create Company </h3-->
                         <h3><div class="fa-hover col-md-8 col-sm-8">
-                            <i class="fa fa-bank bigfonts" aria-hidden="true"></i> Credit Bank Deposit<h3>
+                            <i class="fa fa-bank bigfonts" aria-hidden="true"></i> Debit Bank Account<h3>
                             </div>
 
 
@@ -167,7 +167,7 @@ if(isset($_POST['submit']))
                                         <form class="form-inline">	
                                             <div class="input-group mb-2 mr-sm-2 mb-sm-0">								  								  
                                                 <div class="input-group-addon">INR</div>
-                                                <input type="text" name="amount" class="form-control form-control-sm" id="amount" placeholder="Enter Amount" required>
+                                                <input type="text" name="amount" class="form-control form-control-sm" id="amount" placeholder="Enter Withdrawel Amount" required>
                                             </div>
                                             </div></br>										
 

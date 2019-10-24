@@ -168,6 +168,7 @@ if(isset($_SESSION['login_email'])){
 							<a href="addCreditNotes.php"><class="col">Credit Notes</a><br><br><br>
 							<a href="listRecordExpenses.php"><class="col">Expenses</a><br><br><br>
 							<a href="listBankDeposit.php"><class="col">Bank Deposit</a><br><br><br>
+							<a href="listBankWithdrawels.php"><class="col">Bank Withdrawels</a><br><br><br>
 						</div>
                           
                         </div>

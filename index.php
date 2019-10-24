@@ -247,10 +247,15 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                 </div>
 
                 <div class="col-md-3">
-                    <div class="card-box noradius noborder bg-default">
-                            <h5 class="card-title lead text-center text-white">USERS</h5>
+                    <div class="card-box noradius noborder bg-danger">
+                            <!--h5 class="card-title lead text-center text-white">USERS</h5>
                             <br/>
-                            <p class="m-b-20 text-white counter text-center text-white"><?php  print_r(get_users_count());?></p>
+                            <p class="m-b-20 text-white counter text-center text-white"><?php  print_r(get_users_count());?></p-->
+							
+							<h6 class="m-b-20 text-white counter">Users:&nbsp;&nbsp;</a><?php  print_r(get_users_count());?></p>
+							<h6 class="m-b-20 text-white counter"><a href="listCustomerCredits.php">Customer Credits:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
+							 <h6 class="m-b-20 text-white counter">Petty Cash:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
+							
                     </div>
                 </div>
                 
@@ -259,7 +264,7 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                     <h6 class="m-b-20 text-white counter">Income:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
                             <h6 class="m-b-20 text-white counter">Expenses:&nbsp;<?php echo getExpensestotal();?></h6>
                             <h6 class="m-b-20 text-white counter">Bank Deposit:&nbsp;<?php echo getDepositstotal();?></h6>
-                            <h6 class="text-white">Cash on Hand:&nbsp;<?php echo getCashOnHand();?></h6>
+                            <h6 class="text-white">Undeposited Funds:&nbsp;<?php echo getCashOnHand();?></h6>
 				    </div>
 				</div>
                 

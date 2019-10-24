@@ -62,7 +62,7 @@ function payment_status($payment_status,$newdate,$po_payterm,$grn_date){
                                     <select id="custwise" class="form-control form-control-md" name="custwise">
                                         <option value=''>--Select Customer--</option>
                                         <?php
-                                        $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
+                                        $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile where custype='Scrap' ");
                                         while ($row = $sql->fetch_assoc()){	
                                             $custid=$row['custid'];
                                             $custname=$row['custname'];
