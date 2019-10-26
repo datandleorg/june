@@ -52,9 +52,22 @@
 
                                     <td class="text-right">  <a  href="listRecordPayments.php">
                                         <i class="fa fa-angle-right bigfonts" aria-hidden="true">&nbsp;</i>Payments Transactions </a>
-                                        &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="Manual Payments Received Transactions Report."></i><br><br>
-                                     <a href="BankDepositReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;Bank Deposit Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when  amount is deposited into company's bank Report is generated."></i>
+                                        &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" data-toggle="popover" data-trigger="focus"
+										data-placement="top" title="Manual Payments Received Transactions Report."></i><br><br>
+                                   
+								   <a href="BankDepositReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;
+									 Bank Deposit Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" 
+									 data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when  amount is deposited into company's bank 
+									 Report is generated."></i><br><br>
+
+									 <a href="BankWithdrawelsReports.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;
+									 Bank Withdrawels Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" 
+									 data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when  amount is deposited into company's bank 
+									 Report is generated."></i><br><br>
+									 
+									 
 									</td>
+									
                                 </tr> 
 
 

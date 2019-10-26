@@ -10,12 +10,35 @@ if(isset($_POST['submit']))
     $acctype=$_POST['acctype'];//same
     $branch=$_POST['branch'];//same
     $ifsc=$_POST['ifsc'];//same
+    $openbalance=$_POST['openbalance'];//same
+    $asofdate=$_POST['asofdate'];//same
     
+	
+	$bankcode ="";
+    $prefix = "BNK-";
+
+
+    $sql="SELECT MAX(id) as latest_id FROM compbank ORDER BY id DESC";
+    if($result = mysqli_query($dbcon,$sql)){
+        $row   = mysqli_fetch_assoc($result);
+        if(mysqli_num_rows($result)>0){
+            $maxid = $row['latest_id'];
+            $maxid+=1;
+
+            $bankcode = $prefix.$maxid;
+        }else{
+            $maxid = 0;
+            $maxid+=1;
+            $bankcode = $prefix.$maxid;
+        }
+    }
+
+	
 
     //$image =base64_encode($image);		
 
-    $insert_compbank="INSERT INTO compbank(`orgid`,`bankname`,`acctno`,`acctname`,`acctype`,`branch`,`ifsc`)
-	VALUES('$orgid','$bankname','$acctno','$acctname','$acctype','$branch','$ifsc')";
+    $insert_compbank="INSERT INTO compbank(`orgid`,`bankcode`,`bankname`,`acctno`,`acctname`,`acctype`,`branch`,`ifsc`,`openbalance`,`asofdate`)
+	VALUES('$orgid','$bankcode','$bankname','$acctno','$acctname','$acctype','$branch','$ifsc','$openbalance','$asofdate')";
 
      echo "$insert_compbank";
     if(mysqli_query($dbcon,$insert_compbank))
@@ -162,6 +185,20 @@ if(isset($_POST['submit']))
 									  <input type="text" class="form-control" name="ifsc" placeholder="IFSC Code.." required class="form-control" autocomplete="off">
 									</div>
 									</div>
+									<div class="form-row">
+									<div class="form-group col-md-8">
+									  <label for="inputZip">Opening Balance<span class="text-danger">*</span></label>
+									  <input type="text" class="form-control" name="openbalance" placeholder="" required class="form-control" autocomplete="off">
+									</div>
+									</div>
+									<div class="form-row">
+									<div class="form-group col-md-8">
+									  <label for="inputZip">(Open Balance)As of Date<span class="text-danger"></span></label>
+									  <input type="date" class="form-control" name="asofdate" class="form-control"  value="<?php echo date("Y-m-d");?>">
+									</div>
+									</div>
+									
+									
 									
                                 <div class="form-row">
                                     &nbsp;<div class="form-group text-right m-b-10">

@@ -75,11 +75,11 @@ include('workers/getters/functions.php');
                                             <tr>
                                                 <th>Transaction Id</th>
                                                 <th>Date</th>
-                                                <th>Deposit Mode</th>
+                                                <th>Withdrawel Mode</th>
 												<th>Refernce#</th>
                                                 <th>Bank Name</th>
                                                 <th>A/C No.</th>
-                                                <th>Amount</th>
+                                                <th>Withdrawel Amount</th>
                                                 <th>Created by</th>
                                             </tr>
                                         </thead>
@@ -92,17 +92,17 @@ include('workers/getters/functions.php');
                                                 $timestamp = strtotime($_GET['end']);
                                                 $end = date('Y-m-d', $timestamp);
 
-                                               $sql = "SELECT * from bankdeposit bd where 1=1 ";
+                                               $sql = "SELECT * from bankwithdrawels bw where 1=1 ";
                                                 if($_GET['st']!=''){
                                                     if($st==$end){
-                                                        $sql.= " and bd.depositdate='$st' ";   
+                                                        $sql.= " and bw.withdraweldate='$st' ";   
                                                     }else{
-                                                        $sql.=" and (bd.depositdate BETWEEN '$st' AND '$end') ";   
+                                                        $sql.=" and (bw.withdraweldate BETWEEN '$st' AND '$end') ";   
                                                     }
                                                 }
 
                                             }else{
-                                                $sql = "SELECT * from bankdeposit bd ;";    
+                                                $sql = "SELECT * from bankwithdrawels bw ;";    
                                             }
 
                                             $result = mysqli_query($dbcon,$sql);
@@ -111,7 +111,7 @@ include('workers/getters/functions.php');
 
                                                     echo '                           <tr>
                                                 <td>'.$row['transid'].'</td>
-                                                <td>'.$row['depositdate'].'</td>
+                                                <td>'.$row['withdraweldate'].'</td>
                                                 <td>'.$row['paymethod'].'</td>
 												<td>'.$row['referenceno'].'</td>
                                                 <td>'.$row['bankname'].'</td>

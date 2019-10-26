@@ -38,10 +38,10 @@ if(isset($_POST['submit']))
 
     $insert_bankdeposit="INSERT INTO bankdeposit(`transid`,`depositdate`,`compcode`,`bankname`,`acctno`,`amount`,`paymethod`,`paytype`,`referenceno`,`notes`,`createdby`)
 	VALUES('$transid','$depositdate','$compcode','$bankname','$acctno','$amount','$paymethod','$paytype','$referenceno','$notes','$createdby')";
-
-    echo "$insert_bankdeposit";
+	
+    echo "$update_compbank";
     if(mysqli_query($dbcon,$insert_bankdeposit))
-    {
+    {	
         echo "<script>alert('Bank Deposit Added Successfully ')</script>";
         header("location:listBankDeposit.php");
     } else {  die('Error: ' . mysqli_error($dbcon));
@@ -131,7 +131,7 @@ if(isset($_POST['submit']))
                                         </div>
                                     </div>
 
-                                    <div class="form-row">
+                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="inputState">Bank Name<span class="text-danger">*</span></label>
                                             <select id="bankname" onchange="onbankname(this.value);" class="form-control form-control-sm" name="bankname">

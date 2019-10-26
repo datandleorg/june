@@ -83,13 +83,16 @@ if(isset($_POST['compBankEdit']))
 												{
 													//$title = $res['title'];
 													//$cname= $res['name'];
-													$orgid = $res['orgid'];												
+													$orgid = $res['orgid'];		
+													$bankcode = $res['bankcode'];													
 													$bankname=$res['bankname'];
 													$acctno=$res['acctno'];												 
 													$acctname=$res['acctno'];
 													$acctype=$res['acctype'];
 													$branch=$res['branch'];
-													$ifsc=$res['ifsc'];													
+													$ifsc=$res['ifsc'];		
+													$openbalance=$res['openbalance'];		
+													$asofdate=$res['asofdate'];															
 												}
 											}
 											?>	
@@ -99,6 +102,13 @@ if(isset($_POST['compBankEdit']))
 									<div class="form-group col-md-6">
 									  <label for="inputZip">Organization ID<span class="text-danger">*</span></label>
 									  <input type="text" class="form-control"  name="orgid" placeholder="Axis Bank..." readonly  value="<?php echo $orgid;?>" />
+									</div>
+									</div>
+									
+									<div class="form-row">
+									<div class="form-group col-md-6">
+									  <label for="inputZip">BankCode<span class="text-danger">*</span></label>
+									  <input type="text" class="form-control"  name="bankcode"  readonly  value="<?php echo $bankcode;?>" />
 									</div>
 									</div>
 								
@@ -144,6 +154,18 @@ if(isset($_POST['compBankEdit']))
 									<div class="form-group col-md-6">
 									  <label for="inputZip">IFSC<span class="text-danger">*</span></label>
 									  <input type="text" class="form-control"  name="ifsc" placeholder="IFSC Code.." value="<?php echo $ifsc;?>" />
+									</div>
+									</div>
+									<div class="form-row">
+									<div class="form-group col-md-6">
+									  <label for="inputZip">Opening Balance<span class="text-danger">*</span></label>
+									  <input type="text" class="form-control"  name="openbalance" readonly  value="<?php echo $openbalance;?>" />
+									</div>
+									</div>
+									<div class="form-row">
+									<div class="form-group col-md-6">
+									  <label for="inputZip">Opening Bal(As of Date)<span class="text-danger">*</span></label>
+									  <input type="date" class="form-control"  name="asofdate" readonly value="<?php echo $asofdate;?>" />
 									</div>
 									</div>
 									 

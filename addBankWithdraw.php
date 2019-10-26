@@ -3,7 +3,7 @@ include("database/db_conection.php");//make connection here
 
 if(isset($_POST['submit']))
 {
-    $depositdate = $_POST['depositdate'];
+    $withdraweldate = $_POST['withdraweldate'];
 	$compcode = $_POST['compcode'];
     $bankname = $_POST['bankname'];
 	$acctno =$_POST['acctno'];
@@ -36,8 +36,8 @@ if(isset($_POST['submit']))
 
     //$image =base64_encode($image);		
 
-    $insert_bankdeposit="INSERT INTO bankwithdrawels(`transid`,`depositdate`,`compcode`,`bankname`,`acctno`,`amount`,`paymethod`,`paytype`,`referenceno`,`notes`,`createdby`)
-	VALUES('$transid','$depositdate','$compcode','$bankname','$acctno','$amount','$paymethod','$paytype','$referenceno','$notes','$createdby')";
+    $insert_bankdeposit="INSERT INTO bankwithdrawels(`transid`,`withdraweldate`,`compcode`,`bankname`,`acctno`,`amount`,`paymethod`,`paytype`,`referenceno`,`notes`,`createdby`)
+	VALUES('$transid','$withdraweldate','$compcode','$bankname','$acctno','$amount','$paymethod','$paytype','$referenceno','$notes','$createdby')";
 
     echo "$insert_bankdeposit";
     if(mysqli_query($dbcon,$insert_bankdeposit))
@@ -105,7 +105,7 @@ if(isset($_POST['submit']))
                                         <div class="form-group col-md-12">
                                             <label for="datepicker1">Date</label><span class="text-danger">*</span>
                                             <!--input type="date" class="form-control" name="date" value="<?php echo date("d/m/Y") ?>"/-->
-                                            <input type="date" class="form-control form-control-sm"  name="depositdate" value="<?php echo date("Y-m-d");?>">									
+                                            <input type="date" class="form-control form-control-sm"  name="withdraweldate" value="<?php echo date("Y-m-d");?>">									
                                         </div>
                                     </div>
 

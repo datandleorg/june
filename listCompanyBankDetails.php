@@ -41,12 +41,15 @@
 										<thead>
 											<tr>
 													<th >Org ID</th>
+													<th >Bankcode</th>
 													<th >Bank</th>
 													<th>Account#</th>
 													<th>Name</th>
 													<th>Type</th>
 													<th>Branch</th>
 													<th>IFSC</th>
+													<th>Closing Balance</th>
+													<th>As of Date</th>
 													<th>Actions</th>
 													</tr>
 										</thead>										
@@ -61,13 +64,15 @@
 														$row_id=$row['id'];
 													echo "<tr>";
 													echo '<td>' . $row['orgid'] . '</td>';
+													echo '<td>' . $row['bankcode'] . '</td>';
 													echo '<td>'.$row['bankname'].'<br /></td>';
 													echo '<td>'.$row['acctno'].'</td>';
 													echo '<td>'.$row['acctname'].'</td>';
 													echo '<td>'.$row['acctype'].'</td>';
 													echo '<td>'.$row['branch'].'</td>';
 													echo '<td>'.$row['ifsc'].'</td>';
-																									
+													echo '<td>'.$row['openbalance'].'</td>';
+													echo '<td>'.$row['asofdate'].'</td>';			
 													echo '<td><a href="editCompanyBankDetails.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
 														<i class="fa fa-pencil" aria-hidden="true"></i></a>
 													

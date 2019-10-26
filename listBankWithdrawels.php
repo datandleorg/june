@@ -64,7 +64,7 @@
 														$row_id=$row['id'];
 													echo "<tr>";
 													echo '<td>' . $row['transid'] . '</td>';
-													echo '<td>'.$row['depositdate'].'<br /></td>';
+													echo '<td>'.$row['withdraweldate'].'<br /></td>';
 													echo '<td>'.$row['compcode'].'</td>';													
 													echo '<td>'.$row['bankname'].'</td>';
 													echo '<td>'.$row['acctno'].'</td>';													
