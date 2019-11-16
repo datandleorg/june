@@ -56,7 +56,7 @@
 										<tbody>
 											<?php
 													include("database/db_conection.php");//make connection here
-													$sql = "SELECT * FROM bankdeposit ";
+													$sql = "SELECT b.*,c.bankname as bankname, c.acctno as acctno FROM bankdeposit b, compbank c where c.id=b.bankname ";
 													$result = mysqli_query($dbcon,$sql);
 													
 													if ($result->num_rows > 0){
@@ -76,7 +76,7 @@
 													
 													
 													
-													echo '<td><a href="editBankDeposit.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
+													echo '<td><a href="addBankDeposit.php?transid=' . $row['transid'] . '&action=edit&type=bankdeposit" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
 														<i class="fa fa-pencil" aria-hidden="true"></i></a>
 													
 													<a onclick="delete_record(this);" id="deletebankDeposit" data-id="' . $row_id . '" class="btn btn-danger btn-sm"  data-title="Delete">

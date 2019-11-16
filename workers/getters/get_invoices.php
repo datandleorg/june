@@ -10,7 +10,7 @@ if (isset($_POST['payment_vendor'])) {
 
     $return=array();
     $values=array();
-     $sql = "SELECT * FROM grn_notes g, vendorprofile v where  g.grn_po_vendor=v.vendorid and g.grn_balance!=0 ;";
+     $sql = "SELECT * FROM grn_notes g, vendorprofile v where  g.grn_po_vendor=v.vendorid and g.grn_po_vendor='".$payment_vendor."' and g.grn_balance>0 ;";
     
     $result = mysqli_query($dbcon, $sql);
     $values = sql_fetch_all($result);
@@ -30,7 +30,7 @@ if (isset($_POST['payment_vendor'])) {
 
     $return=array();
     $values=array();
-    $sql = "SELECT * FROM invoices where inv_customer='$cust_payment_customer' ";
+    $sql = "SELECT * FROM invoices where inv_customer='$cust_payment_customer' and inv_balance_amt>0 ";
     
     $result = mysqli_query($dbcon, $sql);
     $values = sql_fetch_all($result);

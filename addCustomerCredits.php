@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="card-body">
-                            <form autocomplete="off" action="#" enctype="multipart/form-data" id="addcustomercredits_form" method="post">
+                            <form autocomplete="off" action="#" enctype="multipart/form-data" id="addcustomercredits_form" method="post" novalidate>
 
 
                                 <div class="form-row">
@@ -55,7 +55,9 @@
                                 <div class="form-row">      
                                     <div class="form-group col-md-6">
                                         <label >Payment Mode<span class="text-danger">*</span></label>
-                                        <select required name="customer_credits_paymentmode" id="customer_credits_paymentmode" data-parsley-trigger="change"  class="form-control form-control-sm"   >
+                                        <select required name="customer_credits_paymentmode" id="customer_credits_paymentmode" 
+                                        onchange="togglePaymentDetailsOptions(this.value)"
+                                        data-parsley-trigger="change"  class="form-control form-control-sm"   >
                                             <option value="">-- Select Payment Mode --</option>
                                             <option value="Cash">Cash</option>
                                             <option value="Cheque">Cheque</option>
@@ -63,6 +65,50 @@
                                             <option value="Bank Transfer">Bank Transfer</option>
                                             <option value="Bank Remittance">Bank Remittance</option>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row" id="customer_credits_cheque_status_row">
+                                    <div class="form-group col-md-6">
+                                        <label>Cheque Status<span class="text-danger">*</span></label>
+                                        <select required name="customer_credits_cheque_status" id="customer_credits_cheque_status" data-parsley-trigger="change" class="form-control form-control-sm">
+                                            <option value="">-- Select Cheque Status --</option>
+                                            <option value="Cleared">Cleared</option>
+                                            <option value="Uncleared">Uncleared</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                
+                                <div class="form-row" id="customer_credits_bank_row">
+                                    <div class="form-group col-sm-6">
+                                        <label> Bank<span class="text-danger">*</span></label>
+
+                                        <select id="customer_credits_bank" class="form-control form-control-sm" onchange="printBankDetails(this.value)" name="customer_credits_bank">
+                                            <option selected>--Select Bank--</option> ';
+                                            <?php
+                                            $sql = "SELECT * FROM compbank where orgid='COMP001' ";
+                                            $result = mysqli_query($dbcon, $sql);
+                                            while ($row = $result->fetch_assoc()) {
+                                                $bankid = $row['id'];
+                                                $bankname = $row['bankname'];
+                                                echo '<option  value="' . $bankid . '" >' . $bankname . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6" id="vendor_bank_details">
+
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-8">
+                                        <label>Reference #</label>
+                                        <input type="text" class="form-control form-control-sm" name="customer_credits_refno" id="customer_credits_refno" placeholder=" Reference Number(optional)" class="form-control" autocomplete="off" />
                                     </div>
                                 </div>
 
@@ -180,6 +226,49 @@
 
 
     <script>
+
+        function togglePaymentDetailsOptions(paymentMode) {
+            if (paymentMode == "Bank Transfer" || paymentMode == "Bank Remittance") {
+                $('#customer_credits_bank_row').show();
+                $('#customer_credits_cheque_status_row').hide();
+                $('#vendor_bank_details').show();
+            } else {
+                $('#customer_credits_bank_row').hide();
+                $('#vendor_bank_details').hide();
+
+            }
+
+            if (paymentMode == "Cheque") {
+                $('#customer_credits_cheque_status_row').show();
+                $('#customer_credits_bank_row').hide();
+                $('#vendor_bank_details').hide();
+                $('#customer_credits_cheque_status').val('Uncleared');
+            } else {
+                $('#customer_credits_cheque_status_row').hide();
+            }
+
+        }
+
+        function printBankDetails(bankid) {
+            if (bankid != '') {
+                var bank_data = Page.get_edit_vals(bankid, "compbank", "id");
+                var bank_div = '';
+                bank_div += '<h6>Bank Details</h6>';
+                bank_div += '<p>';
+                bank_div += '<b>' + bank_data.bankname + '</b><br/>';
+                bank_div += bank_data.acctname + '<br/>';
+                bank_div += bank_data.acctno + '<br/>';
+                bank_div += bank_data.acctype + '<br/>';
+                bank_div += bank_data.branch + '<br/>';
+                bank_div += bank_data.ifsc + '<br/>';
+                bank_div += '</p>';
+                $('#vendor_bank_details').html(bank_div);
+            } else {
+                $('#vendor_bank_details').html('');
+
+            }
+        }
+
         function get_vendors(){
 
             var customer_params=[];
