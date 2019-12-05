@@ -9,6 +9,8 @@ if (isset($_POST['array'])) {
     $v_credits_id=$_POST['v_credits_id'];
     $action=$_POST['action'];
     $table=$_POST['table'];
+    $handler=$_POST['handler'];
+    $compId=$_POST['compId'];
     $return=array();
     
     if ($v_credits_id=="") {
@@ -20,6 +22,12 @@ if (isset($_POST['array'])) {
 
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$v_credits_id,$table,"v_credits_id");
+
+            $array['rowId'] = $v_credits_id;
+            $entry = $array;
+            // (compcode,compbank,type="credit",id,amount,paymentMode,check status,entry as json,user)
+            // transaction table, update bank table v_credits_paymentmode
+            // handleTransaction($compId,"credit",$entry, $array['v_credits_paymentmode'],$handler);
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);

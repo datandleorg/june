@@ -48,7 +48,7 @@
 
 
                             <div class="card-body">
-                                <form method="post" enctype="multipart/form-data" id="bankDepositForm">
+                                <form method="post" enctype="multipart/form-data" id="bankDepositForm" novalidate>
 
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
@@ -124,7 +124,7 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label >Payment Method</label>
-                                            <select required id="paymethod" data-parsley-trigger="change"  class="form-control form-control-sm"  name="paymethod" >
+                                            <select required id="paymethod" data-parsley-trigger="change"  onchange="togglePaymentDetailsOptions(this.value)" class="form-control form-control-sm"  name="paymethod" >
                                                 <option value="">Open Payment Method</option>
                                                 <option value="Cash">Cash</option>
                                                 <option value="Cheque">Cheque</option>
@@ -132,6 +132,19 @@
                                             </select>
                                         </div>
                                     </div>
+
+
+                                    <div class="form-row" id="v_credits_cheque_status_row">
+                                        <div class="form-group col-md-6">
+                                            <label>Cheque Status<span class="text-danger">*</span></label>
+                                            <select required name="pay_status" id="pay_status" data-parsley-trigger="change" class="form-control form-control-sm">
+                                                <option value="">-- Select Cheque Status --</option>
+                                                <option value="Cleared">Cleared</option>
+                                                <option value="Uncleared">Uncleared</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
 
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
@@ -228,6 +241,19 @@
             onbankname(edit_data.bankname);
         }
 
+        $('#v_credits_cheque_status_row').hide();
+
+        function togglePaymentDetailsOptions(paymentMode) {
+
+            if (paymentMode == "Cheque") {
+                $('#v_credits_cheque_status_row').show();
+                $('#v_credits_cheque_status').val('Uncleared');
+            } else {
+                $('#v_credits_cheque_status_row').hide();
+            }
+
+        }
+
 
         function set_form_data(data){
 
@@ -280,7 +306,10 @@
                     array : JSON.stringify(data),
                     transid:page_transid,
                     action:page_action?page_action:"add",
-                    table:"bankdeposit"
+                    table:"bankdeposit",
+                    compId:`<?php echo $session_org?$session_org:'';?>`,
+                    handler:`<?php echo $session_user?$session_user:'';?>`
+
                 },
                 dataType: 'json',
                 success:function(response){

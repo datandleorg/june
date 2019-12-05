@@ -270,7 +270,7 @@
         }
 
         function get_vendors(){
-
+           alert()
             var customer_params=[];
             Page.load_select_options('customer_credits_custid',customer_params,'customerprofile','Customers','custid','custname',null);
 
@@ -353,6 +353,7 @@
                     array : JSON.stringify(data),
                     customer_credits_id:page_customer_credits_id,
                     action:page_action?page_action:"add",
+                    compId:<?php echo $session_org?$session_org:'';?>
                     table:"customercredits"},
                 dataType: 'json',
                 success:function(response){

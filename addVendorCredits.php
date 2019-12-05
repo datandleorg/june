@@ -385,7 +385,10 @@
                     array: JSON.stringify(data),
                     v_credits_id: page_v_credits_id,
                     action: page_action ? page_action : "add",
-                    table: "vendorcredits"
+                    table: "vendorcredits",
+                    compId:`<?php echo $session_org?$session_org:'';?>`,
+                    handler:`<?php echo $session_user?$session_user:'';?>`
+
                 },
                 dataType: 'json',
                 success: function(response) {

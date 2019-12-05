@@ -44,7 +44,9 @@
                                             <th>Credit Date</th>												
                                             <th>Status</th>												
                                             <th>Customer</th>
-                                            <th>Amount</th>												
+                                            <th>Amount</th>	
+                                            <th>Payment Mode</th>												
+                                            <th>RefNo & Status</th>																							
                                             <th>Credit Balance</th>												
                                             <th>User</th>												
                                             <th>Actions</th>
@@ -75,6 +77,9 @@
                                                 }
                                                 echo '<td>'.$row['custname'].' </td>';
                                                 echo '<td>'.$row['customer_credits_amount'].' </td>';
+                                                echo '<td>'.$row['customer_credits_paymentmode'].' </td>';
+                                                echo '<td>'.$row['customer_credits_refno'].'<br/>['.$row['customer_credits_cheque_status'].']</td>';
+
                                                 echo '<td>'.$row['customer_credits_availcredits'].' </td>';
                                                 echo '<td>'.$row['customer_credits_handler'].' </td>';
                                         ?>

@@ -9,10 +9,11 @@ if (isset($_POST['array'])) {
     $transid=$_POST['transid'];
     $action=$_POST['action'];
     $table=$_POST['table'];
+    $handler=$_POST['handler'];
+    $compId=$_POST['compId'];
     $return=array();
     
     if ($transid=="") {
-  
         $transid = get_id($dbcon,$table,"TRANSC-0");
     }
 
@@ -21,6 +22,26 @@ if (isset($_POST['array'])) {
 
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$transid,$table,"transid");
+
+            if ($return['status']){
+               $entry['data'] = json_decode($array,true);
+               $entry['rowId'] = $transid;
+               $entry['colName'] = "transid";
+               $entry['entity'] = "Bank Deposit";
+
+                $transData = array();
+                $transData['trans_type'] = "credit";
+                $transData['trans_amt'] = $entry['data']['amount'];
+                $transData['trans_bank'] = $entry['data']['bankname'];
+                $transData['trans_entry'] = json_encode($entry);
+                $transData['trans_status'] = "Completed";
+                
+                $return = handleTransaction($dbcon,$compId,"credit",$entry, $entry['data']['paymethod'],$handler,'',$transData);
+            
+            }else{
+                $return['status']=false;
+                $return['error']=mysqli_error($dbcon);
+            }
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);
