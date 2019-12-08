@@ -10,6 +10,8 @@ if (isset($_POST['array'])) {
     $payment_grn_id=$_POST['payment_grn_id'];
     $payment_amount=$_POST['payment_amount'];
     $page_payment_v_credits_id=$_POST['page_payment_v_credits_id'];
+    $handler=$_POST['handler'];
+    $compId=$_POST['compId'];
 
     $action=$_POST['action'];
     $action=$_POST['action'];
@@ -58,6 +60,29 @@ if (isset($_POST['array'])) {
                     $return['error']=mysqli_error($dbcon);
                 }
             }
+
+            // correct verson
+            if ($return['status']){
+                $entry['data'] = json_decode($array,true);
+                $entry['rowId'] = $payment_id;
+                $entry['colName'] = "payment_id";
+                $entry['entity'] = "Vendor Payments";
+ 
+                 $transData = array();
+                 $transData['trans_type'] = "debit";
+                 $transData['trans_amt'] = $entry['data']['payment_amount'];
+                 $transData['trans_bank'] = $entry['data']['payment_mode']!=="Cash" ? $entry['data']['payment_bank'] : "";
+                 $transData['trans_entry'] = json_encode($entry);
+                 $transData['trans_status'] = "Completed";
+                 $transData['trans_handler'] = $handler;
+                 $transData['trans_mode'] = $entry['data']['payment_mode'];
+                 
+                 $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+             
+             }else{
+                 $return['status']=false;
+                 $return['error']=mysqli_error($dbcon);
+             }
 
 
         }else{

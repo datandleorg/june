@@ -77,9 +77,11 @@ include('workers/getters/functions.php');
                                                 <th>Date</th>
                                                 <th>Withdrawel Mode</th>
 												<th>Refernce#</th>
+                                                <th>Bank Code</th>
                                                 <th>Bank Name</th>
                                                 <th>A/C No.</th>
                                                 <th>Withdrawel Amount</th>
+                                                <th>Closing Bal</th>
                                                 <th>Created by</th>
                                             </tr>
                                         </thead>
@@ -92,7 +94,7 @@ include('workers/getters/functions.php');
                                                 $timestamp = strtotime($_GET['end']);
                                                 $end = date('Y-m-d', $timestamp);
 
-                                               $sql = "SELECT * from bankwithdrawels bw where 1=1 ";
+                                               $sql = "SELECT * from bankwithdrawels bw, compbank b where b.id=bw.bankname";
                                                 if($_GET['st']!=''){
                                                     if($st==$end){
                                                         $sql.= " and bw.withdraweldate='$st' ";   
@@ -102,7 +104,7 @@ include('workers/getters/functions.php');
                                                 }
 
                                             }else{
-                                                $sql = "SELECT * from bankwithdrawels bw ;";    
+                                                $sql = "SELECT * from bankwithdrawels bw, compbank b where b.id=bw.bankname ;";    
                                             }
 
                                             $result = mysqli_query($dbcon,$sql);
@@ -114,9 +116,11 @@ include('workers/getters/functions.php');
                                                 <td>'.$row['withdraweldate'].'</td>
                                                 <td>'.$row['paymethod'].'</td>
 												<td>'.$row['referenceno'].'</td>
+                                                <td>'.$row['id'].'</td>
                                                 <td>'.$row['bankname'].'</td>
                                                 <td>'.$row['acctno'].'</td>
                                                 <td>'.$row['amount'].'</td>
+                                                <td>'.$row['closing_bal'].'</td>
                                                 <td>'.$row['createdby'].'</td>
 
                                             </tr>';  
@@ -128,6 +132,9 @@ include('workers/getters/functions.php');
                                         </tbody>
                                         <tfoot>
                                             <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
                                                 <th></th>
                                                 <th></th>
                                                 <th></th>
@@ -220,28 +227,16 @@ include('workers/getters/functions.php');
                         i : 0;
                 };
                 var grossval = api
-                .column( 5 )
+                .column( 7 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 ).toFixed(2);
-
-                var taxgrossval = api
-                .column( 4 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 ).toFixed(2);
-
 
 
 
                 $( api.column( 0 ).footer() ).html('Total');
-                $( api.column( 5 ).footer() ).html(grossval);
-                // $( api.column( 4 ).footer() ).html(taxgrossval);
-                //   $( api.column( 5 ).footer() ).html(taxamt);
-                //   $( api.column( 7 ).footer() ).html(netval);
-                //  $( api.column( 8 ).footer() ).html(bal);
+                $( api.column( 7 ).footer() ).html(grossval);
 
             },
             buttons: [
@@ -304,7 +299,7 @@ include('workers/getters/functions.php');
             end = date_range[1].replace(" ","");
         }
         var custwise = $('#custwise').val();
-        location.href="BankDepositReports.php?st="+st+"&end="+end;
+        location.href="BankWithdrawelsReports.php?st="+st+"&end="+end;
     }
 
     function cb(start, end) {

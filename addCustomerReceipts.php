@@ -128,7 +128,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-row" id="cust_payment_cheque_status_row">
+                                        <div class="form-row" id="cust_payment_cheque_status_row" style="display:none">
                                             <div class="form-group col-md-6">
                                                 <label>Cheque Status<span class="text-danger">*</span></label>
                                                 <select required name="cust_payment_cheque_status" id="cust_payment_cheque_status" data-parsley-trigger="change" class="form-control form-control-sm">
@@ -141,7 +141,7 @@
 
 
 
-                                <div class="form-row" id="cust_payment_bank_row">
+                                <div class="form-row" id="cust_payment_bank_row" style="display:none">
                                     <div class="form-group col-sm-6">
                                         <label> Bank<span class="text-danger">*</span></label>
 
@@ -497,11 +497,13 @@
                         cust_payment_inv_id:data.cust_payment_inv_id,
                         cust_payment_amount:data.cust_payment_amount,
                         action:"add",table:"customer_payments",
-                        page_cust_payment_v_credits_id:page_cust_payment_v_credits_id
+                        page_cust_payment_v_credits_id:page_cust_payment_v_credits_id,
+                        compId:`<?php echo $session_org?$session_org:'';?>`,
+                        handler:`<?php echo $session_user?$session_user:'';?>`
                     },
                     dataType: 'json',
                     success:function(response){
-                        location.href="listInvoices.php";
+                     //   location.href="listInvoices.php";
                     }
 
 

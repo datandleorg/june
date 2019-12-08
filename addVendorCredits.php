@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="card-body">
-                            <form autocomplete="off" action="#" enctype="multipart/form-data" id="addcredits_form" method="post" novalidate>
+                            <form autocomplete="off" action="#" enctype="multipart/form-data" id="addcredits_form" method="post">
                                 <!--
 <div class="form-row">
 <div class="form-group col-md-6">
@@ -49,7 +49,7 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="inputState">Vendor Name<span class="text-danger">*</span></label>
-                                        <select ng-change="getvendor()" ng-model="v_credits_vendorid" id="v_credits_vendorid" onchange="print_bill_addr(this.value);" class="form-control form-control-sm" name="v_credits_vendorid">
+                                        <select required id="v_credits_vendorid" onchange="print_bill_addr(this.value);" class="form-control form-control-sm" name="v_credits_vendorid">
                                             <option selected>--Select Vendor Code--</option>
                                         </select>
 
@@ -116,8 +116,6 @@
                                 </div>
 
 
-
-
                                 <div class="form-row">
                                     <div class="form-group col-md-8">
                                         <label>Reference #</label>
@@ -134,7 +132,7 @@
                                     </div>
 
                                     <div class="form-group col-md-3">
-                                        <label>Enter Credits</label>
+                                        <label>Enter Credits<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control form-control-sm" name="v_credits_amount" id="v_credits_amount" placeholder="Credit Amount" required class="form-control" autocomplete="off">
                                     </div>
                                 </div>
@@ -240,6 +238,8 @@
                 $('#v_credits_handler').val(credits_data.v_credits_handler);
                 $('#v_credits_amount').val(credits_data.v_credits_amount);
                 $('#v_credits_notes').val(credits_data.v_credits_notes);
+                $('#v_credits_bank').val(credits_data.v_credits_bank);
+                $('#v_credits_cheque_status').val(credits_data.v_credits_cheque_status);
 
             }
 
@@ -250,24 +250,29 @@
 
     <script>
         function togglePaymentDetailsOptions(paymentMode) {
-            if (paymentMode == "Bank Transfer" || paymentMode == "Bank Remittance") {
-                $('#v_credits_bank_row').show();
-                $('#v_credits_cheque_status_row').hide();
-                $('#vendor_bank_details').show();
-            } else {
+            if(paymentMode==="Cash"){
                 $('#v_credits_bank_row').hide();
+                $('#v_credits_cheque_status_row').hide();
                 $('#vendor_bank_details').hide();
+                $("#v_credits_bank").prop("readonly", true);
+                $('#v_credits_cheque_status').prop("readonly", true);
 
+            }else{
+                if(paymentMode == "Bank Transfer" || paymentMode == "Bank Remittance"){
+                    $('#v_credits_bank_row').show();
+                    $("#v_credits_bank").prop("readonly", false);
+
+                    $('#v_credits_cheque_status_row').hide();
+                    $('#v_credits_cheque_status').prop("readonly", true);
+                }else{
+                    $('#v_credits_bank_row').show();
+                    $('#v_credits_cheque_status_row').show();
+                    $('#vendor_bank_details').show();
+                    $("#v_credits_bank").prop("readonly", false);
+                    $('#v_credits_cheque_status').prop("readonly", false);
+                }
             }
 
-            if (paymentMode == "Cheque") {
-                $('#v_credits_cheque_status_row').show();
-                $('#v_credits_bank_row').hide();
-                $('#vendor_bank_details').hide();
-                $('#v_credits_cheque_status').val('Uncleared');
-            } else {
-                $('#v_credits_cheque_status_row').hide();
-            }
 
         }
 
@@ -340,25 +345,28 @@
             if (page_action == "edit") {
 
                 var credirRefund_arr = Page.get_multiple_vals(page_v_credits_id, "vendor_refund", "v_refund_creditsid");
-                var refund_sum = 0;
-                console.log(credirRefund_arr);
-                if (credirRefund_arr.length > 0) {
-                    for (r = 0; r < credirRefund_arr.length; r++) {
-                        refund_sum = refund_sum + eval(credirRefund_arr[r].v_refund_amount);
+                
+                if(credirRefund_arr){
+                    var refund_sum = 0;
+                    if (credirRefund_arr.length > 0) {
+                        for (r = 0; r < credirRefund_arr.length; r++) {
+                            refund_sum = refund_sum + eval(credirRefund_arr[r].v_refund_amount);
+                        }
+                    }
+
+
+                    if (data.v_credits_amount < refund_sum) {
+                        $('#message-alert').show();
+                        $('#message-alert').text('Refunds has been made for this Credit , so It cant be lesser than that .');
+                        return false;
+
+                    } else {
+                        $('#message-alert').hide();
+                        $('#message-alert').text('');
+
                     }
                 }
 
-
-                if (data.v_credits_amount < refund_sum) {
-                    $('#message-alert').show();
-                    $('#message-alert').text('Refunds has been made for this Credit , so It cant be lesser than that .');
-                    return false;
-
-                } else {
-                    $('#message-alert').hide();
-                    $('#message-alert').text('');
-
-                }
 
             }
             // console.log($('#v_credits_email_notification').is(":checked"));
@@ -371,10 +379,6 @@
 
             if (data.v_credits_paymentmode !== "Cheque") {
                 data.v_credits_cheque_status = '';
-            }
-
-            if (data.v_credits_paymentmode === "Cheque") {
-                data.v_credits_bank="";
             }
 
             

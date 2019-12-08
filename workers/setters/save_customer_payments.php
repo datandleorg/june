@@ -10,6 +10,8 @@ if (isset($_POST['array'])) {
     $cust_payment_inv_id=$_POST['cust_payment_inv_id'];
     $cust_payment_amount=$_POST['cust_payment_amount'];
     $page_cust_payment_v_credits_id=$_POST['page_cust_payment_v_credits_id'];
+    $handler=$_POST['handler'];
+    $compId=$_POST['compId'];
 
     $action=$_POST['action'];
     $table=$_POST['table'];
@@ -19,7 +21,6 @@ if (isset($_POST['array'])) {
 
         $cust_payment_id = get_id($dbcon,$table,"CUSTPAY-0000");
     }
-
 
 
 
@@ -61,6 +62,29 @@ if (isset($_POST['array'])) {
                     $return['status']=false;
                     $return['error']=mysqli_error($dbcon);
                 }
+            }
+
+            // correct verson
+            if ($return['status']){
+            $entry['data'] = json_decode($array,true);
+            $entry['rowId'] = $cust_payment_id;
+            $entry['colName'] = "cust_payment_id";
+            $entry['entity'] = "Customer Payments";
+
+                $transData = array();
+                $transData['trans_type'] = "debit";
+                $transData['trans_amt'] = $entry['data']['cust_payment_amount'];
+                $transData['trans_bank'] = $entry['data']['cust_payment_mode']!=="Cash" ? $entry['data']['cust_payment_bank'] : "";
+                $transData['trans_entry'] = json_encode($entry);
+                $transData['trans_status'] = "Completed";
+                $transData['trans_handler'] = $handler;
+                $transData['trans_mode'] = $entry['data']['cust_payment_mode'];
+                
+                $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+            
+            }else{
+                $return['status']=false;
+                $return['error']=mysqli_error($dbcon);
             }
 
         }else{

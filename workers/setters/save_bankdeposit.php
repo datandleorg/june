@@ -35,9 +35,11 @@ if (isset($_POST['array'])) {
                 $transData['trans_bank'] = $entry['data']['bankname'];
                 $transData['trans_entry'] = json_encode($entry);
                 $transData['trans_status'] = "Completed";
+                $transData['trans_handler'] = $handler;
+                $transData['trans_mode'] = $entry['data']['payment_mode'];
                 
-                $return = handleTransaction($dbcon,$compId,"credit",$entry, $entry['data']['paymethod'],$handler,'',$transData);
-            
+                $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+                
             }else{
                 $return['status']=false;
                 $return['error']=mysqli_error($dbcon);

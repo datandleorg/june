@@ -48,7 +48,7 @@
                                 <div class="col-md-8">
 
                                     <!--form autocomplete="off" action="#"-->
-                                    <form  autocomplete="off" action="#" id="add_payment_form" enctype="multipart/form-data">
+                                    <form  autocomplete="off" action="#" id="add_payment_form" enctype="multipart/form-data" novalidate>
 
                                         <div class="form-row">
                                             <div class="form-group col-md-8" >
@@ -507,12 +507,14 @@
                         payment_grn_id:data.payment_grn_id,
                         payment_amount:data.payment_amount,
                         action:"add",table:"payments",
-                        page_payment_v_credits_id:page_payment_v_credits_id
+                        page_payment_v_credits_id:page_payment_v_credits_id,
+                        compId:`<?php echo $session_org?$session_org:'';?>`,
+                        handler:`<?php echo $session_user?$session_user:'';?>`
                     },
                     dataType: 'json',
                     success:function(response){
                         if(response.status){
-                            location.href="listGoodsReceiptNote.php";
+                           // location.href="listGoodsReceiptNote.php";
                         }
                     }
 

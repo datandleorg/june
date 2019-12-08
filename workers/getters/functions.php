@@ -447,7 +447,7 @@ function getTotalClosingBal($dbcon){
     }
 }
 
-function handleTransaction($dbcon,$compId,$type,$entry,$paymentMode,$handler,$transid,$transData){
+function handleTransaction($dbcon,$compId,$entry,$transid,$transData){
 
     
         if ($transid=="") {
@@ -462,7 +462,7 @@ function handleTransaction($dbcon,$compId,$type,$entry,$paymentMode,$handler,$tr
                 $transData['total_cash_on_hand'] = $lastRow['total_cash_on_hand'];
                 $transData['total_petty_cash'] = $lastRow['total_petty_cash'];
 
-                if($entry['entity'] !== "Bank Deposit" && $paymentMode==="Cash"){
+                if($entry['entity'] !== "Bank Deposit" && $transData['trans_mode']==="Cash"){
                     $transData['total_cash_on_hand'] = $transData['trans_type'] == "credit" ? $transData['total_cash_on_hand']+$transData['trans_amt'] : $transData['total_cash_on_hand']-$transData['trans_amt'];
                 }else{
                     $transData['total_closing_bal'] = $transData['trans_type'] == "credit" ? $transData['total_closing_bal']+$transData['trans_amt'] : $transData['total_closing_bal']-$transData['trans_amt'];
@@ -470,11 +470,10 @@ function handleTransaction($dbcon,$compId,$type,$entry,$paymentMode,$handler,$tr
 
                 $return = update_query($dbcon,json_encode($transData),$transid,"transactions","trans_id");
 
-                if ($return['status']){
+                if ($return['status']  && $transData['trans_mode']!=="Cash" ){
                     $pastVal = findbyand($dbcon,$transData['trans_bank'],'compbank','id');
-
-                    $bank = array();
-                    $bank['closing_bal'] = $transData['trans_type'] == "credit" ? $transData['trans_amt']+$pastVal['values'][0]['closing_bal'] : $transData['trans_amt']-$pastVal['values'][0]['closing_bal']  ;
+                     $bank = array();
+                     $bank['closing_bal'] = $transData['trans_type'] == "credit" ? $pastVal['values'][0]['closing_bal']+$transData['trans_amt'] : $pastVal['values'][0]['closing_bal']-$transData['trans_amt']  ;
                      //update bank
                      $return = update_query($dbcon,json_encode($bank),$transData['trans_bank'],"compbank","id");
                      if ($return['status']){

@@ -134,16 +134,16 @@ if(isset($_POST['submit']))
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="inputState">Bank Name<span class="text-danger">*</span></label>
-                                            <select id="bankname" onchange="onbankname(this.value);" class="form-control form-control-sm" name="bankname">
+                                            <select id="bankname" onchange="onbankname(this);" class="form-control form-control-sm" name="bankname">
                                                 <option selected>Open Bank Names</option>
                                                 <?php 
                                                 $sql = mysqli_query($dbcon,"select bankname,id from compbank");
                                                 while ($row = $sql->fetch_assoc()){	
                                                     echo $bankname_get=$row['bankname'];
                                                     if($bankname_get==$_GET['bankname']){
-                                                        echo '<option value="'.$bankname_get.'"  selected>'.$bankname_get.'</option>';  
+                                                        echo '<option data-name="'.$bankname_get.'" value="'.$row['id'].'"  selected>'.$bankname_get.'</option>';  
                                                     }else{
-                                                        echo '<option value="'.$bankname_get.'" >'.$bankname_get.'</option>';      
+                                                        echo '<option data-name="'.$bankname_get.'" value="'.$row['id'].'" >'.$bankname_get.'</option>';      
                                                     }
                                                 }
                                                 ?>
@@ -277,14 +277,9 @@ if(isset($_POST['submit']))
 
         function onbankname(x){
             var compcode = $('#compcode').val();
-            var bankname = x;
-            var edit_data = Page.get_multiple_vals(compcode,"compbank","orgid");
-
-            for(var i=0;i<edit_data.length;i++){
-                if(edit_data[i].bankname==bankname){
-                    $('#acctno').val(edit_data[i].acctno);
-                }
-            }
+            var bankid = $(x).val();
+            var edit_data = Page.get_edit_vals(bankid,"compbank","id");
+            $('#acctno').val(edit_data.acctno);
 
         }
 

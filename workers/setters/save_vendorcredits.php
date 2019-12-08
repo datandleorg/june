@@ -22,18 +22,65 @@ if (isset($_POST['array'])) {
 
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$v_credits_id,$table,"v_credits_id");
+         
+            
+            // correct verson
+            if ($return['status']){
+                $entry['data'] = json_decode($array,true);
+                $entry['rowId'] = $v_credits_id;
+                $entry['colName'] = "v_credits_id";
+                $entry['entity'] = "Vendor Credits";
+    
+                    $transData = array();
+                    $transData['trans_type'] = "debit";
+                    $transData['trans_amt'] = $entry['data']['v_credits_amount'];
+                    $transData['trans_bank'] = $entry['data']['v_credits_paymentmode']!=="Cash" ? $entry['data']['v_credits_bank'] : "";
+                    $transData['trans_entry'] = json_encode($entry);
+                    $transData['trans_status'] = $entry['data']['v_credits_paymentmode']!=="Cheque" ? "Completed" : $entry['data']['v_credits_cheque_status'];
+                    $transData['trans_handler'] = $handler;
+                    $transData['trans_mode'] = $entry['data']['v_credits_paymentmode'];
+                    
+                    if($transData['trans_status']==="Completed" || $transData['trans_status']==="Cleared"){
+                        $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+                    }
+                
+            }else{
+                $return['status']=false;
+                $return['error']=mysqli_error($dbcon);
+            }
 
-            $array['rowId'] = $v_credits_id;
-            $entry = $array;
-            // (compcode,compbank,type="credit",id,amount,paymentMode,check status,entry as json,user)
-            // transaction table, update bank table v_credits_paymentmode
-            // handleTransaction($compId,"credit",$entry, $array['v_credits_paymentmode'],$handler);
+                
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);
         }
     }else{
         $return = update_query($dbcon,$array,$v_credits_id,$table,"v_credits_id");
+
+        // correct verson
+        if ($return['status']){
+            $entry['data'] = json_decode($array,true);
+            $entry['rowId'] = $v_credits_id;
+            $entry['colName'] = "v_credits_id";
+            $entry['entity'] = "Vendor Credits";
+
+                $transData = array();
+                $transData['trans_type'] = "debit";
+                $transData['trans_amt'] = $entry['data']['v_credits_amount'];
+                $transData['trans_bank'] = $entry['data']['v_credits_paymentmode']!=="Cash" ? $entry['data']['v_credits_bank'] : "";
+                $transData['trans_entry'] = json_encode($entry);
+                $transData['trans_status'] = $entry['data']['v_credits_paymentmode']!=="Cheque" ? "Completed" : $entry['data']['v_credits_cheque_status'];
+                $transData['trans_handler'] = $handler;
+                $transData['trans_mode'] = $entry['data']['v_credits_paymentmode'];
+                
+                if($transData['trans_status']==="Completed" || $transData['trans_status']==="Uncleared"){
+                    $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+                }
+            
+        }else{
+            $return['status']=false;
+            $return['error']=mysqli_error($dbcon);
+        }
     }
 
 

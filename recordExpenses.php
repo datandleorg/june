@@ -41,7 +41,7 @@ include("database/db_conection.php");//make connection here
 							<div class="card-body">
 								
 								<!--form autocomplete="off" action="#"-->
-								<form id="add_expense_form" method="post" accept-charset="utf-8">
+								<form id="add_expense_form" method="post" accept-charset="utf-8" novalidate>
 								
 								
 								
@@ -57,20 +57,60 @@ include("database/db_conection.php");//make connection here
 									<div class="form-row">
 									<div class="form-group col-md-6">
 									  <label >Paid Through</label>
-									 <select required id="expense_paid_thru" name="expense_paid_thru" data-parsley-trigger="change" 
+                                     <select required id="expense_paid_thru" 
+                                     onchange="togglePaymentDetailsOptions(this.value)"
+                                     name="expense_paid_thru" data-parsley-trigger="change" 
 									  class="form-control form-control-sm"  name="paymentype" >
 										<option value="">--Select Paid Through--</option>
-										<option value="Cash">Petty Cash</option>
-										<option value="Cheque">Prepaid Expenses</option>
-										<option value="Neft">Construction Loans</option>
-										<option value="Neft">Undeposited Funds</option>
-										 <option value="Cheque">Employee Advance</option>
-										 <option value="Cheque">Mortgages</option>
-										  <option value="Cheque">Others</option>
+										<option value="Petty Cash">Petty Cash</option>
+										<option value="Bank Transfer">Bank Transfer</option>
+										<option value="Cheque">Cheque</option>
 									</select>
 									</div>
 									</div>	
-									 
+                                     
+                                    <div class="form-row" id="expense_cheque_status_row" style="display:none">
+                                    <div class="form-group col-md-6">
+                                        <label>Cheque Status<span class="text-danger">*</span></label>
+                                        <select required name="expense_cheque_status" id="expense_cheque_status" data-parsley-trigger="change" class="form-control form-control-sm">
+                                            <option value="">-- Select Cheque Status --</option>
+                                            <option value="Cleared">Cleared</option>
+                                            <option value="Uncleared">Uncleared</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row" id="expense_bank_row" style="display:none">
+                                    <div class="form-group col-sm-6">
+                                        <label> Bank<span class="text-danger">*</span></label>
+
+                                        <select id="expense_bank" class="form-control form-control-sm" onchange="printBankDetails(this.value)" name="expense_bank">
+                                            <option selected>--Select Bank--</option> ';
+                                            <?php
+                                            $sql = "SELECT * FROM compbank where orgid='COMP001' ";
+                                            $result = mysqli_query($dbcon, $sql);
+                                            while ($row = $result->fetch_assoc()) {
+                                                $bankid = $row['id'];
+                                                $bankname = $row['bankname'];
+                                                echo '<option  value="' . $bankid . '" >' . $bankname . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6" id="vendor_bank_details">
+
+                                    </div>
+                                </div>
+
+                                <div class="form-row" id="expense_ref_row" style="display:none">
+                                    <div class="form-group col-md-8">
+                                        <label>Reference #</label>
+                                        <input type="text" class="form-control form-control-sm" name="v_credits_ref_no" id="v_credits_ref_no" placeholder=" Reference Number(optional)" class="form-control" autocomplete="off" />
+                                    </div>
+                                </div>
 								 
 									
 									<div class="form-row">
@@ -396,8 +436,56 @@ include("database/db_conection.php");//make connection here
 
     var expense_bill = "";
 
+    function printBankDetails(bankid) {
+            if (bankid != '') {
+                var bank_data = Page.get_edit_vals(bankid, "compbank", "id");
+                var bank_div = '';
+                bank_div += '<h6>Bank Details</h6>';
+                bank_div += '<p>';
+                bank_div += '<b>' + bank_data.bankname + '</b><br/>';
+                bank_div += bank_data.acctname + '<br/>';
+                bank_div += bank_data.acctno + '<br/>';
+                bank_div += bank_data.acctype + '<br/>';
+                bank_div += bank_data.branch + '<br/>';
+                bank_div += bank_data.ifsc + '<br/>';
+                bank_div += '</p>';
+                $('#vendor_bank_details').html(bank_div);
+            } else {
+                $('#vendor_bank_details').html('');
+
+            }
+    }
+
+    function togglePaymentDetailsOptions(paymentMode) {
+        
+            if (paymentMode == "Bank Transfer" || paymentMode == "Bank Remittance") {
+                $('#expense_bank_row').show();
+                $('#expense_cheque_status_row').hide();
+                $('#vendor_bank_details').show();
+                $('#expense_ref_row').hide();
+
+            } else {
+                $('#expense_bank_row').hide();
+                $('#vendor_bank_details').hide();
+            }
+
+            if (paymentMode == "Cheque") {
+                $('#expense_cheque_status_row').show();
+                $('#expense_ref_row').show();
+                $('#expense_bank_row').hide();
+                $('#vendor_bank_details').hide();
+                $('#expense_cheque_status').val('Uncleared');
+            } else {
+                $('#expense_cheque_status_row').hide();
+                $('#expense_ref_row').hide();
+            }
+
+        }
 
 $(function(){   
+
+
+
 
 	$('#expense_file_src').change(function(e){
             expense_bill = e.target.files[0];
