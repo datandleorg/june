@@ -48,7 +48,7 @@
                                 <div class="col-md-8">
 
                                     <!--form autocomplete="off" action="#"-->
-                                    <form  autocomplete="off" action="#" id="add_cust_payment_form" enctype="multipart/form-data">
+                                    <form  autocomplete="off" action="#" id="add_cust_payment_form" enctype="multipart/form-data" novalidate>
 
                                         <div class="form-row">
                                             <div class="form-group col-md-8" >
@@ -108,12 +108,16 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-4">
                                                 <label>Payment Date<span class="text-danger">*</span></label>									 
-                                                <input type="cust_payment_date" class="form-control form-control-sm"  name="cust_payment_date" value="<?php echo date("Y-m-d");?>">					  
+                                                <input type="cust_payment_date" class="form-control form-control-sm" 
+                                                 name="cust_payment_date" value="<?php echo date("Y-m-d");?>">					  
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <label ><span class="text-danger">Payment Mode*</span></label>
-                                                <select onchange="modifyRefNoField(this.value)" required id="cust_payment_mode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="cust_payment_mode" >
+                                                <select onchange="modifyRefNoField(this.value)" 
+                                                required id="cust_payment_mode" 
+                                                data-parsley-trigger="change"  class="form-control form-control-sm"
+                                                name="cust_payment_mode" >
                                                     <option value="">-- Select Payment Mode --</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Cheque">Cheque</option>
@@ -123,6 +127,46 @@
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="form-row" id="cust_payment_cheque_status_row" style="display:none">
+                                            <div class="form-group col-md-6">
+                                                <label>Cheque Status<span class="text-danger">*</span></label>
+                                                <select required name="cust_payment_cheque_status" id="cust_payment_cheque_status" data-parsley-trigger="change" class="form-control form-control-sm">
+                                                    <option value="">-- Select Cheque Status --</option>
+                                                    <option value="Cleared">Cleared</option>
+                                                    <option value="Uncleared">Uncleared</option>
+                                                </select>
+                                            </div>
+                                         </div>
+
+
+
+                                <div class="form-row" id="cust_payment_bank_row" style="display:none">
+                                    <div class="form-group col-sm-6">
+                                        <label> Bank<span class="text-danger">*</span></label>
+
+                                        <select id="cust_payment_bank" class="form-control form-control-sm" 
+                                        onchange="printBankDetails(this.value)" name="cust_payment_bank">
+                                            <option selected>--Select Bank--</option> ';
+                                            <?php
+                                            $sql = "SELECT * FROM compbank where orgid='COMP001' ";
+                                            $result = mysqli_query($dbcon, $sql);
+                                            while ($row = $result->fetch_assoc()) {
+                                                $bankid = $row['id'];
+                                                $bankname = $row['bankname'];
+                                                echo '<option  value="' . $bankid . '" >' . $bankname . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6" id="vendor_bank_details">
+
+                                    </div>
+                                </div>
+
 
                                         <div class="form-row">								
                                             <div class="form-group col-md-8">										
@@ -270,12 +314,52 @@
             });
 
             function modifyRefNoField(modeOfPayment){
+
+                if (modeOfPayment == "Bank Transfer" || modeOfPayment == "Bank Remittance") {
+                $('#cust_payment_bank_row').show();
+                $('#cust_payment_cheque_status_row').hide();
+                $('#vendor_bank_details').show();
+            } else {
+                $('#cust_payment_bank_row').hide();
+                $('#vendor_bank_details').hide();
+
+            }
+
+            if (modeOfPayment == "Cheque") {
+                $('#cust_payment_cheque_status_row').show();
+                $('#cust_payment_bank_row').hide();
+                $('#vendor_bank_details').hide();
+                $('#cust_payment_cheque_status').val('Uncleared');
+            } else {
+                $('#cust_payment_cheque_status_row').hide();
+            }
+
                 if(modeOfPayment!=="Cash"){
                     $('#cust_payment_ref_no').attr("required",true);
                 }else{
                     $('#cust_payment_ref_no').attr("required",false);
                 }
             }
+
+            function printBankDetails(bankid) {
+            if (bankid != '') {
+                var bank_data = Page.get_edit_vals(bankid, "compbank", "id");
+                var bank_div = '';
+                bank_div += '<h6>Bank Details</h6>';
+                bank_div += '<p>';
+                bank_div += '<b>' + bank_data.bankname + '</b><br/>';
+                bank_div += bank_data.acctname + '<br/>';
+                bank_div += bank_data.acctno + '<br/>';
+                bank_div += bank_data.acctype + '<br/>';
+                bank_div += bank_data.branch + '<br/>';
+                bank_div += bank_data.ifsc + '<br/>';
+                bank_div += '</p>';
+                $('#vendor_bank_details').html(bank_div);
+            } else {
+                $('#vendor_bank_details').html('');
+
+            }
+        }
 
             function customer_select(val){
 
@@ -413,11 +497,13 @@
                         cust_payment_inv_id:data.cust_payment_inv_id,
                         cust_payment_amount:data.cust_payment_amount,
                         action:"add",table:"customer_payments",
-                        page_cust_payment_v_credits_id:page_cust_payment_v_credits_id
+                        page_cust_payment_v_credits_id:page_cust_payment_v_credits_id,
+                        compId:`<?php echo $session_org?$session_org:'';?>`,
+                        handler:`<?php echo $session_user?$session_user:'';?>`
                     },
                     dataType: 'json',
                     success:function(response){
-                        location.href="listInvoices.php";
+                     //   location.href="listInvoices.php";
                     }
 
 

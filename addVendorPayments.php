@@ -48,7 +48,7 @@
                                 <div class="col-md-8">
 
                                     <!--form autocomplete="off" action="#"-->
-                                    <form  autocomplete="off" action="#" id="add_payment_form" enctype="multipart/form-data">
+                                    <form  autocomplete="off" action="#" id="add_payment_form" enctype="multipart/form-data" novalidate>
 
                                         <div class="form-row">
                                             <div class="form-group col-md-8" >
@@ -104,7 +104,9 @@
 
                                             <div class="form-group col-md-4">
                                                 <label >Payment Mode<span class="text-danger">*</span></label>
-                                                <select required id="payment_mode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="payment_mode" >
+                                                <select required id="payment_mode" data-parsley-trigger="change"  
+                                                onchange="modifyRefNoField(this.value)" 
+                                                class="form-control form-control-sm"  name="payment_mode" >
                                                     <option value="">-- Select Payment Mode --</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Cheque">Cheque</option>
@@ -115,12 +117,48 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-row">								
-                                            <div class="form-group col-md-8">										
-                                                <label>Bank Name</label>
-                                                <input type="text" class="form-control form-control-sm" name="payment_bank" id="payment_bank" placeholder="Bank Name"  class="form-control" autocomplete="off" />
+                                        
+                                        <div class="form-row" id="payment_cheque_status_row">
+                                            <div class="form-group col-md-6">
+                                                <label>Cheque Status<span class="text-danger">*</span></label>
+                                                <select required name="payment_cheque_status" id="payment_cheque_status" 
+                                                data-parsley-trigger="change" class="form-control form-control-sm">
+                                                    <option value="">-- Select Cheque Status --</option>
+                                                    <option value="Cleared">Cleared</option>
+                                                    <option value="Uncleared">Uncleared</option>
+                                                </select>
                                             </div>
-                                        </div>
+                                         </div>
+
+
+
+                                <div class="form-row" id="payment_bank_row">
+                                    <div class="form-group col-sm-6">
+                                        <label> Bank<span class="text-danger">*</span></label>
+
+                                        <select id="payment_bank" class="form-control form-control-sm" 
+                                        onchange="printBankDetails(this.value)" name="payment_bank">
+                                            <option selected>--Select Bank--</option> ';
+                                            <?php
+                                            $sql = "SELECT * FROM compbank where orgid='COMP001' ";
+                                            $result = mysqli_query($dbcon, $sql);
+                                            while ($row = $result->fetch_assoc()) {
+                                                $bankid = $row['id'];
+                                                $bankname = $row['bankname'];
+                                                echo '<option  value="' . $bankid . '" >' . $bankname . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6" id="vendor_bank_details">
+
+                                    </div>
+                                </div>
+
+
 
                                         <div class="form-row">								
                                             <div class="form-group col-md-8">										
@@ -282,6 +320,54 @@
 
             });
 
+        function printBankDetails(bankid) {
+            if (bankid != '') {
+                var bank_data = Page.get_edit_vals(bankid, "compbank", "id");
+                var bank_div = '';
+                bank_div += '<h6>Bank Details</h6>';
+                bank_div += '<p>';
+                bank_div += '<b>' + bank_data.bankname + '</b><br/>';
+                bank_div += bank_data.acctname + '<br/>';
+                bank_div += bank_data.acctno + '<br/>';
+                bank_div += bank_data.acctype + '<br/>';
+                bank_div += bank_data.branch + '<br/>';
+                bank_div += bank_data.ifsc + '<br/>';
+                bank_div += '</p>';
+                $('#vendor_bank_details').html(bank_div);
+            } else {
+                $('#vendor_bank_details').html('');
+
+            }
+        }
+
+            function modifyRefNoField(modeOfPayment){
+
+                if (modeOfPayment == "Bank Transfer" || modeOfPayment == "Bank Remittance") {
+                    $('#payment_bank_row').show();
+                    $('#payment_cheque_status_row').hide();
+                    $('#vendor_bank_details').show();
+                } else {
+                    $('#payment_bank_row').hide();
+                    $('#vendor_bank_details').hide();
+
+                }
+
+                if (modeOfPayment == "Cheque") {
+                    $('#payment_cheque_status_row').show();
+                    $('#payment_bank_row').hide();
+                    $('#vendor_bank_details').hide();
+                    $('#payment_cheque_status').val('Uncleared');
+               } else {
+                    $('#payment_cheque_status_row').hide();
+                }
+
+                if(modeOfPayment!=="Cash"){
+                    $('#payment_ref_no').attr("required",true);
+                }else{
+                    $('#payment_ref_no').attr("required",false);
+                }
+}
+
             function onvendor_select(val){
 
                 $.ajax ({
@@ -421,12 +507,14 @@
                         payment_grn_id:data.payment_grn_id,
                         payment_amount:data.payment_amount,
                         action:"add",table:"payments",
-                        page_payment_v_credits_id:page_payment_v_credits_id
+                        page_payment_v_credits_id:page_payment_v_credits_id,
+                        compId:`<?php echo $session_org?$session_org:'';?>`,
+                        handler:`<?php echo $session_user?$session_user:'';?>`
                     },
                     dataType: 'json',
                     success:function(response){
                         if(response.status){
-                            location.href="listGoodsReceiptNote.php";
+                           // location.href="listGoodsReceiptNote.php";
                         }
                     }
 

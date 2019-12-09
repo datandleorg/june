@@ -50,13 +50,14 @@
 													<th>Reference#</th>
 													<th>User</th>
 													<th>Amount Withdrawn</th>
+													<th>Closing Bal</th>
 													<th>Actions</th>
 													</tr>
 										</thead>										
 										<tbody>
 											<?php
 													include("database/db_conection.php");//make connection here
-													$sql = "SELECT * FROM bankwithdrawels ";
+													$sql = "SELECT * FROM bankwithdrawels w, compbank b where b.id = w.bankname  ";
 													$result = mysqli_query($dbcon,$sql);
 													
 													if ($result->num_rows > 0){
@@ -72,6 +73,7 @@
 													echo '<td>'.$row['referenceno'].'</td>';													
 													echo '<td>'.$row['createdby'].'</td>';
 													echo '<td>'.$row['amount'].'</td>';
+													echo '<td>'.$row['closing_bal'].'</td>';
 													
 													
 													

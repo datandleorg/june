@@ -1,55 +1,4 @@
-<?php
-include("database/db_conection.php");//make connection here
 
-if(isset($_POST['submit']))
-{
-    $depositdate = $_POST['depositdate'];
-	$compcode = $_POST['compcode'];
-    $bankname = $_POST['bankname'];
-	$acctno =$_POST['acctno'];
-    $amount=$_POST['amount'];//same
-    $paymethod=$_POST['paymethod'];//same
-    $paytype=$_POST['paytype'];//same
-    $referenceno=$_POST['referenceno'];//same
-    $notes=$_POST['notes'];//same	
-    $createdby=$_POST['createdby'];//same
-    
-
-    $transid ="";
-    $prefix = "CR";
-
-
-    $sql="SELECT MAX(id) as latest_id FROM bankdeposit ORDER BY id DESC";
-    if($result = mysqli_query($dbcon,$sql)){
-        $row   = mysqli_fetch_assoc($result);
-        if(mysqli_num_rows($result)>0){
-            $maxid = $row['latest_id'];
-            $maxid+=1;
-
-            $transid = $prefix.$maxid;
-        }else{
-            $maxid = 0;
-            $maxid+=1;
-            $transid = $prefix.$maxid;
-        }
-    }
-
-    //$image =base64_encode($image);		
-
-    $insert_bankdeposit="INSERT INTO bankdeposit(`transid`,`depositdate`,`compcode`,`bankname`,`acctno`,`amount`,`paymethod`,`paytype`,`referenceno`,`notes`,`createdby`)
-	VALUES('$transid','$depositdate','$compcode','$bankname','$acctno','$amount','$paymethod','$paytype','$referenceno','$notes','$createdby')";
-	
-    echo "$update_compbank";
-    if(mysqli_query($dbcon,$insert_bankdeposit))
-    {	
-        echo "<script>alert('Bank Deposit Added Successfully ')</script>";
-        header("location:listBankDeposit.php");
-    } else {  die('Error: ' . mysqli_error($dbcon));
-            echo "<script>alert('Bank Deposit creation unsuccessful ')</script>";
-           }
-
-}
-?>
 <?php include('header.php');?>
 
 <!-- End Sidebar -->
@@ -99,7 +48,7 @@ if(isset($_POST['submit']))
 
 
                             <div class="card-body">
-                                <form method="post" enctype="multipart/form-data">
+                                <form method="post" enctype="multipart/form-data" id="bankDepositForm" novalidate>
 
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
@@ -139,11 +88,12 @@ if(isset($_POST['submit']))
                                                 <?php 
                                                 $sql = mysqli_query($dbcon,"select bankname,id from compbank");
                                                 while ($row = $sql->fetch_assoc()){	
-                                                    echo $bankname_get=$row['bankname'];
-                                                    if($bankname_get==$_GET['bankname']){
-                                                        echo '<option value="'.$bankname_get.'"  selected>'.$bankname_get.'</option>';  
+                                                     $bankname=$row['bankname'];
+                                                     $bankid=$row['id'];
+                                                    if($bankname==$_GET['bankname']){
+                                                        echo '<option value="'.$bankid.'"  selected>'.$bankname.'</option>';  
                                                     }else{
-                                                        echo '<option value="'.$bankname_get.'" >'.$bankname_get.'</option>';      
+                                                        echo '<option value="'.$bankid.'" >'.$bankname.'</option>';      
                                                     }
                                                 }
                                                 ?>
@@ -174,7 +124,7 @@ if(isset($_POST['submit']))
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label >Payment Method</label>
-                                            <select required id="paymethod" data-parsley-trigger="change"  class="form-control form-control-sm"  name="paymethod" >
+                                            <select required id="paymethod" data-parsley-trigger="change"  onchange="togglePaymentDetailsOptions(this.value)" class="form-control form-control-sm"  name="paymethod" >
                                                 <option value="">Open Payment Method</option>
                                                 <option value="Cash">Cash</option>
                                                 <option value="Cheque">Cheque</option>
@@ -182,6 +132,19 @@ if(isset($_POST['submit']))
                                             </select>
                                         </div>
                                     </div>
+
+
+                                    <div class="form-row" id="v_credits_cheque_status_row">
+                                        <div class="form-group col-md-6">
+                                            <label>Cheque Status<span class="text-danger">*</span></label>
+                                            <select required name="pay_status" id="pay_status" data-parsley-trigger="change" class="form-control form-control-sm">
+                                                <option value="">-- Select Cheque Status --</option>
+                                                <option value="Cleared">Cleared</option>
+                                                <option value="Uncleared">Uncleared</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
 
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
@@ -267,27 +230,96 @@ if(isset($_POST['submit']))
 
     <script>
 
-        $(function(){
-            var compcode11 =  $('#compcode').val();
-            if(compcode11!=''){
-                onbankname(compcode11);
-            }
-        });
+        var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
+        var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
+        var page_transid = "<?php if(isset($_GET['transid'])){ echo $_GET['transid']; } ?>";
 
 
-        function onbankname(x){
-            var compcode = $('#compcode').val();
-            var bankname = x;
-            var edit_data = Page.get_multiple_vals(compcode,"compbank","orgid");
+        if(page_action=="edit"){
+            var edit_data = Page.get_edit_vals(page_transid,page_table,"transid");
+            set_form_data(edit_data);
+            onbankname(edit_data.bankname);
+        }
 
-            for(var i=0;i<edit_data.length;i++){
-                if(edit_data[i].bankname==bankname){
-                    $('#acctno').val(edit_data[i].acctno);
-                }
+        $('#v_credits_cheque_status_row').hide();
+
+        function togglePaymentDetailsOptions(paymentMode) {
+
+            if (paymentMode == "Cheque") {
+                $('#v_credits_cheque_status_row').show();
+                $('#v_credits_cheque_status').val('Uncleared');
+            } else {
+                $('#v_credits_cheque_status_row').hide();
             }
 
         }
 
+
+        function set_form_data(data){
+
+            $.each(data, function(index, value) {
+
+                if(index=="id"||index=="so_code"){
+                }else if(index=="so_items"){
+                    set_math_vals(JSON.parse(value));
+                }else{
+                    $('#'+index).val(value);
+                }
+            }); 
+
+            }
+
+        function onbankname(bankid){
+            console.log(bankid,"bankid");
+            var edit_data = Page.get_edit_vals(bankid,"compbank","id");
+            $('#acctno').val(edit_data.acctno);
+        }
+
+
+        $("form#bankDepositForm").submit(function(e){
+            e.preventDefault();
+            var $form = $(this);
+            var data = getFormData($form);
+
+            function getFormData($form){
+                var unindexed_array = $form.serializeArray();
+                var indexed_array = {};
+
+                $.map(unindexed_array, function(n, i){
+                    if(n['name']=="id"){
+
+                    }else{
+                        indexed_array[n['name']] = n['value'];
+                    }
+                });
+
+                return indexed_array;
+          }
+
+           console.log(data);
+      //  return false;
+
+            $.ajax ({
+                url: 'workers/setters/save_bankdeposit.php',
+                type: 'post',
+                data: {
+                    array : JSON.stringify(data),
+                    transid:page_transid,
+                    action:page_action?page_action:"add",
+                    table:"bankdeposit",
+                    compId:`<?php echo $session_org?$session_org:'';?>`,
+                    handler:`<?php echo $session_user?$session_user:'';?>`
+
+                },
+                dataType: 'json',
+                success:function(response){
+                   // location.href="listVendorCredits.php";
+                }
+
+
+            });
+
+        });
 
     </script>
     <?php include('footer.php');?>

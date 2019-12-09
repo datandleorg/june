@@ -52,7 +52,7 @@ if(isset($_GET['v_credits_id']))
                         <table width="100%">
                             <tr>
                                 <td style="padding:5px;">Credit Ref No. <?php echo $row['v_credits_id']; ?></td> 
-                            </tr>     
+                            </tr>      
                             <tr>
                                 <td style="padding:5px;">
                                     Date. <?php echo $row['v_credits_paymentdate']; ?>
@@ -61,6 +61,40 @@ if(isset($_GET['v_credits_id']))
                             <tr>
                                 <td style="padding:5px;">Payment Mode: <?php echo $row['v_credits_paymentmode']; ?></td> 
                             </tr>    
+                            <?php
+                                if($row['v_credits_paymentmode']==="Cheque"){
+                                echo " <tr>
+                                            <td style='padding:5px;'>Cheque Status: ".$row['v_credits_cheque_status']."</td> 
+                                        </tr> ";
+                                }
+                            ?>
+                            <?php
+                                if($row['v_credits_paymentmode']!=="Cheque" && $row['v_credits_paymentmode']!=="Cash"){
+                                    $bid = $row['v_credits_bank'];
+                                    $sql2 = "SELECT * FROM compbank where orgid='COMP001' and id='$bid' ";
+                                    $result2 = mysqli_query($dbcon, $sql2);
+                                    while ($rowed = $result2->fetch_assoc()) {
+                                    
+                                        $bankDetails = $rowed['bankname'];
+                                        $bankDetails.="<br/>";
+                                        $bankDetails.= $rowed['acctname'];
+                                        $bankDetails.="<br/>";
+                                        $bankDetails.= $rowed['acctno'];
+                                        $bankDetails.="<br/>";
+                                        $bankDetails.= $rowed['branch'];
+                                        $bankDetails.="<br/>";
+                                        $bankDetails.= $rowed['ifsc'];
+                                        $bankDetails.="<br/>";
+
+                                    }
+                                echo " <tr>
+                                            <td style='padding:5px;'>Bank Details:</br> ".$bankDetails."</td> 
+                                      </tr> ";
+                                }
+                            ?>
+                          
+                            </tr>   
+
                             <tr>
                                 <td style="padding:5px;">
                                     <p class="h6">Credit Amount : <?php echo $row['v_credits_amount']; ?></p>

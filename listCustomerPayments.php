@@ -51,6 +51,7 @@
                                             <th>Invoioce#</th>												
                                             <th>Mode</th>												
                                             <th>Amount Received</th>
+                                            <th>Ref No Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>										
@@ -75,7 +76,7 @@
                                                 echo '<td>'.$row['cust_payment_invoice_no'].' </td>';
                                                 echo '<td>'.$row['cust_payment_mode'].' </td>';
                                                 echo '<td>'.$row['cust_payment_amount'].' </td>';
-
+                                                echo '<td>'.$row['cust_payment_ref_no'].'<br/>'.$row['cust_payment_cheque_status'].'</td>';
                                          
                                         ?>
 

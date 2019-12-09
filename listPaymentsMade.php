@@ -52,6 +52,7 @@
                                             <th style="width:100px">Invoioce#</th>												
                                             <th style="width:300px">PaymentMode</th>												
                                             <th style="width:300px">Amt Received</th>
+                                            <th style="width:300px">Cheque Status</th>
                                             <th style="width:200px">Actions</th>
                                         </tr>
                                     </thead>										
@@ -74,6 +75,7 @@
                                                 echo '<td>'.$row['payment_invoice_no'].' </td>';
                                                 echo '<td>'.$row['payment_mode'].' </td>';
                                                 echo '<td>'.$row['payment_amount'].' </td>';
+                                                echo '<td>'.$row['payment_cheque_status'].' </td>';
                                                 echo '<td><a class="btn btn-light btn-sm hidden-md" 
                                                      onclick="ToPrint(this);" data-img="assets/images/logo.png"
                                                       data-code="'.$row['payment_id'].'"  data-id="po_print">

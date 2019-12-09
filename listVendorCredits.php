@@ -45,6 +45,8 @@
                                             <th>Status</th>												
                                             <th>Vendor</th>
                                             <th>Amount</th>												
+                                            <th>Payment Mode</th>												
+                                            <th>RefNo & Status</th>												
                                             <th>Credit Balance</th>												
                                             <th>User</th>												
                                             <th>Actions</th>
@@ -74,6 +76,8 @@
                                                 }
                                                 echo '<td>'.$row['supname'].' </td>';
                                                 echo '<td>'.$row['v_credits_amount'].' </td>';
+                                                echo '<td>'.$row['v_credits_paymentmode'].' </td>';
+                                                echo '<td>'.$row['v_credits_ref_no'].'<br/>['.$row['v_credits_cheque_status'].']</td>';
                                                 echo '<td>'.$row['v_credits_availcredits'].' </td>';
                                                 echo '<td>'.$row['v_credits_handler'].' </td>';
                                         ?>

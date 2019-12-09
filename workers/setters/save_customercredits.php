@@ -20,6 +20,11 @@ if (isset($_POST['array'])) {
 
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$customer_credits_id,$table,"customer_credits_id");
+            if($return['status']){
+                
+            }else{
+                $return['status']=false;
+            }
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);

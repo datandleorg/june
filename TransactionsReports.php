@@ -14,10 +14,10 @@ include('workers/getters/functions.php');
             <div class="row">
                 <div class="col-xl-12">
                     <div class="breadcrumb-holder">
-                        <h1 class="main-title float-left"> Bank Deposit Report</h1>
+                        <h1 class="main-title float-left"> Transactions Report</h1>
                         <ol class="breadcrumb float-right">
                             <li class="breadcrumb-item">Home</li>
-                            <li class="breadcrumb-item active">Bank Deposit Reprot</li>
+                            <li class="breadcrumb-item active">Transactions Report</li>
                         </ol>
                         <div class="clearfix"></div>
                     </div>
@@ -31,14 +31,15 @@ include('workers/getters/functions.php');
                         <div class="card-header">
 
 
-                            <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"></i><b>&nbsp;Bank Deposit Reports </b></h3>
+                            <h3><i class="fa fa-cart-plus bigfonts" aria-hidden="true"></i><b>&nbsp;Transactions Reports </b></h3>
                         </div>
 
                         <div class="card-body">
                             <div class="form-group row">
+                               
                                 <div class="col-sm-3">
                                     <div class="input-group">
-                                        <input type="text" id="daterange" class="form-control-sm" placeholder="Select Date Range">
+                                        <input type="text" id="daterange" class="form-control form-control-sm" placeholder="Select Date Range">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" id="reset-date">
                                                 <i class="fa fa-times"></i>
@@ -46,21 +47,18 @@ include('workers/getters/functions.php');
                                         </span>
                                     </div>
                                 </div>
-                                <!-- <div class="form-group col-sm-3">
-                                    <select id="custwise" class="form-control form-control-sm" name="custwise">
-                                        <option selected>--Select Customer--</option>
-                                        <?php
-                                        // $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
-                                        // while ($row = $sql->fetch_assoc()){	
-                                        //     $custid=$row['custid'];
-                                        //     $custname=$row['custname'];
-                                        //     echo '<option  value="'.$custid.'" >'.$custid.' '.$custname.'</option>';
+                        
+                                <div class="form-group col-md-3">
+                                        <select required id="payment_mode" data-parsley-trigger="change"  class="form-control form-control-sm"  name="payment_mode" >
+                                            <option value="">-- Select Payment Mode --</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Cheque">Cheque</option>
+                                            <option value="Credit Card">Credit Card</option>
+                                            <option value="Bank Transfer">Bank Transfer</option>
+                                            <option value="Bank Remittance">Bank Remittance</option>
+                                        </select>
+                                </div>
 
-                                        // }
-                                        ?>
-                                    </select>
-
-                                </div> -->
                                 <div class="col-sm-2">
                                     <button type="button" class="btn btn-primary btn-sm" onclick="get_cp_reports();">Run Report</button>
                                 </div>
@@ -73,53 +71,60 @@ include('workers/getters/functions.php');
                                     <table id="po_reports" class="table table-bordered" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>Transaction Id</th>
-                                                <th>Date</th>
-                                                <th>Deposit Mode</th>
-												<th>Refernce#</th>
-                                                <th>Bank Name</th>
-                                                <th>A/C No.</th>
+                                                <th>Id</th>
+                                                <th>Type</th>
                                                 <th>Amount</th>
+                                                <th>Payment Mode</th>
+                                                <th>Bank</th>
                                                 <th>Closing Bal</th>
-                                                <th>Created by</th>
+                                                <th>Cash On Hand</th>
+                                                <th>Petty Cash</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if((isset($_GET['st'])&&$_GET['st']!='')||(isset($_GET['end'])&&$_GET['end']!='')){ 
+                                            if((isset($_GET['st'])&&$_GET['st']!='')||(isset($_GET['end'])&&$_GET['end']!='') ||(isset($_GET['payment_mode']))){ 
 
                                                 $timestamp = strtotime($_GET['st']);
                                                 $st = date('Y-m-d', $timestamp);
                                                 $timestamp = strtotime($_GET['end']);
                                                 $end = date('Y-m-d', $timestamp);
 
-                                               $sql = "SELECT * from bankdeposit bd , compbank c where c.id=bd.bankname ";
+                                               $sql = "SELECT * from expenses ex where 1=1 ";
                                                 if($_GET['st']!=''){
                                                     if($st==$end){
-                                                        $sql.= " and bd.depositdate='$st' ";   
+                                                        $sql.= " and ex.expense_date='$st' ";   
                                                     }else{
-                                                        $sql.=" and (bd.depositdate BETWEEN '$st' AND '$end') ";   
+                                                        $sql.=" and (ex.expense_date BETWEEN '$st' AND '$end') ";   
                                                     }
                                                 }
 
+                                                if($_GET['payment_mode']!=''){
+                                                    $sql.= " and ex.expense_paid_thru='".$_GET['payment_mode']."' ";   
+
+                                                }
+
                                             }else{
-                                                $sql = "SELECT * from bankdeposit bd, compbank c where c.id=bd.bankname ;";    
+                                                $sql = "SELECT * from transactions t ;";    
                                             }
 
                                             $result = mysqli_query($dbcon,$sql);
                                             if ($result->num_rows > 0){
                                                 while ($row =$result-> fetch_assoc()){
 
-                                                    echo '                           <tr>
-                                                <td>'.$row['transid'].'</td>
-                                                <td>'.$row['depositdate'].'</td>
-                                                <td>'.$row['paymethod'].'</td>
-												<td>'.$row['referenceno'].'</td>
-                                                <td>'.$row['bankname'].'</td>
-                                                <td>'.$row['acctno'].'</td>
-                                                <td>'.$row['amount'].'</td>
-                                                <td>'.$row['closing_bal'].'</td>
-                                                <td>'.$row['createdby'].'</td>
+                                                    echo '<tr>
+                                                <td>'.$row['trans_id'].'</td>
+                                                <td>'.$row['trans_type'].'</td>
+                                                <td>'.$row['trans_amt'].'</td>
+                                                <td>'.$row['trans_mode'].'</td>
+                                                <td>'.$row['trans_bank'].'</td>
+                                                <td>'.$row['total_closing_bal'].'</td>
+                                                <td>'.$row['total_cash_on_hand'].'</td>
+                                                <td>'.$row['total_petty_cash'].'</td>
+                                                <td>'.$row['trans_status'].'</td>
+                                                <td>'.$row['trans_date'].'</td>
 
                                             </tr>';  
                                                 }
@@ -128,7 +133,7 @@ include('workers/getters/functions.php');
 
 
                                         </tbody>
-                                        <tfoot>
+                                        <!-- <tfoot>
                                             <tr>
                                                 <th></th>
                                                 <th></th>
@@ -140,7 +145,7 @@ include('workers/getters/functions.php');
                                                 <th></th>
                                                 <th></th>
                                             </tr>
-                                        </tfoot>
+                                        </tfoot> -->
                                     </table>
                                 </div>
                             </div>
@@ -161,14 +166,15 @@ include('workers/getters/functions.php');
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 <script>
-    var page_custwise = "<?php if(isset($_GET['custwise'])){ echo $_GET['custwise']; } ?>";
-    var page_st = "<?php if(isset($_GET['st'])){ echo $_GET['st']; } ?>";
+   // var page_custwise = "<?php if(isset($_GET['custwise'])){ echo $_GET['custwise']; } ?>";
+    var page_payment_mode = "<?php if(isset($_GET['payment_mode'])){ echo $_GET['payment_mode']; } ?>";
+   var page_st = "<?php if(isset($_GET['st'])){ echo $_GET['st']; } ?>";
     var page_end = "<?php if(isset($_GET['end'])){ echo $_GET['end']; } ?>";
 
     $(document).ready(function() {
-        var vendor_params =[];
-        Page.load_select_options('custwise',vendor_params,'customerprofile',' Customer','custid','custname');
-        $('#custwise').val(page_custwise);
+       // var vendor_params =[];
+       // Page.load_select_options('custwise',vendor_params,'customerprofile',' Customer','custid','custname');
+       $('#payment_mode').val(page_payment_mode);
         $("#reset-date").hide();
 
         $('#daterange').daterangepicker({
@@ -204,14 +210,20 @@ include('workers/getters/functions.php');
 
         var date_range = $('#daterange').val(); 
 
-        var cust_var = $('#custwise').val(); 
-        var cust_name_json = cust_var!=''?Page.get_edit_vals(cust_var,"customerprofile","custid"):'';
-        var cust_name = cust_name_json.custname;
+        // var cust_var = $('#custwise').val(); 
+        // var cust_name_json = cust_var!=''?Page.get_edit_vals(cust_var,"customerprofile","custid"):'';
+        // var cust_name = cust_name_json.custname;
         var printhead = '';
         printhead+= date_range!=''?'<p><b>Date : </b>'+date_range+'</p>':'';
+        printhead+= '';
+        printhead+= page_payment_mode!=''?'<p><b>Payment Mode : </b>'+page_payment_mode+'</p>':'';
         var excel_printhead = '';
         excel_printhead+= '  ';
         excel_printhead+= date_range!=''?'Date : '+date_range:'';
+        excel_printhead+= '  ';
+        excel_printhead+= page_payment_mode!=''?'Payment Mode : '+page_payment_mode+'':'';
+
+
 
         var table = $('#po_reports').DataTable( {
             lengthChange: false,
@@ -230,12 +242,15 @@ include('workers/getters/functions.php');
                     return intVal(a) + intVal(b);
                 }, 0 ).toFixed(2);
 
-       
+                // var taxgrossval = api
+                // .column( 4 )
+                // .data()
+                // .reduce( function (a, b) {
+                //     return intVal(a) + intVal(b);
+                // }, 0 ).toFixed(2);
 
-
-
-                $( api.column( 0 ).footer() ).html('Total');
-                $( api.column( 6 ).footer() ).html(grossval);
+                // $( api.column( 0 ).footer() ).html('Total');
+                // $( api.column( 6 ).footer() ).html(grossval);
                 // $( api.column( 4 ).footer() ).html(taxgrossval);
                 //   $( api.column( 5 ).footer() ).html(taxamt);
                 //   $( api.column( 7 ).footer() ).html(netval);
@@ -252,7 +267,7 @@ include('workers/getters/functions.php');
                         $(win.document.body)
                             .css( 'font-size', '10pt' )
                             .prepend(
-                            '<p><img src="<?php echo $baseurl;?>assets/images/logo.png" style="width:50px;height:50px;" /></p><p class="lead text-center"><b>Bank Deposit Report</b><br/></p>'+printhead+'</div>'
+                            '<p><img src="<?php echo $baseurl;?>assets/images/logo.png" style="width:50px;height:50px;" /></p><p class="lead text-center"><b>Expenses Report</b><br/></p>'+printhead+'</div>'
                         );
 
                         $(win.document.body).find( 'table' )
@@ -263,14 +278,14 @@ include('workers/getters/functions.php');
                 {
                     extend: 'excel',
                     text:'<span class="fa fa-file-excel-o"></span>',
-                    title:'Bank Deposits', footer: true ,
+                    title:'Expenses Report', footer: true ,
                     messageTop: excel_printhead   
 
                 },
                 {
                     extend: 'pdf',
                     text:'<span class="fa fa-file-pdf-o"></span>',
-                    title:'Bank Deposits', footer: true ,
+                    title:'Expenses Report', footer: true ,
                     messageTop: excel_printhead   
 
                 },
@@ -301,8 +316,8 @@ include('workers/getters/functions.php');
             st = date_range[0].replace(" ","");
             end = date_range[1].replace(" ","");
         }
-        var custwise = $('#custwise').val();
-        location.href="BankDepositReports.php?st="+st+"&end="+end;
+        var payment_mode = $('#payment_mode').val();
+        location.href="TransactionsReports.php?st="+st+"&end="+end+"&payment_mode="+payment_mode;
     }
 
     function cb(start, end) {
