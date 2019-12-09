@@ -224,8 +224,7 @@ $prefix = "CUST00";
 									</div>
 								  </div>
 								</div>
-								</div>
-								</div>
+					
 							
 							<!-- Modal Ends-->	
 									
