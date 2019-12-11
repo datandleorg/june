@@ -439,8 +439,8 @@ function sql_fetch_all($result){
 
 }
 
-function getTotalClosingBal($dbcon){
-   $sql = "SELECT total_closing_bal,total_cash_on_hand ,total_petty_cash FROM transactions ORDER BY id DESC LIMIT 1 ";
+function getTotalClosingBal($dbcon,$compId){
+   $sql = "SELECT closing_bal,cash_on_hand ,petty_cash_bal FROM comprofile  WHERE orgid='".$compId."' LIMIT 1 ";
     $result = mysqli_query($dbcon, $sql);
     while ($row = $result->fetch_assoc()) {
         return $row;
@@ -452,36 +452,47 @@ function handleTransaction($dbcon,$compId,$entry,$transid,$transData){
     
         if ($transid=="") {
             $transid = get_id($dbcon,"transactions","TRN-00");
-            $lastRow = getTotalClosingBal($dbcon);
+            $lastRow = getTotalClosingBal($dbcon,$compId);
 
             $sql = "INSERT INTO transactions (trans_id) VALUES ('$transid')";
 
             if (mysqli_query($dbcon,$sql)) {
              
-                $transData['total_closing_bal'] = $lastRow['total_closing_bal'];
-                $transData['total_cash_on_hand'] = $lastRow['total_cash_on_hand'];
-                $transData['total_petty_cash'] = $lastRow['total_petty_cash'];
+                $transData['total_closing_bal'] = $lastRow['closing_bal'];
+                $transData['total_cash_on_hand'] = $lastRow['cash_on_hand'];
+                $transData['total_petty_cash'] = $lastRow['petty_cash_bal'];
 
                 if($entry['entity'] !== "Bank Deposit" && $transData['trans_mode']==="Cash"){
-                    $transData['total_cash_on_hand'] = $transData['trans_type'] == "credit" ? $transData['total_cash_on_hand']+$transData['trans_amt'] : $transData['total_cash_on_hand']-$transData['trans_amt'];
+                    $transData['total_petty_cash'] = $transData['trans_type'] == "credit" ? $transData['total_petty_cash']+$transData['trans_amt'] : $transData['total_petty_cash']-$transData['trans_amt'];
                 }else{
                     $transData['total_closing_bal'] = $transData['trans_type'] == "credit" ? $transData['total_closing_bal']+$transData['trans_amt'] : $transData['total_closing_bal']-$transData['trans_amt'];
                 }
 
                 $return = update_query($dbcon,json_encode($transData),$transid,"transactions","trans_id");
+                echo $transData['trans_mode'];
 
-                if ($return['status']  && $transData['trans_mode']!=="Cash" ){
-                    $pastVal = findbyand($dbcon,$transData['trans_bank'],'compbank','id');
-                     $bank = array();
-                     $bank['closing_bal'] = $transData['trans_type'] == "credit" ? $pastVal['values'][0]['closing_bal']+$transData['trans_amt'] : $pastVal['values'][0]['closing_bal']-$transData['trans_amt']  ;
-                     //update bank
-                     $return = update_query($dbcon,json_encode($bank),$transData['trans_bank'],"compbank","id");
-                     if ($return['status']){
-                        return $return;
-                     }else{
-                        return $return;
-                     }
-
+                if ($return['status']){
+                    if($transData['trans_mode']!=="Cash"){
+                        $pastVal = findbyand($dbcon,$transData['trans_bank'],'compbank','id');
+                        $bank = array();
+                        $bank['closing_bal'] = $transData['trans_type'] == "credit" ? $pastVal['values'][0]['closing_bal']+$transData['trans_amt'] : $pastVal['values'][0]['closing_bal']-$transData['trans_amt']  ;
+                        //update bank
+                        $return = update_query($dbcon,json_encode($bank),$transData['trans_bank'],"compbank","id");
+                        if ($return['status']){
+                            $pastValcomp = findbyand($dbcon,$compId,'comprofile','orgid');
+                            $comprofile = array();
+                            $comprofile['closing_bal'] = $transData['trans_type'] == "credit" ? $pastValcomp['values'][0]['closing_bal']+$transData['trans_amt'] : $pastValcomp['values'][0]['closing_bal']-$transData['trans_amt']  ;
+                            $return = update_query($dbcon,json_encode($comprofile),$compId,"comprofile","orgid");
+                        }else{
+                            return $return;
+                        }
+                    }else{
+                            $pastValcomp = findbyand($dbcon,$compId,'comprofile','orgid');
+                            $comprofile = array();
+                            $comprofile['petty_cash_bal'] = $transData['trans_type'] == "credit" ? $pastValcomp['values'][0]['petty_cash_bal']+$transData['trans_amt'] : $pastValcomp['values'][0]['petty_cash_bal']-$transData['trans_amt']  ;
+                            $return = update_query($dbcon,json_encode($comprofile),$compId,"comprofile","orgid");
+                    }
+                 
                 }else{
                     return $return;
                 }

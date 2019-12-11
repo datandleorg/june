@@ -72,8 +72,8 @@ if (isset($_POST['array'])) {
                 $transData['trans_status'] = $entry['data']['v_credits_paymentmode']!=="Cheque" ? "Completed" : $entry['data']['v_credits_cheque_status'];
                 $transData['trans_handler'] = $handler;
                 $transData['trans_mode'] = $entry['data']['v_credits_paymentmode'];
-                
-                if($transData['trans_status']==="Completed" || $transData['trans_status']==="Uncleared"){
+
+                if($transData['trans_status']==="Completed" || $transData['trans_status']==="Cleared"){
                     $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
                 }
             
