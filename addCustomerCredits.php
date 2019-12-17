@@ -2,7 +2,7 @@
 <?php include('header.php');?>
 <!-- End Sidebar -->
 
-<div class="content-page">
+<div class="content-page" ng-app="paymentPages" ng-controller="formCtrl" ng-init="formInit()">
 
     <!-- Start content -->
     <div class="content">
@@ -32,14 +32,24 @@
                         </div>
 
                         <div class="card-body">
-                            <form autocomplete="off" action="#" enctype="multipart/form-data" id="addcustomercredits_form" method="post" novalidate>
+                            <form autocomplete="off" action="#" enctype="multipart/form-data" id="addcustomercredits_form" method="post">
 
 
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputState">Customer Name<span class="text-danger">*</span></label>
-                                        <select id="customer_credits_custid" onchange="print_bill_addr(this.value);" class="form-control form-control-sm" name="customer_credits_custid">
-                                            <option selected>--Select Customer Code--</option>
+                                        <select id="customer_credits_custid" onchange="print_bill_addr(this.value);" 
+                                        ng-model="cc.customer_credits_custid"
+                                        class="form-control form-control-sm" name="customer_credits_custid">
+                                            <option selected value="">--Select Customer Code--</option>
+                                            <?php
+                                            $sql = mysqli_query($dbcon,"SELECT * FROM customerprofile");
+                                            while ($row = $sql->fetch_assoc()){	
+                                                $custid=$row['custid'];
+                                                $custname=$row['custname'];
+                                                echo '<option  value="'.$custid.'" >'.$custid.' '.$custname.'</option>';
+                                            }
+                                            ?>
                                         </select>
 
                                     </div>
@@ -52,26 +62,35 @@
                                     </div>											
                                 </div>
 
-                                <div class="form-row">      
+                                <div class="form-row" ng-if="editMode">
                                     <div class="form-group col-md-6">
-                                        <label >Payment Mode<span class="text-danger">*</span></label>
-                                        <select required name="customer_credits_paymentmode" id="customer_credits_paymentmode" 
-                                        onchange="togglePaymentDetailsOptions(this.value)"
-                                        data-parsley-trigger="change"  class="form-control form-control-sm"   >
-                                            <option value="">-- Select Payment Mode --</option>
-                                            <option value="Cash">Cash</option>
-                                            <option value="Cheque">Cheque</option>
-                                            <option value="Credit Card">Credit Card</option>
-                                            <option value="Bank Transfer">Bank Transfer</option>
-                                            <option value="Bank Remittance">Bank Remittance</option>
-                                        </select>
+                                       Payment Mode : {{cc.customer_credits_paymentmode}}
                                     </div>
                                 </div>
 
-                                <div class="form-row" id="customer_credits_cheque_status_row">
+                                <div class="form-row" ng-show="!editMode">
+                                    <div class="form-group col-md-6">
+                                        <label>Payment Mode<span class="text-danger">*</span></label>
+                                        <select required name="customer_credits_paymentmode" id="customer_credits_paymentmode"
+                                            ng-model="cc.customer_credits_paymentmode" ng-change="onPaymentModeChange()"
+                                            class="form-control form-control-sm" name="customer_credits_paymentmode">
+                                            <option value="">-- Select Payment Mode --</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Cheque">Cheque</option>
+                                            <option value="Bank Transfer">Bank Transfer</option>
+                                        </select>
+                                        <p ng-if="vc.v_credits_paymentmode=='Cash'" class="small p-1"
+                                            id="petty_cash_bal">Petty Cash balance : {{comprofile.petty_cash_bal}}</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-row" id="customer_credits_cheque_status_row"
+                                    ng-if="cc.customer_credits_paymentmode=='Cheque'">
                                     <div class="form-group col-md-6">
                                         <label>Cheque Status<span class="text-danger">*</span></label>
-                                        <select required name="customer_credits_cheque_status" id="customer_credits_cheque_status" data-parsley-trigger="change" class="form-control form-control-sm">
+                                        <select name="customer_credits_cheque_status" id="customer_credits_cheque_status"
+                                            ng-model="cc.customer_credits_cheque_status" data-parsley-trigger="change"
+                                            class="form-control form-control-sm">
                                             <option value="">-- Select Cheque Status --</option>
                                             <option value="Cleared">Cleared</option>
                                             <option value="Uncleared">Uncleared</option>
@@ -79,13 +98,17 @@
                                     </div>
                                 </div>
 
-                                
-                                <div class="form-row" id="customer_credits_bank_row">
+
+
+                                <div class="form-row" id="customer_credits_bank_row"
+                                    ng-if="cc.customer_credits_paymentmode=='Bank Transfer' || cc.customer_credits_paymentmode=='Cheque'">
                                     <div class="form-group col-sm-6">
                                         <label> Bank<span class="text-danger">*</span></label>
 
-                                        <select id="customer_credits_bank" class="form-control form-control-sm" onchange="printBankDetails(this.value)" name="customer_credits_bank">
-                                            <option selected>--Select Bank--</option> ';
+                                        <select id="customer_credits_bank" class="form-control form-control-sm"
+                                            ng-model="cc.customer_credits_bank" name="customer_credits_bank"
+                                            ng-change="onBankChange()">
+                                            <option value='' selected>--Select Bank--</option> ';
                                             <?php
                                             $sql = "SELECT * FROM compbank where orgid='COMP001' ";
                                             $result = mysqli_query($dbcon, $sql);
@@ -96,42 +119,62 @@
                                             }
                                             ?>
                                         </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="form-group col-md-6" id="vendor_bank_details">
+                                        <p ng-if="cc.customer_credits_bank!==''" class="small p-1" id="petty_cash_bal">Account
+                                            balance : {{selectedBank.closing_bal}}</p>
 
                                     </div>
                                 </div>
 
                                 <div class="form-row">
+                                    <div class="form-group col-md-6"
+                                        ng-if="cc.customer_credits_bank!=='' && (cc.customer_credits_paymentmode=='Bank Transfer' || cc.customer_credits_paymentmode=='Cheque')">
+                                        <h6>Bank Details</h6>
+                                        <p><b>{{selectedBank.bankname}}</b><br />
+                                            {{selectedBank.acctname}}<br />
+                                            {{selectedBank.acctno}}<br />
+                                            {{selectedBank.acctype}}<br />
+                                            {{selectedBank.branch}}<br />
+                                            {{selectedBank.ifsc}}<br />
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-row" ng-if="cc.customer_credits_paymentmode!=='Cash'">
                                     <div class="form-group col-md-8">
                                         <label>Reference #</label>
-                                        <input type="text" class="form-control form-control-sm" name="customer_credits_refno" id="customer_credits_refno" placeholder=" Reference Number(optional)" class="form-control" autocomplete="off" />
+                                        <input ng-model="cc.customer_credits_ref_no" type="text"
+                                            class="form-control form-control-sm" name="customer_credits_ref_no"
+                                            id="customer_credits_ref_no" placeholder=" Reference Number(optional)"
+                                            class="form-control" autocomplete="off" />
                                     </div>
                                 </div>
+
 
 
                                 <!-- Modal Ends-->	
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="inputState">Credit Date</label>									
-                                        <input type="date" class="form-control form-control-sm"  id="customer_credits_paymentdate" name="customer_credits_paymentdate" value="<?php echo date("Y-m-d");?>">		
+                                        <input type="date" class="form-control form-control-sm" 
+                                        ng-model="cc.customer_credits_paymentdate"
+                                         id="customer_credits_paymentdate" 
+                                         name="customer_credits_paymentdate" value="<?php echo date("Y-m-d");?>">		
                                     </div>
 
                                     <div class="form-group col-md-3">									  
                                         <label>Enter Credits</label>
-                                        <input type="text" class="form-control form-control-sm" name="customer_credits_amount" id="customer_credits_amount" placeholder="Credit Amount"  required class="form-control" autocomplete="off">
+                                        <input type="text" class="form-control form-control-sm" 
+                                        name="customer_credits_amount" id="customer_credits_amount" 
+                                        ng-model="cc.customer_credits_amount"
+                                        placeholder="Credit Amount"  required class="form-control" autocomplete="off">
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="inputState">Handler</label>
-
                                         <input type="text" class="form-control form-control-sm" name="customer_credits_handler" id="customer_credits_handler" readonly class="form-control form-control-sm" value="<?php echo $session_user; ?>" required />
-
                                     </div>
                                 </div>
 
@@ -144,14 +187,14 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label>Add Notes</label>
-                                        <textarea rows="2" class="form-control editor" id="customer_credits_notes" name="customer_credits_notes" placeholder="add product/price/stock related notes here"></textarea>
+                                        <textarea rows="2" class="form-control editor" ng-model="cc.customer_credits_notes" id="customer_credits_notes" name="customer_credits_notes" placeholder="add product/price/stock related notes here"></textarea>
                                     </div> 
                                 </div>
 
 
                                 <div class="form-row">
                                     <div class="col-md-12 col-md-offset-12">
-                                        <input type="checkbox" id="customer_credits_email_notification" name="customer_credits_email_notification">
+                                        <input type="checkbox" ng-model="cc.customer_credits_email_notification" id="customer_credits_email_notification" name="customer_credits_email_notification">
                                         <label for="subscribeNews">Send a Customer Credit Note information email notification to Customer</label>									
                                     </div>
                                 </div>
@@ -206,20 +249,7 @@
 
 
         $(function(){
-            get_vendors();
             $('#message-alert').hide();
-
-            if(page_action=="edit"){
-                var credits_data = Page.get_edit_vals(page_customer_credits_id,"customercredits","customer_credits_id");
-                $('#customer_credits_custid').val(credits_data.customer_credits_custid);
-                $('#customer_credits_paymentmode').val(credits_data.customer_credits_paymentmode);
-                $('#customer_credits_paymentdate').val(credits_data.customer_credits_paymentdate);               
-                $('#customer_credits_handler').val(credits_data.customer_credits_handler);
-                $('#customer_credits_amount').val(credits_data.customer_credits_amount);
-                $('#customer_credits_notes').val(credits_data.customer_credits_notes);               
-
-            }
-
         });      
     </script>
 
@@ -227,27 +257,58 @@
 
     <script>
 
-        function togglePaymentDetailsOptions(paymentMode) {
-            if (paymentMode == "Bank Transfer" || paymentMode == "Bank Remittance") {
-                $('#customer_credits_bank_row').show();
-                $('#customer_credits_cheque_status_row').hide();
-                $('#vendor_bank_details').show();
-            } else {
-                $('#customer_credits_bank_row').hide();
-                $('#vendor_bank_details').hide();
+        var error = false;
+        var app = angular.module('paymentPages', []);
+        app.controller('formCtrl', function ($scope, $http) {
+            $scope.formInit = () =>{
+                if (page_action == "edit") {
+                    var credits_data = Page.get_edit_vals(page_customer_credits_id, "customercredits", "customer_credits_id");   
+                    $scope.cc = credits_data;
+                    $scope.cc.customer_credits_paymentdate = new Date($scope.cc.customer_credits_paymentdate);
+                    print_bill_addr($scope.cc.customer_credits_custid);
+                    $scope.onPaymentModeChange();
+                    if($scope.cc.customer_credits_paymentmode==="Cash"){
+                    }else{
+                        $scope.onBankChange();
+                    }
+                    $scope.editMode = true;
+                }
+            }
+            $scope.test = "test";
+            $scope.cc = {
+                customer_credits_vendorid: "",
+                customer_credits_paymentmode: "",
+                customer_credits_cheque_status: "Uncleared",
+                customer_credits_bank: "",
+                customer_credits_ref_no: "",
+                customer_credits_paymentdate: new Date(),
+                customer_credits_amount: 0,
+                customer_credits_handler: "<?php echo $session_user; ?>",
+                customer_credits_notes: "",
+                customer_credits_email_notification: false
+            };
+            $scope.creditAmtValidation = true;
 
+
+            $scope.onPaymentModeChange = () => {
+                let comprofile = Page.get_edit_vals('<?php echo $session_org;?>', "comprofile", "orgid");
+                $scope.comprofile = comprofile;
             }
 
-            if (paymentMode == "Cheque") {
-                $('#customer_credits_cheque_status_row').show();
-                $('#customer_credits_bank_row').hide();
-                $('#vendor_bank_details').hide();
-                $('#customer_credits_cheque_status').val('Uncleared');
-            } else {
-                $('#customer_credits_cheque_status_row').hide();
+            $scope.onBankChange = () => {
+                let selectedBank = Page.get_edit_vals($scope.cc.customer_credits_bank, "compbank", "id");
+                $scope.selectedBank = selectedBank;
             }
 
-        }
+            $scope.onVendorChange = () => {
+                let customerProfile = Page.get_edit_vals($scope.cc.customer_credits_custid, "customerprofile",
+                    "custid");
+                $scope.customerProfile = customerProfile;
+            }
+
+      
+        });
+
 
         function printBankDetails(bankid) {
             if (bankid != '') {
@@ -270,7 +331,6 @@
         }
 
         function get_vendors(){
-           alert()
             var customer_params=[];
             Page.load_select_options('customer_credits_custid',customer_params,'customerprofile','Customers','custid','custname',null);
 
@@ -318,12 +378,14 @@
 
                 var credirRefund_arr = Page.get_multiple_vals(page_customer_credits_id,"customer_refund","customer_refund_creditsid");
                 var refund_sum = 0 ;
-                console.log(credirRefund_arr);
-                if(credirRefund_arr.length>0){
+                if(credirRefund_arr){
+                    if(credirRefund_arr.length>0){
                     for(r=0;r<credirRefund_arr.length;r++){
                         refund_sum = refund_sum + eval(credirRefund_arr[r].v_refund_amount);
                     }         
                 }
+                }
+      
 
 
                 if(data.customer_credits_amount<refund_sum){
@@ -346,21 +408,31 @@
                 data.customer_credits_availcredits = $('#customer_credits_amount').val();
             }
 
-            $.ajax ({
-                url: 'workers/setters/save_customercredits.php',
-                type: 'post',
-                data: {
-                    array : JSON.stringify(data),
-                    customer_credits_id:page_customer_credits_id,
-                    action:page_action?page_action:"add",
-                    compId:<?php echo $session_org?$session_org:'';?>
-                    table:"customercredits"},
-                dataType: 'json',
-                success:function(response){
-                    location.href="listCustomerCredits.php";
-                }
+            data.customer_credits_compId = `<?php echo $session_org?$session_org:'';?>`;
 
-            });
+
+            if (!error) {
+                $.ajax ({
+                    url: 'workers/setters/save_customercredits.php',
+                    type: 'post',
+                    data: {
+                        array : JSON.stringify(data),
+                        customer_credits_id:page_customer_credits_id,
+                        action:page_action?page_action:"add",
+                        table:"customercredits",
+                        compId: `<?php echo $session_org?$session_org:'';?>`,
+                        handler: `<?php echo $session_user?$session_user:'';?>`
+
+                    },
+                    dataType: 'json',
+                    success:function(response){
+                        location.href="listCustomerCredits.php";
+                    }
+
+                });
+            }else{
+
+            }
 
         });
     </script>			

@@ -55,8 +55,9 @@ function gettaxamt_total($arr){
 
 
 function get_id($dbcon,$table,$ui){
-    $sql = "SELECT * FROM $table ORDER BY ID DESC LIMIT 1";
-    $result = mysqli_query($dbcon, $sql);
+    echo $sql = "SELECT * FROM $table ORDER BY id DESC LIMIT 1";
+    $result = $dbcon->exec($sql);
+    print_r($result);
     $values = sql_fetch_all($result);
 
     if(count($values)>0){
@@ -373,7 +374,8 @@ function insertRow($dbcon,$table,$row){
 }
 
 function findbyand($dbcon,$col_val,$table,$col){
-    $sql=" SELECT * FROM $table where $col='$col_val'; "; 
+   echo $sql=" SELECT * FROM $table where $col='$col_val'; "; 
+    //echo $sql;
     $result = mysqli_query($dbcon, $sql);
     $values = sql_fetch_all($result);
 
@@ -476,13 +478,13 @@ function handleTransaction($dbcon,$compId,$entry,$transid,$transData){
              
                 $transData['total_closing_bal'] = $lastRow['closing_bal'];
                 $transData['total_cash_on_hand'] = $lastRow['cash_on_hand'];
-                $transData['total_petty_cash'] = $lastRow['petty_cash_bal'];
+               echo $transData['total_petty_cash'] = $lastRow['petty_cash_bal'];
 
                 if($entry['entity'] !== "Bank Deposit" && $transData['trans_mode']==="Cash"){
                     echo $transData['total_petty_cash'];
-                    echo "==".$transData['trans_amt'];
-                    echo "==".$transData['trans_type'];
-                    echo "==".$transData['total_petty_cash'] = $transData['trans_type'] == "credit" ? $transData['total_petty_cash']+$transData['trans_amt'] : $transData['total_petty_cash']-$transData['trans_amt'];
+                    echo $transData['trans_amt'];
+                    echo $transData['trans_type'];
+                    echo $transData['total_petty_cash'] = $transData['trans_type'] == "credit" ? $transData['total_petty_cash']+$transData['trans_amt'] : $transData['total_petty_cash']-$transData['trans_amt'];
                 }else{
                     $transData['total_closing_bal'] = $transData['trans_type'] == "credit" ? $transData['total_closing_bal']+$transData['trans_amt'] : $transData['total_closing_bal']-$transData['trans_amt'];
                 }

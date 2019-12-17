@@ -51,6 +51,7 @@ if(isset($_SESSION['login_email'])){
 
 
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
         <script src="assets/js/modernizr.min.js"></script>
         <script src="assets/js/moment.min.js"></script>

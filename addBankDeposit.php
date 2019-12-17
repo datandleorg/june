@@ -27,16 +27,7 @@
         <!-- end row -->
 
 
-        <!--div class="alert alert-success" role="alert">
-<h4 class="alert-heading">Company Registrtion Form</h4>
-<p></a></p>
-</div-->
-
-
         <div class="row">
-
-
-
 
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">						
                 <div class="card mb-3">
@@ -48,7 +39,7 @@
 
 
                             <div class="card-body">
-                                <form method="post" enctype="multipart/form-data" id="bankDepositForm" novalidate>
+                                <form method="post" enctype="multipart/form-data" id="bankDepositForm">
 
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
@@ -153,6 +144,7 @@
                                                 <option value="">Open Payment Type</option>
                                                 <option value="Sales">Sales</option>
                                                 <option value="Payments">Payments</option>
+                                                <option value="Investments">Investments</option>
                                                 <option value="Others">Others</option>
                                             </select>
                                         </div>
