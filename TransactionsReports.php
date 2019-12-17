@@ -71,8 +71,11 @@ include('workers/getters/functions.php');
                                     <table id="po_reports" class="table table-bordered" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>Id</th>
-                                                <th>Type</th>
+                                            <th>Id</th>
+                                            <th>Trans Id</th>
+                                            <th>Entry Id</th>
+                                            <th>Type</th>
+                                            <th>Entry Type</th>
                                                 <th>Amount</th>
                                                 <th>Payment Mode</th>
                                                 <th>Bank</th>
@@ -107,7 +110,7 @@ include('workers/getters/functions.php');
                                                 }
 
                                             }else{
-                                                $sql = "SELECT * from transactions t ;";    
+                                                $sql = "SELECT * from transactions t order by t.trans_id asc ;";    
                                             }
 
                                             $result = mysqli_query($dbcon,$sql);
@@ -115,9 +118,12 @@ include('workers/getters/functions.php');
                                                 while ($row =$result-> fetch_assoc()){
 
                                                     echo '<tr>
-                                                <td>'.$row['trans_id'].'</td>
-                                                <td>'.$row['trans_type'].'</td>
-                                                <td>'.$row['trans_amt'].'</td>
+                                                    <td>'.$row['id'].'</td>
+                                                    <td>'.$row['trans_id'].'</td>
+                                                    <td>'.$row['trans_row_id'].'</td>
+                                                    <td>'.$row['trans_type'].'</td>
+                                                    <td>'.$row['trans_entry_type'].'</td>
+                                                    <td>'.$row['trans_amt'].'</td>
                                                 <td>'.$row['trans_mode'].'</td>
                                                 <td>'.$row['trans_bank'].'</td>
                                                 <td>'.$row['total_closing_bal'].'</td>

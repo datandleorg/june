@@ -1,6 +1,6 @@
 <?php include('header.php');?>
 
-<div class="content-page" ng-app="vendorCredits" ng-controller="formCtrl" ng-init="formInit()">
+<div class="content-page" ng-app="paymentPages" ng-controller="formCtrl" ng-init="formInit()">
 
     <div class="content">
 
@@ -72,7 +72,14 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row">
+                                
+                                <div class="form-row" ng-if="editMode">
+                                    <div class="form-group col-md-6">
+                                       Payment Mode : {{vc.v_credits_paymentmode}}
+                                    </div>
+                                </div>
+
+                                <div class="form-row" ng-show="!editMode">
                                     <div class="form-group col-md-6">
                                         <label>Payment Mode<span class="text-danger">*</span></label>
                                         <select required name="v_credits_paymentmode" id="v_credits_paymentmode"
@@ -274,7 +281,7 @@
 
     <script>
         var error = false;
-        var app = angular.module('vendorCredits', []);
+        var app = angular.module('paymentPages', []);
         app.controller('formCtrl', function ($scope, $http) {
             $scope.formInit = () =>{
                 if (page_action == "edit") {
@@ -288,6 +295,7 @@
                         $scope.onBankChange();
                     }
                     $scope.onCreditChange();
+                    $scope.editMode = true;
                 }
             }
             $scope.test = "test";
@@ -324,10 +332,12 @@
 
             $scope.onCreditChange = () => {
                 if ($scope.vc.v_credits_paymentmode === "Cash") {
-                    $scope.creditAmtValidation = $scope.vc.v_credits_amount > $scope.comprofile
+                     $scope.creditAmtValidation = +$scope.vc.v_credits_amount > +$scope.comprofile
                         .petty_cash_bal ? false : true;
+        
+                        
                 } else {
-                    $scope.creditAmtValidation = $scope.vc.v_credits_amount > $scope.selectedBank
+                    $scope.creditAmtValidation = +$scope.vc.v_credits_amount > +$scope.selectedBank
                         .closing_bal ? false : true;
                 }
 
@@ -398,7 +408,7 @@
                 data.v_credits_cheque_status = '';
             }
 
-            console.log(error);
+            data.v_credits_compId = `<?php echo $session_org?$session_org:'';?>`;
             
             if (!error) {
                 $.ajax({
@@ -415,10 +425,8 @@
                     },
                     dataType: 'json',
                     success: function (response) {
-                        // location.href="listVendorCredits.php";
+                        location.href="listVendorCredits.php";
                     }
-
-
                 });
             } else {
                 alert('error in data, please check again');

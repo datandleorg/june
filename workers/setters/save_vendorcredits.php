@@ -4,6 +4,8 @@ include('../../database/db_conection.php');
 
 include('../getters/functions.php');
 
+try{
+
 if (isset($_POST['array'])) {
     $array=$_POST['array'];
     $v_credits_id=$_POST['v_credits_id'];
@@ -32,7 +34,10 @@ if (isset($_POST['array'])) {
                 $entry['entity'] = "Vendor Credits";
     
                     $transData = array();
+                    $transData['trans_row_id'] = $v_credits_id;
                     $transData['trans_type'] = "debit";
+                    $transData['trans_entry_type'] = "normal";
+                    $transData['trans_entry_ref'] = "";
                     $transData['trans_amt'] = $entry['data']['v_credits_amount'];
                     $transData['trans_bank'] = $entry['data']['v_credits_paymentmode']!=="Cash" ? $entry['data']['v_credits_bank'] : "";
                     $transData['trans_entry'] = json_encode($entry);
@@ -41,18 +46,20 @@ if (isset($_POST['array'])) {
                     $transData['trans_mode'] = $entry['data']['v_credits_paymentmode'];
                     
                     if($transData['trans_status']==="Completed" || $transData['trans_status']==="Cleared"){
-                        $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+                        $transData['trans_status']="Completed";
+                        $return = handleTransaction($dbcon,$compId,$entry,'',$transData,'normal');
+                        if(!$return['status']){
+                            throw new Exception();
+                        }
                     }
                 
             }else{
-                $return['status']=false;
-                $return['error']=mysqli_error($dbcon);
+                throw new Exception();
             }
 
                 
         }else{
-            $return['status']=false;
-            $return['error']=mysqli_error($dbcon);
+            throw new Exception();
         }
     }else{
         $return = update_query($dbcon,$array,$v_credits_id,$table,"v_credits_id");
@@ -60,31 +67,95 @@ if (isset($_POST['array'])) {
         // correct verson
         if ($return['status']){
             $entry['data'] = json_decode($array,true);
-            $entry['rowId'] = $v_credits_id;
-            $entry['colName'] = "v_credits_id";
             $entry['entity'] = "Vendor Credits";
 
+            $entry['data']['v_credits_paymentmode'];
+            if( $entry['data']['v_credits_paymentmode']==="Cheque" && $entry['data']['v_credits_cheque_status']=="Cleared"){
+
                 $transData = array();
+                $transData['trans_row_id'] = $v_credits_id;
                 $transData['trans_type'] = "debit";
+                $transData['trans_entry_type'] = "normal";
+                $transData['trans_entry_ref'] = "";
                 $transData['trans_amt'] = $entry['data']['v_credits_amount'];
                 $transData['trans_bank'] = $entry['data']['v_credits_paymentmode']!=="Cash" ? $entry['data']['v_credits_bank'] : "";
                 $transData['trans_entry'] = json_encode($entry);
-                $transData['trans_status'] = $entry['data']['v_credits_paymentmode']!=="Cheque" ? "Completed" : $entry['data']['v_credits_cheque_status'];
+                $transData['trans_status'] = "Completed";
                 $transData['trans_handler'] = $handler;
                 $transData['trans_mode'] = $entry['data']['v_credits_paymentmode'];
+                
+                $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
 
-                if($transData['trans_status']==="Completed" || $transData['trans_status']==="Cleared"){
-                    $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+                if(!$return['status']){
+                    throw new Exception();
                 }
+
+            }else{ 
+                // reversing transactions
+                $pastTran = findLastTrans($dbcon,$v_credits_id,'transactions','trans_row_id');
+                $pastData = $pastTran['values'][0];
+                $transid = $pastData['trans_id'];
+
+                $transData['trans_row_id'] = $v_credits_id;
+                $transData['trans_type'] = $pastData['trans_type'] === "debit" ? "credit": "debit";
+                $transData['trans_entry_type'] = "reverted";
+                $transData['trans_entry_ref'] = $transid;
+                $transData['trans_amt'] = $pastData['trans_amt'];
+                $transData['trans_bank'] = $pastData['trans_mode']!=="Cash" ? $pastData['trans_bank'] : "";
+                $transData['trans_entry'] = json_encode($pastData['trans_entry']);
+                $transData['trans_status'] =  "Completed" ;
+                $transData['trans_handler'] = $handler;
+                $transData['trans_mode'] = $pastData['trans_mode'];
+
+                $return = handleTransaction($dbcon,$compId,$entry,'',$transData);      
+                
+                if($return['status']){
+                    $transData = array();
+                    $transData['trans_row_id'] = $v_credits_id;
+                    $transData['trans_type'] = "debit";
+                    $transData['trans_entry_type'] = "normal";
+                    $transData['trans_entry_ref'] = "";
+                    $transData['trans_amt'] = $entry['data']['v_credits_amount'];
+                    $transData['trans_bank'] = $entry['data']['v_credits_paymentmode']!=="Cash" ? $entry['data']['v_credits_bank'] : "";
+                    $transData['trans_entry'] = json_encode($entry);
+                    $transData['trans_status'] = $entry['data']['v_credits_paymentmode']!=="Cheque" ? "Completed" : $entry['data']['v_credits_cheque_status'];
+                    $transData['trans_handler'] = $handler;
+                    $transData['trans_mode'] = $entry['data']['v_credits_paymentmode'];
+                    
+                    $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+
+                    if(!$return['status']){
+                        throw new Exception();
+                    }
+
+                }else{
+                    throw new Exception();                
+                }
+            }
             
         }else{
-            $return['status']=false;
-            $return['error']=mysqli_error($dbcon);
+            throw new Exception();
         }
     }
 
-
-echo json_encode($return);
-
 }
+
+
+// Commit transaction
+mysqli_commit($dbcon);
+
+}catch(Throwable $e){
+// Rollback transaction
+mysqli_rollback($dbcon);
+}finally{
+// Close connection
+mysqli_close($dbcon);
+echo json_encode($return);
+}
+
+
+
+
+
+
 ?>

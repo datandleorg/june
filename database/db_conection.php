@@ -12,6 +12,7 @@ mysqli_select_db($dbcon,"lentochanges");
 
 //$dbcon=mysqli_connect("localhost","daplDev","daplDev");
 //mysqli_select_db($dbcon,"daplDev");
+mysqli_autocommit($dbcon,FALSE);
 
 
 

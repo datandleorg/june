@@ -1,8 +1,9 @@
 <?php
 include("database/db_conection.php");//make connection here
+include('header.php');
 ?>
-<?php include('header.php');?>
-<div class="content-page">
+<?php ?>
+<div class="content-page" ng-app="paymentPages" ng-controller="formCtrl" ng-init="formInit()">
 	
 		<!-- Start content -->
         <div class="content">
@@ -41,15 +42,14 @@ include("database/db_conection.php");//make connection here
 							<div class="card-body">
 								
 								<!--form autocomplete="off" action="#"-->
-								<form id="add_expense_form" method="post" accept-charset="utf-8" novalidate>
-								
-								
+								<form id="add_expense_form" method="post" accept-charset="utf-8">
+							
 								
 								<div class="form-row">
 									<div class="form-group col-md-6">
 									   <label for="datepicker1">Date</label><span class="text-danger">*</span>
 									  <!--input type="date" class="form-control" name="date" value="<?php echo date("d/m/Y") ?>"/-->
-									  <input type="date" class="form-control form-control-sm"  id="expense_date" name="expense_date" value="<?php echo date("Y-m-d");?>">									
+									  <input type="date" class="form-control form-control-sm" id="expense_date" name="expense_date" value="<?php echo date("Y-m-d");?>">									
 									</div>
 									</div>
 									
@@ -58,21 +58,25 @@ include("database/db_conection.php");//make connection here
 									<div class="form-group col-md-6">
 									  <label >Paid Through</label>
                                      <select required id="expense_paid_thru" 
-                                     onchange="togglePaymentDetailsOptions(this.value)"
+                                     ng-model="re.expense_paid_thru"
                                      name="expense_paid_thru" data-parsley-trigger="change" 
+                                     ng-change="onPaymentModeChange()"
 									  class="form-control form-control-sm"  name="paymentype" >
 										<option value="">--Select Paid Through--</option>
 										<option value="Petty Cash">Petty Cash</option>
 										<option value="Bank Transfer">Bank Transfer</option>
 										<option value="Cheque">Cheque</option>
-									</select>
+                                    </select>
+                                    <p ng-if="re.expense_paid_thru === 'Petty Cash'" class="small text-muted">{{'Petty Cash Available: '+comprofile.petty_cash_bal }}</p>
 									</div>
 									</div>	
                                      
-                                    <div class="form-row" id="expense_cheque_status_row" style="display:none">
+                                    <div class="form-row" ng-if="re.expense_paid_thru==='Cheque'">
                                     <div class="form-group col-md-6">
                                         <label>Cheque Status<span class="text-danger">*</span></label>
-                                        <select required name="expense_cheque_status" id="expense_cheque_status" data-parsley-trigger="change" class="form-control form-control-sm">
+                                        <select required name="expense_cheque_status"
+                                        ng-model="re.expense_cheque_status"
+                                         id="expense_cheque_status" data-parsley-trigger="change" class="form-control form-control-sm">
                                             <option value="">-- Select Cheque Status --</option>
                                             <option value="Cleared">Cleared</option>
                                             <option value="Uncleared">Uncleared</option>
@@ -80,12 +84,14 @@ include("database/db_conection.php");//make connection here
                                     </div>
                                 </div>
 
-                                <div class="form-row" id="expense_bank_row" style="display:none">
+                                <div class="form-row" id="expense_bank_row" ng-if="re.expense_paid_thru==='Bank Transfer' || re.expense_paid_thru==='Cheque'">
                                     <div class="form-group col-sm-6">
                                         <label> Bank<span class="text-danger">*</span></label>
 
-                                        <select id="expense_bank" class="form-control form-control-sm" onchange="printBankDetails(this.value)" name="expense_bank">
-                                            <option selected>--Select Bank--</option> ';
+                                        <select id="expense_bank" 
+                                        ng-model="re.expense_bank"
+                                        class="form-control form-control-sm" onchange="printBankDetails(this.value)" name="expense_bank">
+                                            <option selected value="">--Select Bank--</option> ';
                                             <?php
                                             $sql = "SELECT * FROM compbank where orgid='COMP001' ";
                                             $result = mysqli_query($dbcon, $sql);
@@ -100,15 +106,16 @@ include("database/db_conection.php");//make connection here
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="form-group col-md-6" id="vendor_bank_details">
+                                    <div class="form-group col-md-6" id="vendor_bank_details" ng-if="re.expense_paid_thru==='Bank Transfer' || re.expense_paid_thru==='Cheque'">
 
                                     </div>
                                 </div>
 
-                                <div class="form-row" id="expense_ref_row" style="display:none">
-                                    <div class="form-group col-md-8">
+                                <div class="form-row" id="expense_ref_row"  ng-if="re.expense_paid_thru!=='Petty Cash'">
+                                    <div class="form-group col-md-6">
                                         <label>Reference #</label>
-                                        <input type="text" class="form-control form-control-sm" name="v_credits_ref_no" id="v_credits_ref_no" placeholder=" Reference Number(optional)" class="form-control" autocomplete="off" />
+                                        <input type="text" class="form-control form-control-sm" 
+                                        name="expense_ref_no" id="expense_ref_no" placeholder=" Reference Number(optional)" class="form-control" autocomplete="off" />
                                     </div>
                                 </div>
 								 
@@ -117,7 +124,8 @@ include("database/db_conection.php");//make connection here
 									<div class="form-group col-md-6">
 									 <label >Payee type</label><span class="text-danger">*</span>
 									 <select required id="expense_payee_type"
-									 name="expense_payee_type" data-parsley-trigger="change"  class="form-control form-control-sm"  name="payeetype" >
+									 name="expense_payee_type" data-parsley-trigger="change"  
+                                     class="form-control form-control-sm"  name="payeetype" >
 										<option value="">Choose Type</option>
 										<option value="Vendor">Vendor</option>
 										<option value="Customer">Customer</option>
@@ -138,7 +146,8 @@ include("database/db_conection.php");//make connection here
                                     <div class="form-row">
 									<div class="form-group col-md-6">
 									<label > Invoice#</label><span class="text-danger"></span>
-									  <input type="text" class="form-control form-control-sm" id="expense_invoice_no" name="expense_invoice_no" placeholder="Bill nos,..." autocomplete="off">
+									  <input type="text" class="form-control form-control-sm" id="expense_invoice_no"
+                                      name="expense_invoice_no" placeholder="Bill nos,..." autocomplete="off">
 									</div>
 									</div>									
 									
@@ -147,17 +156,8 @@ include("database/db_conection.php");//make connection here
 									<div class="form-row">
 									  <div class="form-group col-md-6">
 									  <label for="inputState">Created By</label>
-									  <?php 
-														//session_start();
-														include("database/db_conection.php");
-														$userid = $_SESSION['userid'];
-														$sq = "select username from userprofile where id='$userid'";
-														$result = mysqli_query($dbcon, $sq) or die(mysqli_error($dbcon));
-														//$count = mysqli_num_rows($result);
-														$rs = mysqli_fetch_assoc($result);
-													?>
 									   <input type="text" class="form-control form-control-sm" name="expense_handler"
-									   id="expense_handler" readonly class="form-control form-control-sm" value="<?php echo $rs['username']; ?>" />
+									   id="expense_handler" readonly class="form-control form-control-sm" value="<?php echo $session_user; ?>" />
 									
 									 </div>
 									</div>
@@ -167,7 +167,8 @@ include("database/db_conection.php");//make connection here
                                 <div class="form-row">                                
                                     <div class="form-group col-md-4">									
                                         <label for="inputState">Status<span class="text-danger">*</span></label>
-                                        <select class="form-control form-control-sm select2" required name="expense_status"  id="expense_status">
+                                        <select class="form-control form-control-sm select2" required
+                                         name="expense_status"  id="expense_status">
                                             <option value="Created">Created</option>
                                             <option value="Approved">Approved</option>
                                         </select>	
@@ -176,7 +177,8 @@ include("database/db_conection.php");//make connection here
 									
 									<div class="form-row">
 									<div class="form-group col-md-6">
-                                        <textarea rows="3" class="form-control" name="expense_notes"  id="expense_notes" required placeholder="Add Expense  Notes"></textarea>
+                                        <textarea rows="3" class="form-control" name="expense_notes"  
+                                        id="expense_notes" required placeholder="Add Expense  Notes"></textarea>
                                     </div>
 									</div>
 									
@@ -433,6 +435,24 @@ include("database/db_conection.php");//make connection here
     var page_expense_no = "<?php if(isset($_GET['expense_no'])){ echo $_GET['expense_no']; } ?>";
     $('#expense_file_preview_btn').hide();
 
+    var error = false;
+        var app = angular.module('paymentPages', []);
+        app.controller('formCtrl', function ($scope, $http) {
+     
+            $scope.re = {
+                expense_paid_thru: "",
+                expense_cheque_status:"Uncleared",
+                expense_bank:""
+            };
+            $scope.creditAmtValidation = true;
+
+            $scope.onPaymentModeChange = () => {
+                let comprofile = Page.get_edit_vals('<?php echo $session_org;?>', "comprofile", "orgid");
+                $scope.comprofile = comprofile;
+            }
+        });
+
+
 
     var expense_bill = "";
 
@@ -443,6 +463,7 @@ include("database/db_conection.php");//make connection here
                 bank_div += '<h6>Bank Details</h6>';
                 bank_div += '<p>';
                 bank_div += '<b>' + bank_data.bankname + '</b><br/>';
+                bank_div += 'Available Balance : <b>' + bank_data.closing_bal + '</b><br/>';
                 bank_div += bank_data.acctname + '<br/>';
                 bank_div += bank_data.acctno + '<br/>';
                 bank_div += bank_data.acctype + '<br/>';
@@ -456,31 +477,6 @@ include("database/db_conection.php");//make connection here
             }
     }
 
-    function togglePaymentDetailsOptions(paymentMode) {
-        
-            if (paymentMode == "Bank Transfer" || paymentMode == "Bank Remittance") {
-                $('#expense_bank_row').show();
-                $('#expense_cheque_status_row').hide();
-                $('#vendor_bank_details').show();
-                $('#expense_ref_row').hide();
-
-            } else {
-                $('#expense_bank_row').hide();
-                $('#vendor_bank_details').hide();
-            }
-
-            if (paymentMode == "Cheque") {
-                $('#expense_cheque_status_row').show();
-                $('#expense_ref_row').show();
-                $('#expense_bank_row').hide();
-                $('#vendor_bank_details').hide();
-                $('#expense_cheque_status').val('Uncleared');
-            } else {
-                $('#expense_cheque_status_row').hide();
-                $('#expense_ref_row').hide();
-            }
-
-        }
 
 $(function(){   
 
@@ -597,6 +593,7 @@ $(function(){
 
 	  var $form = $("#add_expense_form");
       var data = getFormData($form);
+      
 
         function getFormData($form){
             var unindexed_array = $form.serializeArray();
@@ -626,8 +623,9 @@ $(function(){
 	    formData.append("action",page_action?page_action:"add");
 	    formData.append("table","expenses");
 	    formData.append("expense_total_amount",expense_total_amount);
+	    formData.append("expense_compId",'<?php echo $session_org?$session_org:'';?>');
         
-
+        
 		
         $.ajax ({
             url: 'workers/setters/save_expense.php',
@@ -637,7 +635,7 @@ $(function(){
             type: 'POST',
             success:function(response){
                 if(JSON.parse(response).status){
-                   location.href="listRecordExpenses.php";
+                  // location.href="listRecordExpenses.php";
                  }
 			}
         });
