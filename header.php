@@ -138,6 +138,7 @@ if(isset($_SESSION['login_email'])){
 							<a href="listPurchaseOrders.php"><class="col">Purchase Order</a><br><br><br>
 							<a href="listGoodsReceiptNote.php"><class="col">GRN(Self)</a><br><br><br>
 							<a href="listPartnerPurchaseEntries.php"><class="col">GRN(Outsourced)</a><br><br><br>
+							<a href="listVendorCredits.php"><class="col">Vendor Credits</a><br><br><br>
 							<a href="addVendorPayments.php"><class="col">Make Vendor Payments</a><br><br><br>
 							<a href="listDebitNotes.php"><class="col">Debit Note</a><br><br><br>
 							<a href="listPaymentsMade.php"><class="col">Payments Made</a><br><br><br>

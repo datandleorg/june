@@ -204,6 +204,10 @@
                                         <td class="text-left">
                                             <i class="fa fa-money bigfonts" aria-hidden="true"></i>&nbsp;Receivables & Received Payments
                                         </td>
+										
+										<td class="text-left"><a href="TransactionsReports.php">
+                                            <i class="fa fa-money bigfonts" aria-hidden="true"></i>&nbsp;Accounts Transactions Report
+                                        </td>
                                         <td class="text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             &nbsp;&nbsp;&nbsp;</td>
                                         <td class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
