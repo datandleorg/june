@@ -119,7 +119,7 @@
                                                 <option value="">Open Payment Method</option>
                                                 <option value="Cash">Cash</option>
                                                 <option value="Cheque">Cheque</option>
-                                                <option value="NEFT">NEFT</option>
+                                                <option value="Bank Transfer">Bank Transfer</option>
                                             </select>
                                         </div>
                                     </div>
@@ -128,7 +128,7 @@
                                     <div class="form-row" id="v_credits_cheque_status_row">
                                         <div class="form-group col-md-6">
                                             <label>Cheque Status<span class="text-danger">*</span></label>
-                                            <select required name="pay_status" id="pay_status" data-parsley-trigger="change" class="form-control form-control-sm">
+                                            <select name="pay_status" id="pay_status" data-parsley-trigger="change" class="form-control form-control-sm">
                                                 <option value="">-- Select Cheque Status --</option>
                                                 <option value="Cleared">Cleared</option>
                                                 <option value="Uncleared">Uncleared</option>
@@ -167,30 +167,10 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <label for="inputState">Created By</label>
-                                        <?php 
-                                        //session_start();
-                                        include("database/db_conection.php");
-                                        $userid = $_SESSION['userid'];
-                                        $sq = "select username from userprofile where id='$userid'";
-                                        $result = mysqli_query($dbcon, $sq) or die(mysqli_error($dbcon));
-                                        //$count = mysqli_num_rows($result);
-                                        $rs = mysqli_fetch_assoc($result);
-                                        ?>
-                                        <input type="text" class="form-control form-control-sm" name="createdby" readonly class="form-control form-control-sm" value="<?php echo $rs['username']; ?>" />
+                                        <input type="text" class="form-control form-control-sm" name="createdby" readonly class="form-control form-control-sm" value="<?php echo $session_user; ?>" />
 
                                     </div>
                                 </div>									
-
-
-                                <!--div class="form-row">
-<div class="form-group col-md-12">
-<label>
-<div class="fa-hover col-md-12 col-sm-12">
-<span class="text-danger"><i class="fa fa-paperclip bigfonts" aria-hidden="true"></span></i>&nbsp;Attach Receipt<span class="text-danger">(not more than 1MB)</span></div>
-</label> 
-&nbsp;&nbsp;<input type="file" name="image" class="form-control">
-</div>
-</div-->
 
                                 <div class="form-row">
                                     <div class="form-group text-right m-b-10">
@@ -234,14 +214,17 @@
         }
 
         $('#v_credits_cheque_status_row').hide();
+        $('#v_credits_cheque_status').prop('required',false);
 
         function togglePaymentDetailsOptions(paymentMode) {
 
             if (paymentMode == "Cheque") {
                 $('#v_credits_cheque_status_row').show();
                 $('#v_credits_cheque_status').val('Uncleared');
+                $('#v_credits_cheque_status').prop('required',true);
             } else {
                 $('#v_credits_cheque_status_row').hide();
+                $('#v_credits_cheque_status').prop('required',false);
             }
 
         }
@@ -273,7 +256,12 @@
             var $form = $(this);
             var data = getFormData($form);
 
+            console.log(data);
+            
+
             function getFormData($form){
+                console.log($form.serializeArray());
+                
                 var unindexed_array = $form.serializeArray();
                 var indexed_array = {};
 

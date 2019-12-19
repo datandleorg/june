@@ -71,7 +71,7 @@
 													echo '<td>'.$row['acctype'].'</td>';
 													echo '<td>'.$row['branch'].'</td>';
 													echo '<td>'.$row['ifsc'].'</td>';
-													echo '<td>'.$row['openbalance'].'</td>';
+													echo '<td>'.$row['closing_bal'].'</td>';
 													echo '<td>'.$row['asofdate'].'</td>';			
 													echo '<td><a href="editCompanyBankDetails.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
 														<i class="fa fa-pencil" aria-hidden="true"></i></a>

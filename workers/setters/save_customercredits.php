@@ -1,6 +1,7 @@
 
 <?php
 include('../../database/db_conection.php');
+mysqli_autocommit($dbcon,FALSE);
 
 include('../getters/functions.php');
 try{

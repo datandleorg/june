@@ -463,7 +463,7 @@ function getTotalClosingBal($dbcon,$compId){
     }
 }
 
-function handleTransaction($dbcon,$compId,$entry,$transid,$transData){
+function handleTransaction($dbcon,$compId,$entry,$transid,$transData,$effectOn){
          
     
         if ($transid=="") {
@@ -478,21 +478,25 @@ function handleTransaction($dbcon,$compId,$entry,$transid,$transData){
                 $transData['total_cash_on_hand'] = $lastRow['cash_on_hand'];
                 $transData['total_petty_cash'] = $lastRow['petty_cash_bal'];
 
-                if($entry['entity'] !== "Bank Deposit" && $transData['trans_mode']==="Cash"){
+                if($entry['entity'] !== "Bank Deposit" && $effectOn==="Cash"){
                     echo $transData['total_petty_cash'];
                     echo "==".$transData['trans_amt'];
                     echo "==".$transData['trans_type'];
                     echo "==".$transData['total_petty_cash'] = $transData['trans_type'] == "credit" ? $transData['total_petty_cash']+$transData['trans_amt'] : $transData['total_petty_cash']-$transData['trans_amt'];
                 }else{
-                    $transData['total_closing_bal'] = $transData['trans_type'] == "credit" ? $transData['total_closing_bal']+$transData['trans_amt'] : $transData['total_closing_bal']-$transData['trans_amt'];
+                    echo $transData['trans_type'];
+                    echo $transData['trans_amt'];
+                    echo $transData['total_closing_bal'];
+                    echo $transData['total_closing_bal'] = $transData['trans_type'] == "credit" ? $transData['total_closing_bal']+$transData['trans_amt'] : $transData['total_closing_bal']-$transData['trans_amt'];
                 }
 
                // print_r($transData);
 
                 $return = update_query($dbcon,json_encode($transData),$transid,"transactions","trans_id");
-
+echo $effectOn;
                 if ($return['status']){
-                    if($transData['trans_mode']==="Bank Transfer" || $transData['trans_mode']==="Cheque"){
+                    if($effectOn==="Bank Transfer" || $effectOn==="Cheque"){
+                        echo "bank";
                         $pastVal = findbyand($dbcon,$transData['trans_bank'],'compbank','id');
                         $bank = array();
                         $bank['closing_bal'] = $transData['trans_type'] == "credit" ? $pastVal['values'][0]['closing_bal']+$transData['trans_amt'] : $pastVal['values'][0]['closing_bal']-$transData['trans_amt']  ;
@@ -506,7 +510,7 @@ function handleTransaction($dbcon,$compId,$entry,$transid,$transData){
                         }else{
                             return $return;
                         }
-                    }else if($transData['trans_mode']==="Cash"){
+                    }else if($effectOn==="Cash"){
                         $pastValcomp = findbyand($dbcon,$compId,'comprofile','orgid');
                         $comprofile = array();
                         $comprofile['petty_cash_bal'] = $transData['trans_type'] == "credit" ? $pastValcomp['values'][0]['petty_cash_bal']+$transData['trans_amt'] : $pastValcomp['values'][0]['petty_cash_bal']-$transData['trans_amt']  ;

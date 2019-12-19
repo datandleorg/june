@@ -1,11 +1,12 @@
 
 <?php
 include('../../database/db_conection.php');
-
 include('../getters/functions.php');
 
 try{
 
+    mysqli_autocommit($dbcon,FALSE);
+    
 if (isset($_POST['array'])) {
     $array=$_POST['array'];
     $v_credits_id=$_POST['v_credits_id'];
