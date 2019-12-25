@@ -37,7 +37,7 @@ if(isset($_POST['submit']))
 
     //$image =base64_encode($image);		
 
-    $insert_compbank="INSERT INTO compbank(`orgid`,`bankcode`,`bankname`,`acctno`,`acctname`,`acctype`,`branch`,`ifsc`,`openbalance`,`asofdate`)
+    $insert_compbank="INSERT INTO compbank(`orgid`,`bankcode`,`bankname`,`acctno`,`acctname`,`acctype`,`branch`,`ifsc`,`closing_bal`,`asofdate`)
 	VALUES('$orgid','$bankcode','$bankname','$acctno','$acctname','$acctype','$branch','$ifsc','$openbalance','$asofdate')";
 
      echo "$insert_compbank";

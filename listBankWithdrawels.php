@@ -57,12 +57,12 @@
 										<tbody>
 											<?php
 													include("database/db_conection.php");//make connection here
-													$sql = "SELECT * FROM bankwithdrawels w, compbank b where b.id = w.bankname  ";
+													$sql = "SELECT w.*, w.closing_bal as closing_bal FROM bankwithdrawels w, compbank b where b.id = w.bankname  ";
 													$result = mysqli_query($dbcon,$sql);
 													
 													if ($result->num_rows > 0){
 													while ($row =$result-> fetch_assoc()){
-														$row_id=$row['id'];
+														$row_id=$row['transid'];
 													echo "<tr>";
 													echo '<td>' . $row['transid'] . '</td>';
 													echo '<td>'.$row['withdraweldate'].'<br /></td>';
@@ -78,7 +78,7 @@
 													
 													
 													
-													echo '<td><a href="editBankWithdrawels.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
+													echo '<td><a href="addBankWithdraw.php?transid=' .$row_id. '&action=edit&type=bankwithdrawels" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
 														<i class="fa fa-pencil" aria-hidden="true"></i></a>
 													
 													<a onclick="delete_record(this);" id="deletebankDeposit" data-id="' . $row_id . '" class="btn btn-danger btn-sm"  data-title="Delete">

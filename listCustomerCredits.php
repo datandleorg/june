@@ -78,7 +78,12 @@
                                                 echo '<td>'.$row['custname'].' </td>';
                                                 echo '<td>'.$row['customer_credits_amount'].' </td>';
                                                 echo '<td>'.$row['customer_credits_paymentmode'].' </td>';
+                                                if($row['customer_credits_paymentmode'] !=="Cash"){
                                                 echo '<td>'.$row['customer_credits_ref_no'].'<br/>['.$row['customer_credits_cheque_status'].']</td>';
+
+                                                }else{
+                                                    echo '<td> - </td>';
+                                                }
 
                                                 echo '<td>'.$row['customer_credits_availcredits'].' </td>';
                                                 echo '<td>'.$row['customer_credits_handler'].' </td>';

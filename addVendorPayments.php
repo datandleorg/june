@@ -110,9 +110,7 @@
                                                     <option value="">-- Select Payment Mode --</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Cheque">Cheque</option>
-                                                    <option value="Credit Card">Credit Card</option>
                                                     <option value="Bank Transfer">Bank Transfer</option>
-                                                    <option value="Bank Remittance">Bank Remittance</option>
                                                 </select>
                                             </div>
                                         </div>

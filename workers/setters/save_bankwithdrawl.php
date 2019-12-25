@@ -1,50 +1,43 @@
 
 <?php
 include('../../database/db_conection.php');
-<<<<<<< HEAD
-mysqli_autocommit($dbcon,FALSE);
 
-=======
->>>>>>> 8d4a8aa7e94c555bcdd55abd2a5aa0bc48981f1d
 include('../getters/functions.php');
 
 try{
 
-    $dbcon->begin_transaction();
-    
+   $dbcon->begin_transaction();
+
 if (isset($_POST['array'])) {
     $array=$_POST['array'];
-    $v_credits_id=$_POST['v_credits_id'];
+    $transid=$_POST['transid'];
     $action=$_POST['action'];
     $table=$_POST['table'];
     $handler=$_POST['handler'];
     $compId=$_POST['compId'];
     $return=array();
     
-    if ($v_credits_id=="") {
-        $v_credits_id = get_id($dbcon,$table,"CN00");
+    if ($transid=="") {
+        $transid = get_id($dbcon,$table,"TRANSC-0");
     }
 
     if($action=="add"){
-        $sql2 = "INSERT INTO vendorcredits (v_credits_id) VALUES ('$v_credits_id')";
+        $sql2 = "INSERT INTO $table (transid) VALUES ('$transid')";
 
         if (mysqli_query($dbcon,$sql2)) {
-            $return = update_query($dbcon,$array,$v_credits_id,$table,"v_credits_id");
-         
-            
+            $return = update_query($dbcon,$array,$transid,$table,"transid");
             if ($return['status']){
 
                 $entryData = json_decode($array,true);
-                $entryData['payment_mode'] = $entryData['v_credits_paymentmode'];
-                $entryData['amount'] = $entryData['v_credits_amount'];
-                $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ? $entryData['v_credits_bank'] : "";
-                $entryData['payment_status'] = $entryData['v_credits_paymentmode']==="Cheque"?$entryData['v_credits_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
-                $rowId = $v_credits_id;
+                $entryData['payment_mode'] = "Cash";
+                $entryData['payment_status'] = "Completed" ;
+                $rowId = $transid;
                 $entity = $table;
                 if($entryData['payment_status']==="Completed"){
                     $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
-
+        
                     if(!$return['status']){
+                        print_r($return);
                         throw new Exception();
                     }
                 }
@@ -55,38 +48,32 @@ if (isset($_POST['array'])) {
                 $return['error']=mysqli_error($dbcon);
                 throw new Exception();
             }
-
-                
         }else{
+            $return['status']=false;
+            $return['error']=mysqli_error($dbcon);
             throw new Exception();
         }
     }else{
-        $return = update_query($dbcon,$array,$v_credits_id,$table,"v_credits_id");
+        $return = update_query($dbcon,$array,$transid,$table,"transid");
 
         if ($return['status']){
 
+            $pastTran = findLastTrans($dbcon,$transid,'transactions','trans_row_id');
+            $pastData = $pastTran['values'][0];
             $entryData = json_decode($array,true);
 
             $entryDataNew = json_decode($array,true);
             $entryData = json_decode($array,true);
-            $entryData['payment_mode'] = $entryData['v_credits_paymentmode'];
-            $entryData['amount'] = $entryData['v_credits_amount'];
-            $entryData['trans_bank'] = $entryData['v_credits_bank'];
-            $entryData['payment_status'] = $entryData['v_credits_paymentmode']==="Cheque"?$entryData['v_credits_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
-            $rowId = $v_credits_id;
+            $entryData['payment_mode'] = $entryData['paymethod'];
+            $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+            $rowId = $transid;
             $entity = $table;
 
-            if($entryData['payment_mode'] === "Cheque" && $entryData['payment_status']==="Completed"){
-                $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
-           
-            }else if($entryData['payment_status']==="Completed"){
-                $pastTran = findLastTrans($dbcon,$v_credits_id,'transactions','trans_row_id');
-                $pastData = $pastTran['values'][0];
-                $entryData['amount'] = $pastData['v_credits_amount'];
-                $entryData['trans_bank'] = $entryData['v_credits_bank'];
+              if($entryData['payment_status']==="Completed"){
+                $entryData['amount'] = $pastData['trans_amt'];
                 $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"reverse");
                 if($return['status']){
-                    $entryData['amount'] = $entryDataNew['v_credits_amount'];
+                    $entryData['amount'] = $entryDataNew['amount'];
 
                     $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
 
@@ -110,6 +97,11 @@ if (isset($_POST['array'])) {
             $return['error']=mysqli_error($dbcon);
             throw new Exception();
         }
+
+
+        if(!$return['status']){
+            throw new Exception();
+        }
     }
 
 }
@@ -121,6 +113,7 @@ $dbcon->commit();
 
 }catch(Exception $e){
 // Rollback transaction
+ "rollback";
  $dbcon->rollback();
 
 }finally{
@@ -128,6 +121,5 @@ $dbcon->commit();
  $dbcon->close();
  echo json_encode($return);
 }
-
 
 ?>

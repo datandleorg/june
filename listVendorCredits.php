@@ -77,7 +77,12 @@
                                                 echo '<td>'.$row['supname'].' </td>';
                                                 echo '<td>'.$row['v_credits_amount'].' </td>';
                                                 echo '<td>'.$row['v_credits_paymentmode'].' </td>';
-                                                echo '<td>'.$row['v_credits_ref_no'].'<br/>['.$row['v_credits_cheque_status'].']</td>';
+                                                if($row['v_credits_paymentmode'] !=="Cash"){
+                                                    echo '<td>'.$row['v_credits_ref_no'].'<br/>['.$row['v_credits_cheque_status'].']</td>';
+
+                                                }else{
+                                                    echo '<td> - </td>';
+                                                }
                                                 echo '<td>'.$row['v_credits_availcredits'].' </td>';
                                                 echo '<td>'.$row['v_credits_handler'].' </td>';
                                         ?>

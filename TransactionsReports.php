@@ -53,9 +53,23 @@ include('workers/getters/functions.php');
                                             <option value="">-- Select Payment Mode --</option>
                                             <option value="Cash">Cash</option>
                                             <option value="Cheque">Cheque</option>
-                                            <option value="Credit Card">Credit Card</option>
                                             <option value="Bank Transfer">Bank Transfer</option>
-                                            <option value="Bank Remittance">Bank Remittance</option>
+                                        </select>
+                                </div>
+
+                                <div class="form-group col-md-3">
+                                        <select id="trans_bank" class="form-control form-control-sm"
+                                             name="trans_bank">
+                                            <option value='' selected>--Select Bank--</option> ';
+                                            <?php
+                                            $sql = "SELECT * FROM compbank where orgid='COMP001' ";
+                                            $result = mysqli_query($dbcon, $sql);
+                                            while ($row = $result->fetch_assoc()) {
+                                                $bankid = $row['id'];
+                                                $bankname = $row['bankname'];
+                                                echo '<option  value="' . $bankid . '" >' . $bankname . '</option>';
+                                            }
+                                            ?>
                                         </select>
                                 </div>
 
@@ -66,24 +80,23 @@ include('workers/getters/functions.php');
                             <hr/>
                             <!-- Start coding here -->
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-12" style="overflow-x:scroll">
                                     <span id="po_reports_div"></span>
-                                    <table id="po_reports" class="table table-bordered" style="width:100%">
+                                    <table id="po_reports" class="table table-bordered" style="width:130%">
                                         <thead>
                                             <tr>
                                             <th>Id</th>
                                             <th>Trans Id</th>
-                                            <th>Entry Id</th>
-                                            <th>Type</th>
-                                            <th>Entry Type</th>
-                                                <th>Amount</th>
-                                                <th>Payment Mode</th>
-                                                <th>Bank</th>
-                                                <th>Closing Bal</th>
-                                                <th>Cash On Hand</th>
-                                                <th>Petty Cash</th>
-                                                <th>Status</th>
-                                                <th>Date</th>
+                                            <th>Date</th>
+                                            <th>Details</th>
+                                            <th>Credit</th>
+                                            <th>Debit</th>
+                                            <th>Payment Mode</th>
+                                            <th>Bank</th>
+                                            <th>Closing Bal</th>
+                                            <th>Cash On Hand</th>
+                                            <th>Petty Cash</th>
+                                            <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -95,23 +108,27 @@ include('workers/getters/functions.php');
                                                 $timestamp = strtotime($_GET['end']);
                                                 $end = date('Y-m-d', $timestamp);
 
-                                               $sql = "SELECT * from expenses ex where 1=1 ";
+                                               $sql = "SELECT t.*,DATE_FORMAT(t.trans_date,'%d-%m-%Y') as trans_date,c.bankname,c.acctno from transactions t ,compbank c where c.id=t.trans_bank ";
                                                 if($_GET['st']!=''){
                                                     if($st==$end){
-                                                        $sql.= " and ex.expense_date='$st' ";   
+                                                        $sql.= " and DATE_FORMAT(t.trans_date,'%Y-%m-%d')='$st' ";   
                                                     }else{
-                                                        $sql.=" and (ex.expense_date BETWEEN '$st' AND '$end') ";   
+                                                        $sql.=" and (DATE_FORMAT(t.trans_date,'%Y-%m-%d') BETWEEN '$st' AND '$end') ";   
                                                     }
                                                 }
 
                                                 if($_GET['payment_mode']!=''){
-                                                    $sql.= " and ex.expense_paid_thru='".$_GET['payment_mode']."' ";   
+                                                    $sql.= " and t.trans_mode='".$_GET['payment_mode']."' ";   
+                                                }
 
+                                                if($_GET['trans_bank']!=''){
+                                                    $sql.= " and t.trans_bank='".$_GET['trans_bank']."' ";   
                                                 }
 
                                             }else{
-                                                $sql = "SELECT * from transactions t order by t.trans_id asc ;";    
+                                                $sql = "SELECT t.*,DATE_FORMAT(t.trans_date,'%d-%m-%Y') as trans_date,c.bankname,c.acctno from transactions t ,compbank c where c.id=t.trans_bank order by t.trans_id asc ;";    
                                             }
+
 
                                             $result = mysqli_query($dbcon,$sql);
                                             if ($result->num_rows > 0){
@@ -120,17 +137,25 @@ include('workers/getters/functions.php');
                                                     echo '<tr>
                                                     <td>'.$row['id'].'</td>
                                                     <td>'.$row['trans_id'].'</td>
-                                                    <td>'.$row['trans_row_id'].'</td>
-                                                    <td>'.$row['trans_type'].'</td>
-                                                    <td>'.$row['trans_entry_type'].'</td>
-                                                    <td>'.$row['trans_amt'].'</td>
-                                                <td>'.$row['trans_mode'].'</td>
-                                                <td>'.$row['trans_bank'].'</td>
-                                                <td>'.$row['total_closing_bal'].'</td>
+                                                    <td>'.$row['trans_date'].'</td>
+                                                    <td>['.$row['trans_entry_type'].']-'.$row['trans_entity'].'</td>';
+                                                    if($row['trans_type']==="credit"){
+                                                      echo '  <td>'.$row['trans_amt'] .'</td>
+                                                           <td>-</td> ';
+                                                    }else{
+                                                        echo '  <td>-</td>
+                                                        <td>'.$row['trans_amt'] .'</td> ';
+                                                    }
+                                               echo ' <td>'.$row['trans_mode'].'</td>';
+                                               if($row['trans_bank']!==''){
+                                                 echo ' <td>'.$row['bankname'].'<br/>['.$row['acctno'].']</td>';
+                                               }else{
+                                                echo ' <td>-</td>';
+                                               }
+                                              echo'  <td>'.$row['total_closing_bal'].'</td>
                                                 <td>'.$row['total_cash_on_hand'].'</td>
                                                 <td>'.$row['total_petty_cash'].'</td>
                                                 <td>'.$row['trans_status'].'</td>
-                                                <td>'.$row['trans_date'].'</td>
 
                                             </tr>';  
                                                 }
@@ -173,7 +198,8 @@ include('workers/getters/functions.php');
 
 <script>
    // var page_custwise = "<?php if(isset($_GET['custwise'])){ echo $_GET['custwise']; } ?>";
-    var page_payment_mode = "<?php if(isset($_GET['payment_mode'])){ echo $_GET['payment_mode']; } ?>";
+   var page_payment_mode = "<?php if(isset($_GET['payment_mode'])){ echo $_GET['payment_mode']; } ?>";
+   var page_trans_bank = "<?php if(isset($_GET['trans_bank'])){ echo $_GET['trans_bank']; } ?>";
    var page_st = "<?php if(isset($_GET['st'])){ echo $_GET['st']; } ?>";
     var page_end = "<?php if(isset($_GET['end'])){ echo $_GET['end']; } ?>";
 
@@ -181,6 +207,7 @@ include('workers/getters/functions.php');
        // var vendor_params =[];
        // Page.load_select_options('custwise',vendor_params,'customerprofile',' Customer','custid','custname');
        $('#payment_mode').val(page_payment_mode);
+       $('#trans_bank').val(page_trans_bank);
         $("#reset-date").hide();
 
         $('#daterange').daterangepicker({
@@ -273,7 +300,7 @@ include('workers/getters/functions.php');
                         $(win.document.body)
                             .css( 'font-size', '10pt' )
                             .prepend(
-                            '<p><img src="<?php echo $baseurl;?>assets/images/logo.png" style="width:50px;height:50px;" /></p><p class="lead text-center"><b>Expenses Report</b><br/></p>'+printhead+'</div>'
+                            '<p><img src="<?php echo $baseurl;?>assets/images/logo.png" style="width:50px;height:50px;" /></p><p class="lead text-center"><b>Transactions Report</b><br/></p>'+printhead+'</div>'
                         );
 
                         $(win.document.body).find( 'table' )
@@ -284,14 +311,14 @@ include('workers/getters/functions.php');
                 {
                     extend: 'excel',
                     text:'<span class="fa fa-file-excel-o"></span>',
-                    title:'Expenses Report', footer: true ,
+                    title:'Transactions Report', footer: true ,
                     messageTop: excel_printhead   
 
                 },
                 {
                     extend: 'pdf',
                     text:'<span class="fa fa-file-pdf-o"></span>',
-                    title:'Expenses Report', footer: true ,
+                    title:'Transactions Report', footer: true ,
                     messageTop: excel_printhead   
 
                 },
@@ -323,7 +350,8 @@ include('workers/getters/functions.php');
             end = date_range[1].replace(" ","");
         }
         var payment_mode = $('#payment_mode').val();
-        location.href="TransactionsReports.php?st="+st+"&end="+end+"&payment_mode="+payment_mode;
+        var trans_bank = $('#trans_bank').val();
+        location.href="TransactionsReports.php?st="+st+"&end="+end+"&payment_mode="+payment_mode+"&trans_bank="+trans_bank;
     }
 
     function cb(start, end) {

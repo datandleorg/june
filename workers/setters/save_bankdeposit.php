@@ -4,6 +4,10 @@ include('../../database/db_conection.php');
 
 include('../getters/functions.php');
 
+try{
+
+   $dbcon->begin_transaction();
+
 if (isset($_POST['array'])) {
     $array=$_POST['array'];
     $transid=$_POST['transid'];
@@ -22,38 +26,102 @@ if (isset($_POST['array'])) {
 
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$transid,$table,"transid");
-
             if ($return['status']){
-               $entry['data'] = json_decode($array,true);
-               $entry['rowId'] = $transid;
-               $entry['colName'] = "transid";
-               $entry['entity'] = "Bank Deposit";
 
-                $transData = array();
-                $transData['trans_type'] = "credit";
-                $transData['trans_amt'] = $entry['data']['amount'];
-                $transData['trans_bank'] = $entry['data']['bankname'];
-                $transData['trans_entry'] = json_encode($entry);
-                $transData['trans_status'] = "Completed";
-                $transData['trans_handler'] = $handler;
-                $transData['trans_mode'] = $entry['data']['payment_mode'];
-                
-                $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
+                $entryData = json_decode($array,true);
+                $entryData['payment_mode'] = $entryData['paymethod'];
+                $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+                $rowId = $transid;
+                $entity = $table;
+                if($entryData['payment_status']==="Completed"){
+                    $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+
+                    if(!$return['status']){
+                        throw new Exception();
+                    }
+                }
+              
                 
             }else{
                 $return['status']=false;
                 $return['error']=mysqli_error($dbcon);
+                throw new Exception();
             }
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);
+            throw new Exception();
         }
     }else{
         $return = update_query($dbcon,$array,$transid,$table,"transid");
+       // print_r($return);
+        if ($return['status']){
+
+            $entryData = json_decode($array,true);
+            $pastTran = findLastTrans($dbcon,$transid,'transactions','trans_row_id');
+            $pastData = $pastTran['values'][0];
+
+
+            $entryDataNew = json_decode($array,true);
+            $entryData = json_decode($array,true);
+            $entryData['payment_mode'] = $entryData['paymethod'];
+            $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+            $rowId = $transid;
+            $entity = $table;
+
+            if($entryData['payment_mode'] === "Cheque" && $entryData['payment_status']==="Completed"){
+                $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+           
+            }else if($entryData['payment_status']==="Completed"){
+                $entryData['amount'] = $pastData['trans_amt'];
+                $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"reverse");
+                if($return['status']){
+                    $entryData['amount'] = $entryDataNew['amount'];
+
+                    $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+
+                    if(!$return['status']){
+                        throw new Exception();
+                    }
+                }else{
+                    throw new Exception();
+
+                }
+            
+            }else{
+                $return['status']=false;
+                $return['error']=mysqli_error($dbcon);
+                throw new Exception();
+            }
+          
+            
+        }else{
+            $return['status']=false;
+            $return['error']=mysqli_error($dbcon);
+            throw new Exception();
+        }
+
+
+        if(!$return['status']){
+            throw new Exception();
+        }
     }
 
 }
-echo json_encode($return);
 
+
+// Commit transaction
+$dbcon->commit();
+
+
+}catch(Exception $e){
+// Rollback transaction
+ $dbcon->rollback();
+
+}finally{
+// Close connection
+ $dbcon->close();
+ echo json_encode($return);
+}
 
 ?>

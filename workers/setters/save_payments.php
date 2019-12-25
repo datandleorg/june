@@ -4,6 +4,10 @@ include('../../database/db_conection.php');
 
 include('../getters/functions.php');
 
+try{
+
+    $dbcon->begin_transaction();
+
 if (isset($_POST['array'])) {
     $array=$_POST['array'];
     $payment_id=$_POST['payment_id'];
@@ -28,73 +32,96 @@ if (isset($_POST['array'])) {
         $sql2 = "INSERT INTO payments (payment_id) VALUES ('$payment_id')";
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$payment_id,$table,"payment_id");
-            $grn_val_arr = findbyand($dbcon,$payment_grn_id,"grn_notes","grn_id");
-            // print_r($grn_val_arr);
-            $balance = $grn_val_arr['values'][0]['grn_balance']-$payment_amount;
-            $return = updatebyand($dbcon,$balance,"grn_notes","grn_balance","grn_id",$payment_grn_id);
-            update_open_balance($dbcon,'payables');
-            $grn_val_arr = findbyand($dbcon,$payment_grn_id,"grn_notes","grn_id");
 
-            if($grn_val_arr['values'][0]['grn_balance']==0){
-                $return = updatebyand($dbcon,"Paid","grn_notes","grn_payment_status","grn_id",$payment_grn_id);
-                if($grn_val_arr['values'][0]['grn_po_code']){
-                    $return = updatebyand($dbcon,"Closed","purchaseorders","po_status","po_code",$grn_val_arr['values'][0]['grn_po_code']);
-                }
+            if($return['status']){
+                $grn_val_arr = findbyand($dbcon,$payment_grn_id,"grn_notes","grn_id");
+                $balance = $grn_val_arr['values'][0]['grn_balance']-$payment_amount;
+                $return = updatebyand($dbcon,$balance,"grn_notes","grn_balance","grn_id",$payment_grn_id);
+                if($return['status']){
+                    $return = update_open_balance($dbcon,'payables');
+                    if($return['status']){
+                        $grn_val_arr = findbyand($dbcon,$payment_grn_id,"grn_notes","grn_id");
 
+                        if($grn_val_arr['values'][0]['grn_balance']==0){
+                            $return = updatebyand($dbcon,"Paid","grn_notes","grn_payment_status","grn_id",$payment_grn_id);
 
-            }else if($grn_val_arr['values'][0]['grn_balance']>0&&$grn_val_arr['values'][0]['grn_balance']<$grn_val_arr['values'][0]['grn_po_value']){
-                $return = updatebyand($dbcon,"Partially Paid","grn_notes","grn_payment_status","grn_id",$payment_grn_id);
-            }else if($grn_val_arr['values'][0]['grn_balance']==$grn_val_arr['values'][0]['grn_po_value']){
-                $return = updatebyand($dbcon,"UnPaid","grn_notes","grn_payment_status","grn_id",$payment_grn_id);
-            }
+                            if($return['status']){      
+                                if($grn_val_arr['values'][0]['grn_po_code']){
+                                    $return = updatebyand($dbcon,"Closed","purchaseorders","po_status","po_code",$grn_val_arr['values'][0]['grn_po_code']);
+                                    if(!$return['status']){      
+                                        throw new Exception();
+                                    }
+                                }      
+                            }else{
+                                throw new Exception();
+                            }
+            
+                        }else if($grn_val_arr['values'][0]['grn_balance']>0&&$grn_val_arr['values'][0]['grn_balance']<$grn_val_arr['values'][0]['grn_po_value']){
+                            $return = updatebyand($dbcon,"Partially Paid","grn_notes","grn_payment_status","grn_id",$payment_grn_id);
+                            if(!$return['status']){      
+                                throw new Exception();
+                            }
+                        }else if($grn_val_arr['values'][0]['grn_balance']==$grn_val_arr['values'][0]['grn_po_value']){
+                            $return = updatebyand($dbcon,"UnPaid","grn_notes","grn_payment_status","grn_id",$payment_grn_id);
+                            if(!$return['status']){      
+                                throw new Exception();
+                            }
+                        }
 
-            if($page_payment_v_credits_id!=""){
-                $now = findbyand($dbcon,$payment_id,"payments","payment_id");
-                $now_refund_amount = $now['values'][0]['payment_credits_used'];
-                $sql90 = " UPDATE vendorcredits SET v_credits_availcredits =  v_credits_availcredits - ".$now_refund_amount."  WHERE v_credits_id='".$page_payment_v_credits_id."' ;";
+                        
+                        if($page_payment_v_credits_id!=""){
+                            $now = findbyand($dbcon,$payment_id,"payments","payment_id");
+                            $now_refund_amount = $now['values'][0]['payment_credits_used'];
+                            $sql90 = " UPDATE vendorcredits SET v_credits_availcredits =  v_credits_availcredits - ".$now_refund_amount."  WHERE v_credits_id='".$page_payment_v_credits_id."' ;";
 
-                if (mysqli_query($dbcon,$sql90)) {
-                    $return['status']=true;
+                            if (mysqli_query($dbcon,$sql90)) {
+                                $return['status']=true;
+                            }else{
+                                $return['status']=false;
+                                $return['error']=mysqli_error($dbcon);
+                                throw new Exception();
+                            }
+                        }
+
+                        
+                    }else{
+                        throw new Exception();
+                    }
                 }else{
-                    $return['status']=false;
-                    $return['error']=mysqli_error($dbcon);
+                    throw new Exception();
                 }
+
+            }else{
+                throw new Exception();
             }
 
-            // correct verson
-            if ($return['status']){
-                $entry['data'] = json_decode($array,true);
-                $entry['rowId'] = $payment_id;
-                $entry['colName'] = "payment_id";
-                $entry['entity'] = "Vendor Payments";
- 
-                 $transData = array();
-                 $transData['trans_type'] = "debit";
-                 $transData['trans_amt'] = $entry['data']['payment_amount'];
-                 $transData['trans_bank'] = $entry['data']['payment_mode']!=="Cash" ? $entry['data']['payment_bank'] : "";
-                 $transData['trans_entry'] = json_encode($entry);
-                 $transData['trans_status'] = "Completed";
-                 $transData['trans_handler'] = $handler;
-                 $transData['trans_mode'] = $entry['data']['payment_mode'];
-                 
-                 $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
-             
-             }else{
-                 $return['status']=false;
-                 $return['error']=mysqli_error($dbcon);
-             }
+
 
 
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);
+            throw new Exception();
         }
     }else{
         $return = update_query($dbcon,$array,$payment_id,$table,"payment_id");
     }
 
 }
-echo json_encode($return);
 
+// Commit transaction
+$dbcon->commit();
+
+
+}catch(Exception $e){
+// Rollback transaction
+ "rollback";
+ $dbcon->rollback();
+
+}finally{
+// Close connection
+ $dbcon->close();
+ echo json_encode($return);
+}
 
 ?>
