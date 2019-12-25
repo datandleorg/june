@@ -114,7 +114,7 @@ function print_duedate($payterm, $payterm_desc, $inv_date){
     </head>
     <body onload="printInit();">
         <h5 > 
-        <img src="images/logo.png" width="200px" height="100px"/>    
+        <img src="images/logo.png" width="200px" height="120px"/>    
         <div style="text-align:center">Lento Foods India Pvt. Ltd.</div> </h5>
 		
          <h3>   <div style="text-align:center">TAX INVOICE</div>

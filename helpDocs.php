@@ -34,6 +34,82 @@
 							</div>
 								
 							<div class="card-body">
+							
+							<!--Production starts here-->
+							
+							 <div id="accordion" role="tablist">
+								  <div class="card">
+									<div class="card-header" role="tab" id="headingzero">
+									  <h5 class="mb-0">
+										<a data-toggle="collapse" href="#collapsezero" aria-expanded="true" aria-controls="collapsezero">
+										  Production
+										</a>
+									  </h5>
+									</div>
+
+									<div id="collapsezero" class="collapse " role="tabpanel" aria-labelledby="headingzero" data-parent="#accordion">
+									  <div class="card-body">
+<div class="row">
+<div class="col-xl-12">
+<h5><a style="color:#008080">Production Module Work flow</a></h5>
+<a style="color:green">Item Master(Purchase) -> Item Master(Sales) -> Assign Rawmaterials -> Production Entry -> make production status COMPLETED -> Check stock on hand both purchase and 
+sales inventories. Note: Purchase inventory will decrease the stock and Sales inventory to increase the stock.
+ </div>
+
+ <div class="col-xl-12">
+<h5><a style="color:#008080">Inventory item Master(Purchase/Rawmaterials) Life Cycle</a></h5>
+<a style="color:green">
+goto and click plus icon on your top right and click Item Master(Purchase) - will contain the purchased rammaterials details for both the self and outsourced 
+inventory.<br><a style="color:maroon">
+Case 1 : Inward Item Master need not necessary to create if already created. If not so, please follow the below case 2 &3.<br> 
+Case 2 : Item Master -> add item details set stock in qty as 0 if in case adding stock for the first time.  <br>
+Case 3 : add PO/GRN -> Click GRN(self)/GRN(Outsourced)- Stock can be updated either through Purhase order or directly through GRN and check if stock is updated in 
+respective inventory Self/Outsourced.
+</div>
+
+ <div class="col-xl-12">
+<h5><a style="color:#008080">Inventory Item Master(SALES) Life Cycle</a></h5>
+<a style="color:green">
+goto and click plus icon on your top right and click Item Master(Sales) - will contain the sales items details for both the self and outsourced inventory.
+<br><a style="color:maroon">
+Case 1 : outward Item Master need not necessary to create if already created. If not so, please follow the below case 2 &3. </br>
+Case 2 : Item Master(Sales) -> add item details set stock in qty as 0 if in case adding stock for the first time. </br> 
+Case 3 : add production details and when production status is converted to COMPLETED the stock will get updated.
+</div>
+ <div class="col-xl-12">
+<h5><a style="color:#008080">Assign Rawmaterials to the production/sales items Life Cycle</a></h5>
+<a style="color:green">
+goto and click plus icon on your top right and click Asign Rawmaterials - Assigning raw materials for the each production item i.e., (sales items) to update the
+consumption of rawmaterials for each production item. 
+<br><a style="color:maroon">
+Case 1: Assign Rawmaterials to the production/sales items<br>
+Case 2: anytime rawmaterials can be edited.<br>
+Case 3: Add Production entries and change the production status to completed.<br>
+case 4: Check Item Master(Rawmaterials) the stock on hand to be decreased and Sales Master(Outward) stock on hand to be added 
+</div>
+
+ <div class="col-xl-12">
+<h5><a style="color:#008080">Production Life Cycle</a></h5>
+<a style="color:green">
+goto and click plus icon on your top right and click Production- Production module is required to assign rawmaterials to the production items<br>
+ to take the output of produced stock and will update the stock on both inventory Purchase and Sales.
+<br><a style="color:maroon">
+Case 1: Add Production entries.<br>
+case 2: In edit mode change the production status to completed once the status is completed that record cannot be edited.<br>
+case 3: Check Item Master(Rawmaterials) the stock on hand to be decreased and Sales Master(Outward) stock on hand to be added 
+</div>
+
+
+</div>
+
+									  </div>
+									</div>
+								  </div>
+								
+							
+							<!-- production stops here-->
+							
+							
 								
 								  <div class="card">
 									<div class="card-header" role="tab" id="headingTwo">

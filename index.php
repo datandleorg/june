@@ -138,7 +138,7 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
 											<!--img src="assets/images/avatars/logo.png" alt="Profile image" width="80" height="80" class="avatar-rounded"-->
 											<!--img src="assets/images/avatars/logo.png" alt="Profile image" width="80" height="80" class="avatar-rounded"-->
 											<!--img src="assets/images/avatars/dhirajLogo.jpg" alt="Profile image" width="180" height="60" -->    
-                                                <img src="assets/images/avatars/logo.png" alt="Profile image" width="180" height="60">  
+                                                <img src="assets/images/avatars/logo.png" alt="Profile image" width="100" height="80">  
 											<?php if(isset($_SESSION['login_email'])){ echo $_SESSION['login_email']; } ?>
                                                 <font face="Hemi Head Rg" color="Apple Red">Logged In</font>
 										   </div>
