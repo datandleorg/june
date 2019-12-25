@@ -28,12 +28,113 @@
 						<div class="card mb-3">
 							<div class="card-header">
 								<h3><i class="fa fa-image"></i> Help & Support</h3>
-								 <class="text-muted">Get Started with e-Schoolz Books with detailed answers to the most commonly questions you may have while
-								 using e-Schoolz Books
+								 <class="text-muted">Get Started with e-Schoolz S/W with detailed guide and answers to the most commonly questions you may have while
+								 using e-Schoolz S/W
                                     
 							</div>
 								
 							<div class="card-body">
+							
+							<!--Accounts starts here-->
+							<div id="accordion" role="tablist">
+								  <div class="card">
+									<div class="card-header" role="tab" id="headingzerominus">
+									  <h5 class="mb-0">
+										<a data-toggle="collapse" href="#collapsezerominus" aria-expanded="true" aria-controls="collapsezerominus">
+										  Accounts
+										</a>
+									  </h5>
+									</div>
+
+									<div id="collapsezerominus" class="collapse " role="tabpanel" aria-labelledby="headingzerominus" data-parent="#accordion">
+									  <div class="card-body">
+<div class="row">
+<div class="col-xl-12">
+<h5><a style="color:#008080">What is an UNDEPOSITED FUNDS?</a></h5>
+ <b>Undeposited Funds -</b>Undeposited Funds is a cash account that holds funds from payments to your company until you deposit them to your bank account.
+the Undeposited Funds account holds customer payments  until you deposit them at your BANK, By default, e-Schoolz puts sales receipt payments and customer advance CASH 
+payments through CUSTOMER CREDITS into the Undeposited Funds ...<br>
+<b>What are the other sources of UNDEPOSITED FUNDS?</b><br>
+1> Custmor Credits (only CASH transactions).<br>
+2> Bank Withdrawels only CASH TRANSACTIONS.
+
+ </div> 
+ <div class="col-xl-12">
+ <h5><a style="color:#008080">What is Transaction Report/Account Statement Report?</a></h5>
+Account Statement is a report issued by a bank to its depositor document the account balance and activity during the period.<br>
+1>The Company's beginning/Open balance<br>
+2>Checks, withdrawals, and debits decreasing the balance during the month<br>
+3>Deposits and credits increases the account balance during the month<br>
+4> Photocopies of cancelled checks cleared during the month<br>
+5> The ending balance of the bank account
+ </div>
+<div class="col-xl-12">
+<h5><a style="color:#008080">What is Customer Credits?</a></h5>
+Customer credits are credits that you receive cash from your customer, and is treated as an equivalent of physical cash that the customer owes you. 
+This helps you track the money you're owed until it is either paid by said customer at a later date i.e refunded,or subtracted from any future bill 
+amount due to that Customer.<br>
+<b>What are the sources of customer credits?</b><br>
+CASH,Bank Transfer,Cheque<br>
+<b>How does Customer credits Payments reflects in Account/Transaction Statement Report?</b><br>
+Example if the payment mode is CASH<br>
+in the Transaction Report the amount should be reflected and add the amount to the undepsited funds<br>
+If it is Cheque it should reflect the closing balance only if the status is CLEARED and  update the amount in credit
+If it is Bank transfer closing balance credit amount should be updated.
+</div>
+<div class="col-xl-12">
+<h5><a style="color:#008080">What is petty cash?</a></h5>
+an accessible store of money kept by an company for expenditure on small items.<br>
+<b>When to use petty cash?</b><br>
+Whenever the company spends through CASH for the following purposes<br>
+1> Vendor credits - only cash payments<br>
+2> Record Expense only CASH payments<br>
+<b>What is the source of Petty cash?</b><br>
+Undeposited Funds that needs to be converted to petty cash by validating avialble funds
+</div>
+<div class="col-xl-12">
+<h5><a style="color:#008080">What are Bank Deposits?</a></h5>
+A bank deposit is the placement of funds in an account with a bank.<br>
+<b>What are the sources of Bank Deposits?</b><br>
+Undeposited Funds and Customer Payments through Bank transfer / Cheque/Cash/ and
+Partners Investments<br>
+<b>How does Bank Deposit Account/Transaction Statement Report Creates?</b><br>
+Example if the payment mode is CASH<br>
+in the Transaction Report the amount should be reflected and add the amount in credit and subracts the amount in  undeposited funds or cash on hand<br>
+If it is Cheque it should reflect the closing balance only if the status is CLEARED and  update the amount in credit
+If it is Bank transfer closing balance credit amount should be updated.
+</div>
+<div class="col-xl-12">
+<h5><a style="color:#008080">What is bank withdrawal?</a></h5>
+the withdrawal of money from your account at a bank is Bank withdrawel.<br>
+<b>What are the sources of bank withdrawel?</b><br>
+Using Withdrawel slip,ATM,Cheque<br>
+<b>How does withdrawl transaction creates in transaction statement report?</b><br>
+Mode=cash/cheque/ATM, debit,closing balance, undeposited funds
+debits the amount from bank account and credits the amount into undeposited funds.
+</div>
+<div class="col-xl-12">
+<h5><a style="color:#008080">What is vendor credits?</a></h5>
+Vendor credits are credits that you receive from your vendor/supplier, and is treated as an equivalent of physical cash that the vendor owes you. 
+This helps you track the money you're owed until it is either paid by said vendor at a later date i.e refunded, 
+or subtracted from any future bill amount due to that vendor.<br>
+
+<b>What are the sources of Vendor Payments?</b><br>
+petty cash,cheque, bank transfer<br>
+
+<b>How does vendor credits transaction creates in transaction statement report?</b><br>
+if mode = cash then mode = cash,subracts petty cash<br>
+If mode cheque then status = uncleard, reference#, debit amount need not subracted until status = cleared<br>
+if mode bank transfer status = bnk transfer, reference no <<transaction ref no>> , debit amount to subract and show<br>
+
+</div>
+
+									  </div>
+									</div>
+								  </div>
+								
+							
+							
+							<!--Accounts starts here-->
 							
 							<!--Production starts here-->
 							
