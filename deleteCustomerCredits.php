@@ -25,8 +25,10 @@ try{
         $entryData = findbyand($dbcon,$bdid,'customercredits','customer_credits_id')['values'][0];
         $pastTran = findLastTrans($dbcon,$bdid,'transactions','trans_row_id');
         $pastData = $pastTran['values'][0];
-        $entryData['payment_mode'] = $entryData['paymethod'];
-        $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+        $entryData['payment_mode'] = $entryData['customer_credits_paymentmode '];
+        $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ?  $entryData['customer_credits_bank'] : "";
+
+        $entryData['payment_status'] = $entryData['customer_credits_paymentmode ']==="Cheque"?$entryData['customer_credits_cheque_status ']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
         $rowId = $bdid;
         $entity = 'customercredits';
 

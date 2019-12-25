@@ -25,26 +25,28 @@ try{
         $entryData = findbyand($dbcon,$bdid,'vendorcredits','v_credits_id')['values'][0];
         $pastTran = findLastTrans($dbcon,$bdid,'transactions','trans_row_id');
         $pastData = $pastTran['values'][0];
-        $entryData['payment_mode'] = $entryData['paymethod'];
-        $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+        $entryData['payment_mode'] = $entryData['v_credits_paymentmode'];
+        $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ?  $entryData['v_credits_bank'] : "";
+
+        $entryData['payment_status'] = $entryData['v_credits_paymentmode']==="Cheque"?$entryData['v_credits_cheque_status ']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
         $rowId = $bdid;
         $entity = 'vendorcredits';
 
-        $entryData['amount'] = $pastData['trans_amt'];
+         $entryData['amount'] = $pastData['trans_amt'];
         $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$session_org,$session_user,"reverse");
 
 
         if(!$return['status']){
             throw new Exception();
         }else{
-            $sql = "DELETE FROM vendorcredits WHERE v_credits_id='".$_GET['id']."' ";
+            // $sql = "DELETE FROM vendorcredits WHERE v_credits_id='".$_GET['id']."' ";
 
-            if ($dbcon->query($sql) === TRUE) {
-                header("Location: listVendorCredits.php");
-            } else {
-                echo "Error deleting record: " . $dbcon->error;
-                throw new Exception();
-            }
+            // if ($dbcon->query($sql) === TRUE) {
+            //     header("Location: listVendorCredits.php");
+            // } else {
+            //     echo "Error deleting record: " . $dbcon->error;
+            //     throw new Exception();
+            // }
         }
 
     $dbcon->commit();

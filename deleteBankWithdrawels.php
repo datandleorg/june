@@ -38,7 +38,7 @@ try{
             throw new Exception();
         }else{
             $sql = "DELETE FROM bankwithdrawels WHERE transid='".$_GET['id']."' ";
-
+//
             if ($dbcon->query($sql) === TRUE) {
                 header("Location: listBankWithdrawels.php");
             } else {

@@ -600,7 +600,7 @@ function createTransaction($dbcon,$compId,$transid,$rowId,$data,$compData,$compB
 function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$trans_dir){
 
     $compData = getTotalClosingBal($dbcon,$compId);
-    $compBank = "";
+    $compBank = $data['bankname']!=="" ? findbyand($dbcon,$data['bankname'],'compbank','id')['values'][0] : "";
     $res = array();
     if($entity==="bankdeposit"){
 
@@ -643,13 +643,8 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
 
             // check balanace
-            if($compData['cash_on_hand']>=$data['amount']){
-                   $res = modifyCompValues($dbcon,"cash_on_hand",$data['amount'],$compId,$trans_dir==="normal"?"credit":"debit");
-                if($res['status']){
+            if($compBank['closing_bal']>=$data['amount']){
                    $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['bankname'],$trans_dir==="normal"?"debit":"credit");
-                }else{
-                   $res['status'] = false;
-                }
             }else{
                 $res['status'] = false;
                 $res['message'] = "Insuffucient Funds";
