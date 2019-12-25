@@ -1,40 +1,60 @@
 <?php
 include("database/db_conection.php");//make connection here
 include('workers/getters/functions.php');
+// sql to delete a record
+$bdid = $_GET['id'];
+// reversing transactions
+session_start();
 
-    $customer_credits_id = $_GET['id'];
-    // reversing transactions
-    $entry = findbyand($dbcon,$customer_credits_id,'customercredits','customer_credits_id')['values'][0];
 
-    $pastTran = findLastTrans($dbcon,$customer_credits_id,'transactions','trans_row_id');
-    $pastData = $pastTran['values'][0];
-    $transid = $pastData['trans_id'];
 
-    $transData['trans_row_id'] = $customer_credits_id;
-    $transData['trans_type'] = $pastData['trans_type'] === "debit" ? "credit": "debit";
-    $transData['trans_entry_type'] = "reverted";
-    $transData['trans_entry_ref'] = $transid;
-    $transData['trans_amt'] = $pastData['trans_amt'];
-    $transData['trans_bank'] = $pastData['trans_mode']!=="Cash" ? $pastData['trans_bank'] : "";
-    $transData['trans_entry'] = json_encode($pastData['trans_entry']);
-    $transData['trans_status'] =  "Completed" ;
-    $transData['trans_handler'] = $handler;
-    $transData['trans_mode'] = $pastData['trans_mode'];
+if(isset($_SESSION['login_email'])){
+    $userid = $_SESSION['userid'];
+    $sq = "select * from userprofile where id='$userid'";
+    $result = mysqli_query($dbcon, $sq) or die(mysqli_error($dbcon));
+    //$count = mysqli_num_rows($result);
+    $rs = mysqli_fetch_assoc($result);
+    $session_user = $rs['username'];
+    $session_org = $rs['compcode'];
+}
 
-    $return = handleTransaction($dbcon,$entry['customer_credits_compId'],$entry,'',$transData);     
 
-    if($return['status']){
-        $sql = "DELETE FROM customercredits WHERE customer_credits_id='".$_GET['id']."' ";
+try{
+    $dbcon->begin_transaction();
 
-        if ($dbcon->query($sql) === TRUE) {
-        header("Location: listCustomerCredits.php");
-        } else {
-            echo "Error deleting record: " . $dbcon->error;
+        $entryData = findbyand($dbcon,$bdid,'customercredits','customer_credits_id')['values'][0];
+        $pastTran = findLastTrans($dbcon,$bdid,'transactions','trans_row_id');
+        $pastData = $pastTran['values'][0];
+        $entryData['payment_mode'] = $entryData['paymethod'];
+        $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+        $rowId = $bdid;
+        $entity = 'customercredits';
+
+        $entryData['amount'] = $pastData['trans_amt'];
+        $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$session_org,$session_user,"reverse");
+
+
+        if(!$return['status']){
+            throw new Exception();
+        }else{
+            $sql = "DELETE FROM customercredits WHERE customer_credits_id='".$_GET['id']."' ";
+
+            if ($dbcon->query($sql) === TRUE) {
+                header("Location: listCustomerCredits.php");
+            } else {
+                echo "Error deleting record: " . $dbcon->error;
+                throw new Exception();
+            }
         }
-   }else{
-    echo "Error deleting record";
 
-   }
+    $dbcon->commit();
 
+}catch(Exception $e){
+    $dbcon->rollback();
+}finally{
     $dbcon->close();
+
+}
+
+
 ?>
