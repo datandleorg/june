@@ -668,7 +668,6 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
             }else{
                 $res['status'] = false;
             }
-             $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
         }else{
             $res['status'] = false;
         }

@@ -66,7 +66,7 @@ if (isset($_POST['array'])) {
             $entryData = json_decode($array,true);
             $entryData['payment_mode'] = $entryData['v_credits_paymentmode'];
             $entryData['amount'] = $entryData['v_credits_amount'];
-            $entryData['trans_bank'] = $entryData['v_credits_bank'];
+            $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ?  $entryData['v_credits_bank']:"";
             $entryData['payment_status'] = $entryData['v_credits_paymentmode']==="Cheque"?$entryData['v_credits_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
             $rowId = $v_credits_id;
             $entity = $table;
@@ -77,8 +77,8 @@ if (isset($_POST['array'])) {
             }else if($entryData['payment_status']==="Completed"){
                 $pastTran = findLastTrans($dbcon,$v_credits_id,'transactions','trans_row_id');
                 $pastData = $pastTran['values'][0];
-                $entryData['amount'] = $pastData['v_credits_amount'];
-                $entryData['trans_bank'] = $entryData['v_credits_bank'];
+                $entryData['amount'] = $pastData['trans_amt'];
+                $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ? $entryData['v_credits_bank']:"";
                 $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"reverse");
                 if($return['status']){
                     $entryData['amount'] = $entryDataNew['v_credits_amount'];

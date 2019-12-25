@@ -80,7 +80,7 @@ if (isset($_POST['array'])) {
             }else if($entryData['payment_status']==="Completed"){
                 $pastTran = findLastTrans($dbcon,$v_credits_id,'transactions','trans_row_id');
                 $pastData = $pastTran['values'][0];
-                $entryData['amount'] = $pastData['customer_credits_amount'];
+                $entryData['amount'] = $pastData['trans_amt'];
                 $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ?  $entryData['customer_credits_bank'] : "";
                 $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"reverse");
                 if($return['status']){
