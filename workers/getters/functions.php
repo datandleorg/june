@@ -600,7 +600,7 @@ function createTransaction($dbcon,$compId,$transid,$rowId,$data,$compData,$compB
 function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$trans_dir){
 
     $compData = getTotalClosingBal($dbcon,$compId);
-    $compBank = $data['bankname']!=="" ? findbyand($dbcon,$data['bankname'],'compbank','id')['values'][0] : "";
+    $compBank = $data['trans_bank']!=="" ? findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0] : "";
     $res = array();
     if($entity==="bankdeposit"){
 
