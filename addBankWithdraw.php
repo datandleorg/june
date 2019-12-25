@@ -1,56 +1,7 @@
 <?php
 include("database/db_conection.php");//make connection here
-
-if(isset($_POST['submit']))
-{
-    $withdraweldate = $_POST['withdraweldate'];
-	$compcode = $_POST['compcode'];
-    $bankname = $_POST['bankname'];
-	$acctno =$_POST['acctno'];
-    $amount=$_POST['amount'];//same
-    $paymethod=$_POST['paymethod'];//same
-    $paytype=$_POST['paytype'];//same
-    $referenceno=$_POST['referenceno'];//same
-    $notes=$_POST['notes'];//same	
-    $createdby=$_POST['createdby'];//same
-    
-
-    $transid ="";
-    $prefix = "DR";
-
-
-    $sql="SELECT MAX(id) as latest_id FROM bankdeposit ORDER BY id DESC";
-    if($result = mysqli_query($dbcon,$sql)){
-        $row   = mysqli_fetch_assoc($result);
-        if(mysqli_num_rows($result)>0){
-            $maxid = $row['latest_id'];
-            $maxid+=1;
-
-            $transid = $prefix.$maxid;
-        }else{
-            $maxid = 0;
-            $maxid+=1;
-            $transid = $prefix.$maxid;
-        }
-    }
-
-    //$image =base64_encode($image);		
-
-    $insert_bankdeposit="INSERT INTO bankwithdrawels(`transid`,`withdraweldate`,`compcode`,`bankname`,`acctno`,`amount`,`paymethod`,`paytype`,`referenceno`,`notes`,`createdby`)
-	VALUES('$transid','$withdraweldate','$compcode','$bankname','$acctno','$amount','$paymethod','$paytype','$referenceno','$notes','$createdby')";
-
-    echo "$insert_bankdeposit";
-    if(mysqli_query($dbcon,$insert_bankdeposit))
-    {
-        echo "<script>alert('Bank Deposit Added Successfully ')</script>";
-        header("location:listBankWithdrawels.php");
-    } else {  die('Error: ' . mysqli_error($dbcon));
-            echo "<script>alert('Bank Deposit creation unsuccessful ')</script>";
-           }
-
-}
+include('header.php');
 ?>
-<?php include('header.php');?>
 
 <!-- End Sidebar -->
 
@@ -77,17 +28,7 @@ if(isset($_POST['submit']))
         </div>
         <!-- end row -->
 
-
-        <!--div class="alert alert-success" role="alert">
-<h4 class="alert-heading">Company Registrtion Form</h4>
-<p></a></p>
-</div-->
-
-
         <div class="row">
-
-
-
 
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">						
                 <div class="card mb-3">
@@ -99,7 +40,7 @@ if(isset($_POST['submit']))
 
 
                             <div class="card-body">
-                                <form method="post" enctype="multipart/form-data">
+                                <form method="post" enctype="multipart/form-data" id="bankWithdrawlForm">
 
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
@@ -134,7 +75,7 @@ if(isset($_POST['submit']))
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="inputState">Bank Name<span class="text-danger">*</span></label>
-                                            <select id="bankname" onchange="onbankname(this);" class="form-control form-control-sm" name="bankname">
+                                            <select id="bankname" onchange="onbankname(this.value);" class="form-control form-control-sm" name="bankname">
                                                 <option selected>Open Bank Names</option>
                                                 <?php 
                                                 $sql = mysqli_query($dbcon,"select bankname,id from compbank");
@@ -175,10 +116,7 @@ if(isset($_POST['submit']))
                                         <div class="form-group col-md-12">
                                             <label >Payment Method</label>
                                             <select required id="paymethod" data-parsley-trigger="change"  class="form-control form-control-sm"  name="paymethod" >
-                                                <option value="">Open Payment Method</option>
-                                                <option value="Cash">Cash</option>
-                                                <option value="Cheque">Cheque</option>
-                                                <option value="NEFT">NEFT</option>
+                                                <option value="Cash" selected>Cash</option>
                                             </select>
                                         </div>
                                     </div>
@@ -226,17 +164,6 @@ if(isset($_POST['submit']))
                                     </div>
                                 </div>									
 
-
-                                <!--div class="form-row">
-<div class="form-group col-md-12">
-<label>
-<div class="fa-hover col-md-12 col-sm-12">
-<span class="text-danger"><i class="fa fa-paperclip bigfonts" aria-hidden="true"></span></i>&nbsp;Attach Receipt<span class="text-danger">(not more than 1MB)</span></div>
-</label> 
-&nbsp;&nbsp;<input type="file" name="image" class="form-control">
-</div>
-</div-->
-
                                 <div class="form-row">
                                     <div class="form-group text-right m-b-10">
                                         &nbsp;<button class="btn btn-primary" name="submit" type="submit">
@@ -267,22 +194,82 @@ if(isset($_POST['submit']))
 
     <script>
 
-        $(function(){
-            var compcode11 =  $('#compcode').val();
-            if(compcode11!=''){
-                onbankname(compcode11);
-            }
-        });
+        var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
+        var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
+        var page_transid = "<?php if(isset($_GET['transid'])){ echo $_GET['transid']; } ?>";
 
 
-        function onbankname(x){
-            var compcode = $('#compcode').val();
-            var bankid = $(x).val();
-            var edit_data = Page.get_edit_vals(bankid,"compbank","id");
-            $('#acctno').val(edit_data.acctno);
-
+        if(page_action=="edit"){
+            var edit_data = Page.get_edit_vals(page_transid,page_table,"transid");
+            set_form_data(edit_data);
+            onbankname(edit_data.bankname);
         }
 
+
+        function set_form_data(data){
+
+            $.each(data, function(index, value) {
+
+                if(index=="id"||index=="so_code"){
+                }else{
+                    $('#'+index).val(value);
+                }
+            }); 
+
+            }
+
+        function onbankname(bankid){
+            var edit_data = Page.get_edit_vals(bankid,"compbank","id");
+            $('#acctno').val(edit_data.acctno);
+        }
+
+
+        $("form#bankWithdrawlForm").submit(function(e){
+            e.preventDefault();
+            var $form = $(this);
+            var data = getFormData($form);            
+
+            function getFormData($form){
+                
+                var unindexed_array = $form.serializeArray();
+                var indexed_array = {};
+
+                $.map(unindexed_array, function(n, i){
+                    if(n['name']=="id"){
+
+                    }else{
+                        indexed_array[n['name']] = n['value'];
+                    }
+                });
+
+                return indexed_array;
+          }
+
+            $.ajax ({
+                url: 'workers/setters/save_bankwithdrawl.php',
+                type: 'post',
+                data: {
+                    array : JSON.stringify(data),
+                    transid:page_transid,
+                    action:page_action?page_action:"add",
+                    table:"bankwithdrawels",
+                    compId:`<?php echo $session_org?$session_org:'';?>`,
+                    handler:`<?php echo $session_user?$session_user:'';?>`
+
+                },
+                dataType: 'json',
+                success:function(res){
+                    if(!res.status){
+                       alert(res.message);
+                    }else{
+                        location.href="listBankWithdrawels.php";
+                    }
+                }
+
+
+            });
+
+        });
 
     </script>
     <?php include('footer.php');?>

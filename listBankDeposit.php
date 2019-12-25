@@ -57,12 +57,12 @@
 										<tbody>
 											<?php
 													include("database/db_conection.php");//make connection here
-													$sql = "SELECT b.*,c.bankname as bankname, c.acctno as acctno, c.closing_bal as closing_bal FROM bankdeposit b, compbank c where c.id=b.bankname ";
+													$sql = "SELECT b.*,c.bankname as bankname, c.acctno as acctno, b.closing_bal as closing_bal FROM bankdeposit b, compbank c where c.id=b.bankname ";
 													$result = mysqli_query($dbcon,$sql);
 													
 													if ($result->num_rows > 0){
 													while ($row =$result-> fetch_assoc()){
-														$row_id=$row['id'];
+														$row_id=$row['transid'];
 													echo "<tr>";
 													echo '<td>' . $row['transid'] . '</td>';
 													echo '<td>'.$row['depositdate'].'<br /></td>';
@@ -90,9 +90,7 @@
                                         <script>
                                             function delete_record(x)
                                             {
-                                                console.log(x);
                                                  var row_id = $(x).attr('data-id');
-                                               alert(row_id);
                                                 if (confirm('Confirm delete')) {
                                                   window.location.href = 'deleteBankDeposit.php?id='+row_id;
                                                }

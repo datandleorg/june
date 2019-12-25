@@ -292,8 +292,13 @@
 
                 },
                 dataType: 'json',
-                success:function(response){
-                   // location.href="listVendorCredits.php";
+                success:function(res){
+                    console.log(res);
+                    if(!res.status){
+                       alert(res.message);
+                    }
+                    
+                    location.href="listBankDeposit.php";
                 }
 
 

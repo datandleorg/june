@@ -425,7 +425,7 @@
                     },
                     dataType: 'json',
                     success: function (response) {
-                        location.href="listVendorCredits.php";
+                       location.href="listVendorCredits.php";
                     }
                 });
             } else {
