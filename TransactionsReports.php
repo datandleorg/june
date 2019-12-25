@@ -126,7 +126,7 @@ include('workers/getters/functions.php');
                                                 }
 
                                             }else{
-                                                $sql = "SELECT t.*,DATE_FORMAT(t.trans_date,'%d-%m-%Y') as trans_date,c.bankname,c.acctno from transactions t ,compbank c where c.id=t.trans_bank order by t.trans_id asc ;";    
+                                               echo $sql = "SELECT t.*,DATE_FORMAT(t.trans_date,'%d-%m-%Y') as trans_date,(select bankname from compbank where t.trans_bank!='' and id=t.trans_bank ) as bankname from transactions t  order by t.trans_id asc ;";    
                                             }
 
 
@@ -148,7 +148,7 @@ include('workers/getters/functions.php');
                                                     }
                                                echo ' <td>'.$row['trans_mode'].'</td>';
                                                if($row['trans_bank']!==''){
-                                                 echo ' <td>'.$row['bankname'].'<br/>['.$row['acctno'].']</td>';
+                                                 echo ' <td>'.$row['bankname'].'</td>';
                                                }else{
                                                 echo ' <td>-</td>';
                                                }
