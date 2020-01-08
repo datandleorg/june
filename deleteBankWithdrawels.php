@@ -26,6 +26,7 @@ try{
         $pastTran = findLastTrans($dbcon,$bdid,'transactions','trans_row_id');
         $pastData = $pastTran['values'][0];
         $entryData['payment_mode'] = $entryData['paymethod'];
+        $entryData['trans_bank'] = $entryData['bankname'];
         $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
         $rowId = $bdid;
         $entity = 'bankwithdrawels';
