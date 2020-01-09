@@ -26,6 +26,7 @@ try{
         $pastTran = findLastTrans($dbcon,$bdid,'transactions','trans_row_id');
         $pastData = $pastTran['values'][0];
         $entryData['payment_mode'] = $entryData['paymethod'];
+        $entryData['trans_bank'] = $entryData['bankname'];
         $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
         $rowId = $bdid;
         $entity = 'bankdeposit';
@@ -33,7 +34,7 @@ try{
         $entryData['amount'] = $pastData['trans_amt'];
         $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$session_org,$session_user,"reverse");
 
-
+        print_r($return);
         if(!$return['status']){
             throw new Exception();
         }else{
@@ -53,7 +54,7 @@ try{
     $dbcon->rollback();
 }finally{
     $dbcon->close();
-
+  //  header("Location: listBankDeposit.php");
 }
 
 

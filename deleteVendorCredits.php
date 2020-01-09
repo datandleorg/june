@@ -39,14 +39,14 @@ try{
         if(!$return['status']){
             throw new Exception();
         }else{
-            // $sql = "DELETE FROM vendorcredits WHERE v_credits_id='".$_GET['id']."' ";
+            $sql = "DELETE FROM vendorcredits WHERE v_credits_id='".$_GET['id']."' ";
 
-            // if ($dbcon->query($sql) === TRUE) {
-            //     header("Location: listVendorCredits.php");
-            // } else {
-            //     echo "Error deleting record: " . $dbcon->error;
-            //     throw new Exception();
-            // }
+            if ($dbcon->query($sql) === TRUE) {
+                header("Location: listVendorCredits.php");
+            } else {
+                echo "Error deleting record: " . $dbcon->error;
+                throw new Exception();
+            }
         }
 
     $dbcon->commit();

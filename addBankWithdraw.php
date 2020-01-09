@@ -89,7 +89,7 @@ include('header.php');
                                                 }
                                                 ?>
                                             </select>
-
+                                           <small>Balance: <span id="acbal"></span></small>
                                         </div>
                                     </div>
 
@@ -221,6 +221,7 @@ include('header.php');
         function onbankname(bankid){
             var edit_data = Page.get_edit_vals(bankid,"compbank","id");
             $('#acctno').val(edit_data.acctno);
+            $('#acbal').html(edit_data.closing_bal);
         }
 
 

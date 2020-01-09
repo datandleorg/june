@@ -121,6 +121,7 @@
                                                 <option value="Cheque">Cheque</option>
                                                 <option value="Bank Transfer">Bank Transfer</option>
                                             </select>
+                                            <small id="cashbaldiv">Cash Balance: <span id="cashbal"></span></small>
                                         </div>
                                     </div>
 
@@ -215,7 +216,8 @@
 
         $('#v_credits_cheque_status_row').hide();
         $('#v_credits_cheque_status').prop('required',false);
-
+        $("#cashbaldiv").hide();
+        
         function togglePaymentDetailsOptions(paymentMode) {
 
             if (paymentMode == "Cheque") {
@@ -225,6 +227,11 @@
             } else {
                 $('#v_credits_cheque_status_row').hide();
                 $('#v_credits_cheque_status').prop('required',false);
+                if(paymentMode==="Cash"){
+                    var cedit_data = Page.get_edit_vals("COMP001","comprofile","orgid");
+                    $("#cashbaldiv").show();
+                    $("#cashbal").html(cedit_data.cash_on_hand);
+                }
             }
 
         }
@@ -293,12 +300,13 @@
                 },
                 dataType: 'json',
                 success:function(res){
-                    console.log(res);
+                    
                     if(!res.status){
                        alert(res.message);
+                    }else{
+                        location.href="listBankDeposit.php";
                     }
                     
-                    location.href="listBankDeposit.php";
                 }
 
 

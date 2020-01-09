@@ -563,14 +563,14 @@ function modifyCompValues($dbcon,$type,$amt,$id,$transType){
         return $res;
 }
 
-function createTransaction($dbcon,$compId,$transid,$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity){
+function createTransaction($dbcon,$compId,$transid,$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_type){
 
     $transData = array();
     $res = array();
     $transData['trans_entry_type']=$trans_dir;
     $transData['trans_entry_ref']="";
     $transData['trans_row_id']=$rowId;
-    $transData['trans_type']="credit";
+    $transData['trans_type']=$trans_type;
     $transData['trans_entity']=$entity;
     $transData['trans_amt']=$data['amount'];
     $transData['trans_mode']=$data['payment_mode'];
@@ -607,7 +607,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
            if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
 
                 // check balanace
-                if($compData['cash_on_hand']>=$data['amount']){
+                if($trans_dir==="normal" && $compData['cash_on_hand']>=$data['amount']){
                        $res = modifyCompValues($dbcon,"cash_on_hand",$data['amount'],$compId,$trans_dir==="normal"?"debit":"credit");
                     if($res['status']){
                        $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['bankname'],$trans_dir==="normal"?"credit":"debit");
@@ -631,7 +631,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
             $data['trans_bank'] = $data['bankname'];
             $res = updatebyand($dbcon,$compBank['closing_bal'],"bankdeposit","closing_bal","transid",$rowId);
             if($res['status']){
-                $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
+                $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"credit":"debit");
             }else{
                 $res['status'] = false;
             }
@@ -659,7 +659,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
 
             $res = updatebyand($dbcon,$compBank['closing_bal'],"bankwithdrawels","closing_bal","transid",$rowId);
             if($res['status']){
-                $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
+                $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"debit":"credit");
             }else{
                 $res['status'] = false;
             }
@@ -689,7 +689,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
             if($res['status']){
                 $compBank = $data['payment_mode']!=="Cash" ? findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0] : "";
                 $compData = getTotalClosingBal($dbcon,$compId);
-                $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
+                $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"debit":"credit");
             }else{
                 $res['status'] = false;
             }
@@ -714,7 +714,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         }
 
         if($res['status']){
-            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
+            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"credit":"debit");
         }else{
             $res['status'] = false;
         }
@@ -738,7 +738,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         }
         
         if($res['status']){
-            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
+            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"debit":"credit");
         }else{
             $res['status'] = false;
         }
@@ -757,7 +757,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         if($res['status']){
             $compBank = $data['payment_mode']!=="Cash" ? findbyand($dbcon,$data['customer_credits_bank'],'compbank','id')['values'][0] : "";
             $compData = getTotalClosingBal($dbcon,$compId);
-            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
+            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"credit":"debit");
         }else{
             $res['status'] = false;
         }
@@ -774,7 +774,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         }
 
         if($res['status']){
-            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
+            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"credit":"debit");
         }else{
             $res['status'] = false;
         }
@@ -799,7 +799,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         }
 
         if($res['status']){
-            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity);
+            $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"credit":"debit");
         }else{
             $res['status'] = false;
         }

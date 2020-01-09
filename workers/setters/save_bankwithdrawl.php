@@ -30,6 +30,7 @@ if (isset($_POST['array'])) {
 
                 $entryData = json_decode($array,true);
                 $entryData['payment_mode'] = "Cash";
+                $entryData['trans_bank'] = $entryData['bankname'];
                 $entryData['payment_status'] = "Completed" ;
                 $rowId = $transid;
                 $entity = $table;
@@ -37,7 +38,6 @@ if (isset($_POST['array'])) {
                     $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
         
                     if(!$return['status']){
-                        print_r($return);
                         throw new Exception();
                     }
                 }
@@ -65,6 +65,7 @@ if (isset($_POST['array'])) {
             $entryDataNew = json_decode($array,true);
             $entryData = json_decode($array,true);
             $entryData['payment_mode'] = $entryData['paymethod'];
+            $entryData['trans_bank'] = $entryData['bankname'];
             $entryData['payment_status'] = $entryData['paymethod']==="Cheque"?$entryData['pay_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
             $rowId = $transid;
             $entity = $table;
