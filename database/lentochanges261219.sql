@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Sep 30, 2019 at 03:37 AM
--- Server version: 5.7.19
--- PHP Version: 7.1.9
+-- Host: 127.0.0.1
+-- Generation Time: Dec 26, 2019 at 10:41 AM
+-- Server version: 10.1.36-MariaDB
+-- PHP Version: 5.6.38
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `lento`
+-- Database: `lentochanges`
 --
 
 -- --------------------------------------------------------
@@ -28,32 +28,54 @@ SET time_zone = "+00:00";
 -- Table structure for table `bankdeposit`
 --
 
-DROP TABLE IF EXISTS `bankdeposit`;
-CREATE TABLE IF NOT EXISTS `bankdeposit` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `bankdeposit` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `transid` varchar(20) NOT NULL,
   `depositdate` date NOT NULL,
   `compcode` varchar(100) NOT NULL,
   `bankname` varchar(100) NOT NULL,
   `acctno` varchar(100) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
+  `closing_bal` decimal(10,2) NOT NULL,
   `paymethod` varchar(50) NOT NULL,
+  `pay_status` varchar(10) NOT NULL,
   `paytype` varchar(50) NOT NULL,
   `referenceno` varchar(100) NOT NULL,
   `notes` varchar(255) NOT NULL,
   `createdby` varchar(100) NOT NULL,
-  `createdon` datetime DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `depost` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  `createdon` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `bankdeposit`
 --
 
-INSERT INTO `bankdeposit` (`id`, `transid`, `depositdate`, `compcode`, `bankname`, `acctno`, `amount`, `paymethod`, `paytype`, `referenceno`, `notes`, `createdby`, `createdon`) VALUES
-(001, '00001', '2018-07-26', 'LAF001', 'Indian Bank', '92324327428', '1000.00', 'Cash', 'Sales', '989898', 'hhh', 'Bhairava', '2018-07-27 18:46:57'),
-(002, '00002', '2018-07-27', 'LAF001', 'HDFC Bank', '1234567890', '2000.00', 'Cash', 'Sales', '212123', 'sadsa', 'Bhairava', '2018-07-27 06:40:17'),
-(003, '00003', '2018-08-01', 'LAF001', 'HDFC Bank', '1234567890', '1000.00', 'Cash', 'Sales', 'asdas', 'sadsa', 'Bhairava', '2018-08-01 09:04:48');
+INSERT INTO `bankdeposit` (`id`, `transid`, `depositdate`, `compcode`, `bankname`, `acctno`, `amount`, `closing_bal`, `paymethod`, `pay_status`, `paytype`, `referenceno`, `notes`, `createdby`, `createdon`) VALUES
+(001, 'TRANSC-01', '2019-12-26', 'COMP001', '001', '1234567890', '200.00', '10200.00', 'Cash', '', 'Sales', '', '', 'Lento', '2019-12-26 15:05:54');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bankwithdrawels`
+--
+
+CREATE TABLE `bankwithdrawels` (
+  `id` int(3) NOT NULL,
+  `transid` varchar(20) NOT NULL,
+  `withdraweldate` date NOT NULL,
+  `compcode` varchar(100) NOT NULL,
+  `bankcode` varchar(10) NOT NULL,
+  `bankname` varchar(100) NOT NULL,
+  `acctno` varchar(100) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `closing_bal` decimal(10,2) NOT NULL,
+  `paymethod` varchar(50) NOT NULL,
+  `paytype` varchar(50) NOT NULL,
+  `referenceno` varchar(100) NOT NULL,
+  `notes` varchar(255) NOT NULL,
+  `createdby` varchar(100) NOT NULL,
+  `createdon` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -61,9 +83,8 @@ INSERT INTO `bankdeposit` (`id`, `transid`, `depositdate`, `compcode`, `bankname
 -- Table structure for table `cashmemos`
 --
 
-DROP TABLE IF EXISTS `cashmemos`;
-CREATE TABLE IF NOT EXISTS `cashmemos` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `cashmemos` (
+  `id` int(10) NOT NULL,
   `cashmem_code` varchar(100) DEFAULT NULL,
   `cashmem_owner` varchar(255) DEFAULT NULL,
   `cashmem_customer` varchar(100) DEFAULT NULL,
@@ -78,8 +99,7 @@ CREATE TABLE IF NOT EXISTS `cashmemos` (
   `cashmem_value` varchar(100) DEFAULT NULL,
   `cashmem_tc` varchar(255) DEFAULT NULL,
   `cashmem_notes` varchar(255) DEFAULT NULL,
-  `cashmem_items` longtext,
-  PRIMARY KEY (`id`)
+  `cashmem_items` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -88,28 +108,30 @@ CREATE TABLE IF NOT EXISTS `cashmemos` (
 -- Table structure for table `compbank`
 --
 
-DROP TABLE IF EXISTS `compbank`;
-CREATE TABLE IF NOT EXISTS `compbank` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `compbank` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `orgid` varchar(25) NOT NULL,
+  `bankcode` varchar(15) NOT NULL,
   `name` varchar(40) DEFAULT NULL,
   `ctype` varchar(25) DEFAULT NULL,
   `location` varchar(30) DEFAULT NULL,
   `bankname` varchar(25) DEFAULT NULL,
   `acctno` varchar(20) NOT NULL,
+  `closing_bal` decimal(10,2) NOT NULL,
+  `asofdate` date NOT NULL,
   `acctname` varchar(40) NOT NULL,
   `acctype` varchar(20) NOT NULL,
   `branch` varchar(30) NOT NULL,
-  `ifsc` varchar(25) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+  `ifsc` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `compbank`
 --
 
-INSERT INTO `compbank` (`id`, `orgid`, `name`, `ctype`, `location`, `bankname`, `acctno`, `acctname`, `acctype`, `branch`, `ifsc`) VALUES
-(007, 'DAPL001', NULL, NULL, NULL, 'ANDHRA BANK', '0348111000032777', 'DHIRAJ AGRO PVT LTD', 'Current', 'Chennai Main Branch', 'ANDB0000348');
+INSERT INTO `compbank` (`id`, `orgid`, `bankcode`, `name`, `ctype`, `location`, `bankname`, `acctno`, `closing_bal`, `asofdate`, `acctname`, `acctype`, `branch`, `ifsc`) VALUES
+(001, 'COMP001', 'BNK-1', NULL, NULL, NULL, 'Indian Bank', '1234567890', '10200.00', '2019-12-26', 'Lento Foods Pvt Ltd', 'Current', 'Potchampalli', '123456'),
+(002, 'COMP001', 'BNK-2', NULL, NULL, NULL, 'State Bank of India', '212132435467', '10000.00', '2019-12-26', 'Lento Foods', 'Savings', 'potchampalli', '123123');
 
 -- --------------------------------------------------------
 
@@ -117,9 +139,8 @@ INSERT INTO `compbank` (`id`, `orgid`, `name`, `ctype`, `location`, `bankname`, 
 -- Table structure for table `comprofile`
 --
 
-DROP TABLE IF EXISTS `comprofile`;
-CREATE TABLE IF NOT EXISTS `comprofile` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `comprofile` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `orgid` varchar(15) NOT NULL,
   `prefix` varchar(15) DEFAULT 'DAPL',
   `title` varchar(50) NOT NULL,
@@ -141,6 +162,9 @@ CREATE TABLE IF NOT EXISTS `comprofile` (
   `gstregdate` date NOT NULL,
   `panno` varchar(50) NOT NULL,
   `openbalance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `closing_bal` decimal(10,2) NOT NULL,
+  `cash_on_hand` decimal(10,2) NOT NULL,
+  `petty_cash_bal` decimal(10,2) NOT NULL,
   `balasofdate` date NOT NULL,
   `primaryflag` int(20) NOT NULL DEFAULT '0',
   `image` varchar(155) DEFAULT NULL,
@@ -148,18 +172,15 @@ CREATE TABLE IF NOT EXISTS `comprofile` (
   `createdon` datetime DEFAULT CURRENT_TIMESTAMP,
   `createdby` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedby` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  `updatedby` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `comprofile`
 --
 
-INSERT INTO `comprofile` (`id`, `orgid`, `prefix`, `title`, `orgname`, `shortname`, `orgtype`, `blocation`, `industry`, `address`, `city`, `country`, `state`, `zip`, `workphone`, `mobile`, `email`, `web`, `gstin`, `gstregdate`, `panno`, `openbalance`, `balasofdate`, `primaryflag`, `image`, `tandc`, `createdon`, `createdby`, `updatedon`, `updatedby`) VALUES
-(001, '001', 'DAPL', 'MS.', 'Lento Foods India Pvt. Ltd.,', 'Lento(Registered)', '1', 'Select Business Location', '1', 'Pochampalli,Krishnagiri-Dist', 'Pochampalli', 'IN', 'TN', '635104', '', '9750996500', 'vinoth@lento.com', 'www.lento.com', '1234567890', '2019-09-12', '123456', '0.00', '2019-09-14', 1, 'upload/lento-logo.png', NULL, '2019-09-14 10:54:33', '2019-09-14 10:54:33', '2019-09-14 10:54:33', '2019-09-14 10:54:33'),
-(002, '002', 'DAPL', '', 'Lento Foods', 'Lento(Partnership)', '3', '', '1', 'adadad', 'asdsat', 'IN', 'TN', '654345', '', '87878778', 'ss@g.com', '', '8989889', '2019-12-31', '88', '0.00', '2019-09-14', 1, 'upload/download.jpg', NULL, '2019-09-14 10:56:35', '2019-09-14 10:56:35', '2019-09-14 10:56:35', '2019-09-14 10:56:35'),
-(003, '003', 'DAPL', '', 'Maavin', 'Maavin', '3', '', '1', '125-old hall street', 'London', 'IN', 'TN', '654545', '', '987888', 'maavin@gmail.com', '', '1111', '2019-12-31', '', '0.00', '2019-09-14', 1, 'upload/download.jpg', NULL, '2019-09-14 12:20:56', '2019-09-14 12:20:56', '2019-09-14 12:20:56', '2019-09-14 12:20:56');
+INSERT INTO `comprofile` (`id`, `orgid`, `prefix`, `title`, `orgname`, `shortname`, `orgtype`, `blocation`, `industry`, `address`, `city`, `country`, `state`, `zip`, `workphone`, `mobile`, `email`, `web`, `gstin`, `gstregdate`, `panno`, `openbalance`, `closing_bal`, `cash_on_hand`, `petty_cash_bal`, `balasofdate`, `primaryflag`, `image`, `tandc`, `createdon`, `createdby`, `updatedon`, `updatedby`) VALUES
+(001, 'COMP001', 'DAPL', 'MS.', 'Lento Foods India Pvt Ltd', 'Lento', '1', 'Select Business Location', '1', 'POTCHAMPALLI', 'potchampalli', 'IN', 'TN', '635108', '', '9677573737', 'lentofoods@gmail.com', '', '34433433434', '2019-01-31', '56656556', '4000.00', '1176.00', '2500.00', '4800.00', '2019-10-13', 1, 'upload/logo.png', NULL, '2019-10-13 07:32:44', '2019-10-13 07:32:44', '2019-10-13 07:32:44', '2019-10-13 07:32:44');
 
 -- --------------------------------------------------------
 
@@ -167,8 +188,7 @@ INSERT INTO `comprofile` (`id`, `orgid`, `prefix`, `title`, `orgname`, `shortnam
 -- Table structure for table `country`
 --
 
-DROP TABLE IF EXISTS `country`;
-CREATE TABLE IF NOT EXISTS `country` (
+CREATE TABLE `country` (
   `id` int(10) NOT NULL DEFAULT '0',
   `code` varchar(50) NOT NULL,
   `description` varchar(100) NOT NULL
@@ -4724,8 +4744,7 @@ INSERT INTO `country` (`id`, `code`, `description`) VALUES
 -- Table structure for table `country_lookups`
 --
 
-DROP TABLE IF EXISTS `country_lookups`;
-CREATE TABLE IF NOT EXISTS `country_lookups` (
+CREATE TABLE `country_lookups` (
   `id` int(10) NOT NULL DEFAULT '0',
   `code` varchar(50) NOT NULL,
   `description` varchar(100) NOT NULL
@@ -9281,9 +9300,8 @@ INSERT INTO `country_lookups` (`id`, `code`, `description`) VALUES
 -- Table structure for table `creditnotes`
 --
 
-DROP TABLE IF EXISTS `creditnotes`;
-CREATE TABLE IF NOT EXISTS `creditnotes` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `creditnotes` (
+  `id` int(10) NOT NULL,
   `creditnote_id` varchar(100) DEFAULT NULL,
   `creditnote_owner` varchar(255) DEFAULT NULL,
   `creditnote_customer` varchar(20) DEFAULT NULL,
@@ -9311,8 +9329,33 @@ CREATE TABLE IF NOT EXISTS `creditnotes` (
   `creditnote_tc` varchar(255) DEFAULT NULL,
   `creditnote_notes` varchar(255) DEFAULT NULL,
   `creditnote_email_notification` varchar(10) DEFAULT NULL,
-  `creditnote_items` longtext,
-  PRIMARY KEY (`id`)
+  `creditnote_items` longtext
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customercredits`
+--
+
+CREATE TABLE `customercredits` (
+  `id` int(10) NOT NULL,
+  `customer_credits_id` varchar(20) DEFAULT NULL,
+  `customer_credits_suptype` varchar(100) DEFAULT NULL,
+  `customer_credits_custid` varchar(10) DEFAULT NULL,
+  `customer_credits_compId` varchar(25) NOT NULL,
+  `customer_credits_paymentmode` varchar(255) DEFAULT NULL,
+  `customer_credits_bank` varchar(10) NOT NULL,
+  `customer_credits_cheque_status` varchar(15) NOT NULL,
+  `customer_credits_ref_no` varchar(100) DEFAULT NULL,
+  `customer_credits_paymentdate` varchar(10) DEFAULT NULL,
+  `customer_credits_amount` decimal(10,2) DEFAULT NULL,
+  `customer_credits_availcredits` decimal(10,2) DEFAULT NULL,
+  `customer_credits_handler` varchar(100) DEFAULT NULL,
+  `customer_credits_notes` varchar(255) DEFAULT NULL,
+  `customer_credits_image` varchar(155) DEFAULT NULL,
+  `customer_credits_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `customer_credits_email_notification` varchar(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -9321,9 +9364,8 @@ CREATE TABLE IF NOT EXISTS `creditnotes` (
 -- Table structure for table `customerprofile`
 --
 
-DROP TABLE IF EXISTS `customerprofile`;
-CREATE TABLE IF NOT EXISTS `customerprofile` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `customerprofile` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `custid` varchar(50) NOT NULL,
   `cust_opening_bal` varchar(100) DEFAULT NULL,
   `prefix` varchar(15) DEFAULT 'DAPL',
@@ -9355,65 +9397,19 @@ CREATE TABLE IF NOT EXISTS `customerprofile` (
   `updatedby` varchar(100) DEFAULT NULL,
   `status` varchar(10) NOT NULL DEFAULT '1',
   `handler` varchar(100) DEFAULT NULL,
-  `notes` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+  `notes` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `customerprofile`
 --
 
 INSERT INTO `customerprofile` (`id`, `custid`, `cust_opening_bal`, `prefix`, `postfix`, `title`, `custname`, `portal`, `custype`, `blocation`, `industry`, `address`, `city`, `country`, `state`, `zip`, `workphone`, `mobile`, `email`, `web`, `gstin`, `gstregdate`, `primaryflag`, `openbalance`, `obasofdate`, `image`, `createdon`, `createdby`, `updatedon`, `updatedby`, `status`, `handler`, `notes`) VALUES
-(001, '00001', '21700', 'DAPL', '/', 'M/S.', 'Latha Rani Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '9-75, Yerram Reddy Palem', 'Thukivakam, Renigunta,Chittoor(Dist)', 'IN', 'AP', '517506', '', '9032365313', 'palamakulamohan@gmail.com', '', '37BACPP8415R1ZY', NULL, 0, '0.00', '2019-02-05 08:33:10', NULL, '2019-02-05 08:33:10', NULL, '2019-02-05 08:33:10', NULL, '1', NULL, NULL),
-(002, '00002', '75680', 'DAPL', '/', 'M/S.', 'T.J.S Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '15/228', 'A.M.Puttur By Pass, Srikalahasthi', 'IN', 'AP', '517644', '', '9866798935', '', '', '37BACPT3550K1ZE', NULL, 0, '0.00', '2019-02-05 08:34:58', NULL, '2019-02-05 08:34:58', NULL, '2019-02-05 08:34:58', NULL, '1', NULL, NULL),
-(003, '00003', NULL, 'DAPL', '/', 'M/S.', 'Bhargavi Stores', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '8-13, Near IOB Bank', 'Gajulamandyam, Renigunta, Chittoor Dist ', 'IN', 'AP', '517520', '', '9866424852', 'ramanapallisetti@gmail.com', '', '37CLNPP5473Q1ZX', NULL, 0, '0.00', '2019-02-05 08:38:12', NULL, '2019-02-05 08:38:12', NULL, '2019-02-05 08:38:12', NULL, '1', NULL, NULL),
-(004, '00004', NULL, 'DAPL', '/', 'M/S.', 'Sai General Stores', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '5/85, Ammavarisala Bazar', 'Yerragondapalem, Prakasam Dist', 'IN', 'AP', '523327', '', '9396850597', 'alapati.kishore2@gmail.com', '', '37CFSPA9357R1ZB', NULL, 0, '0.00', '2019-02-05 08:41:10', NULL, '2019-02-05 08:41:10', NULL, '2019-02-05 08:41:10', NULL, '1', NULL, NULL),
-(005, '00005', NULL, 'DAPL', '/', 'M/S.', 'SLB Traders', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '5-18, G.V.R Road', 'Singarayakonda, Praksam Dist', 'IN', 'AP', '523101', '', '9849858403', '', '', '37AJPPT9436R1ZS', NULL, 0, '0.00', '2019-02-05 08:43:00', NULL, '2019-02-05 08:43:00', NULL, '2019-02-05 08:43:00', NULL, '1', NULL, NULL),
-(006, '00006', '24440', 'DAPL', '/', 'M/S.', 'Sri Lakshmi Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '6-3-10, Lathuvali Gunta', 'Naidupeta', 'IN', 'AP', '524126', '', '9959801473', 'chanathkumar1983@gmail.com', '', '37CPKPM5687Q2ZM', NULL, 0, '0.00', '2019-02-05 08:44:59', NULL, '2019-02-05 08:44:59', NULL, '2019-02-05 08:44:59', NULL, '1', NULL, NULL),
-(007, '00007', '61500', 'DAPL', '/', 'M/S.', 'Sri Gayathry Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Gudipallipadu', 'Nellore Rural, Nellore ', 'IN', 'AP', '524314', '', '8555843777', 'b.nandu789@gmail.com', '', '37BFKPS3956R1Z9', NULL, 0, '0.00', '2019-02-05 08:46:43', NULL, '2019-02-05 08:46:43', NULL, '2019-02-05 08:46:43', NULL, '1', NULL, NULL),
-(008, '00008', NULL, 'DAPL', '/', 'M/S.', 'Annapoorna Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Vidya Nagar', ' Kota', 'IN', 'AP', '524411', '', '9493520753', '', '', '37BNBPD6133L2Z0', NULL, 0, '0.00', '2019-02-12 04:00:20', NULL, '2019-02-12 04:00:20', NULL, '2019-02-12 04:00:20', NULL, '1', NULL, NULL),
-(009, '00009', NULL, 'DAPL', '/', 'MS.', 'Karthikeya Enterprisers', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'D No.11/95,', 'Pulavanigunta,Renigunta Road,Tirupathi', 'IN', 'AP', '517501', '', '9704914325', '', '', '37BINPG0673F1ZC', NULL, 0, '0.00', '2019-02-21 00:00:00', NULL, '2019-02-21 03:10:58', NULL, '2019-02-21 03:10:58', NULL, '1', 'T Subbarayulu', ''),
-(010, '000010', '62000', 'DAPL', '/', 'M/S.', 'Srivari', NULL, 'Distributor/Supplier', 'Karnataka', NULL, 'MANTRI SQUARE, FC 09,3 RD  FLOOR MALLESHWARAM,BANGALORE', 'Delievry at MGB Felictiy Mall, Dargamitta,SPSR Nellore - 524003', 'IN', 'KA', '560003', '', '7680004645', '', '', '29ACDFS9005L1ZP', NULL, 0, '0.00', '2019-03-31 21:28:48', NULL, '2019-03-31 21:28:48', NULL, '2019-03-31 21:28:48', NULL, '1', NULL, NULL),
-(011, '000011', '72000', 'DAPL', '/', 'M/S.', 'S. Narayanan', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Plotform No.1, ', 'Railway station, Gudur ', 'IN', 'AP', '524101', '', '8985583351', '', '', '37FURPS9788B1ZI', NULL, 0, '0.00', '2019-03-31 23:35:39', NULL, '2019-03-31 23:35:39', NULL, '2019-03-31 23:35:39', NULL, '1', NULL, NULL),
-(012, '000012', NULL, 'DAPL', '/', 'M/S.', 'KPR Residency', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '3-545,6,7', '.Bazar Street,Srikalahasti.', 'IN', 'AP', '517644', '', '0000000000', '', '', '37AANFK8102A1ZL', NULL, 0, '0.00', '2019-04-01 21:10:28', NULL, '2019-04-01 21:10:28', NULL, '2019-04-01 21:10:28', NULL, '1', NULL, NULL),
-(013, '000013', NULL, 'DAPL', '/', 'M/S.', 'Jubilant Foodworks Limited', NULL, 'Retailer', 'Andhra Pradesh', NULL, 'Sy.No.309,310,311,312, Bommasandra Industrial Area. ', 'Plot No. 17, Bangalore - 560099', 'IN', 'KA', '560099', '', '9743180961', '', '', '29AABCD1821C1Z7', NULL, 0, '0.00', '2019-04-01 21:55:58', NULL, '2019-04-01 21:55:58', NULL, '2019-04-01 21:55:58', NULL, '1', NULL, NULL),
-(014, '000014', NULL, 'DAPL', '/', 'M/S.', 'Jayashree Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Sarojini Devi Layout,', 'D.No-5-5-353 Opp.Sneha Hospital,Tirupathi', 'IN', 'AP', '517101', '', '9885551714', '', '', '37AJLPB4985H1ZV', NULL, 0, '0.00', '2019-04-01 22:01:50', NULL, '2019-04-01 22:01:50', NULL, '2019-04-01 22:01:50', NULL, '1', NULL, NULL),
-(015, '000015', '86404', 'DAPL', '/', 'M/S.', 'Jubilant Foodworks Limited.', NULL, 'Retailer', 'Karnataka', NULL, 'Cheemasandra Village, Bidarahalli Hobli, ', 'Sy No.86/1, Bengaluru - 560049', 'IN', 'KA', '560049', '', '9743180961', '', '', '29AABCD1821C1Z7', NULL, 0, '0.00', '2019-04-01 22:47:27', NULL, '2019-04-01 22:47:27', NULL, '2019-04-01 22:47:27', NULL, '1', NULL, NULL),
-(016, '000016', '57750', 'DAPL', '/', 'M/S.', 'B Ravi Kumar', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Platform No.01', 'Modular Catering Stall, Yerraguntla', 'IN', 'AP', '516309', '', '8074474549', '', '', '37BHKPR0831G1Z9', NULL, 0, '0.00', '2019-04-02 00:45:04', NULL, '2019-04-02 00:45:04', NULL, '2019-04-02 00:45:04', NULL, '1', NULL, NULL),
-(017, '000017', NULL, 'DAPL', '/', 'M/S.', 'TATA CONSULTANCY SERVICES', NULL, 'Retailer', 'Delhi', NULL, '1/1075/1/2 GF4, ', 'Mehrauli, New Delhi - 110030', 'IN', 'DL', '110030', '', '8142421212', '', '', '', NULL, 0, '0.00', '2019-04-02 02:41:39', NULL, '2019-04-02 02:41:39', NULL, '2019-04-02 02:41:39', NULL, '1', NULL, NULL),
-(018, '000018', NULL, 'DAPL', '/', 'Mr.', 'Rathnaiah', NULL, 'Retailer', 'Andhra Pradesh', NULL, '18,8,40B,', 'Tirumala Bypass Road,Leela Mahal Circle ', 'IN', 'AP', ' 517501', '', '0000000000', '', '', '37ACNPR3185L1ZT', NULL, 0, '0.00', '2019-04-02 04:50:07', NULL, '2019-04-02 04:50:07', NULL, '2019-04-02 04:50:07', NULL, '1', NULL, NULL),
-(019, '000019', NULL, 'DAPL', '/', 'M/S.', 'R Ramakrishna', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'PF Stall,  ', 'Railway Station, Madanapalle', 'IN', 'AP', '517325', '', '8978108022', '', '', '37BNCPR0852D1Z5', NULL, 0, '0.00', '2019-04-02 06:23:09', NULL, '2019-04-02 06:23:09', NULL, '2019-04-02 06:23:09', NULL, '1', NULL, NULL),
-(020, '000020', NULL, 'DAPL', '/', 'M/S.', 'RR Distributors', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'PV Chowdary Compound,Near Kakathiya Apartment,', 'Court Road,Ananthapur', 'IN', 'AP', '515001', '', '9966003922', '', '', '37ASOPM6570D1ZE', NULL, 0, '0.00', '2019-04-02 23:48:09', NULL, '2019-04-02 23:48:09', NULL, '2019-04-02 23:48:09', NULL, '1', NULL, NULL),
-(021, '000021', NULL, 'DAPL', '/', 'Mr.', 'Mabbu Srikanth', NULL, 'Retailer', 'Andhra Pradesh', NULL, 'AIRPORT TERMINAL BUILDING 0-1,', 'TIRUPATHI', 'IN', 'AP', '517501', '', '0000000000', '', '', '37AGMPM5247R1ZG', NULL, 0, '0.00', '2019-04-03 04:18:18', NULL, '2019-04-03 04:18:18', NULL, '2019-04-03 04:18:18', NULL, '1', NULL, NULL),
-(022, '000022', NULL, 'DAPL', '/', 'M/S.', 'ARENCO CATERING', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'PLOT FORM NO - 1,RAILWAY STATION', 'ONGOLE,PRAKASAM.', 'IN', 'AP', '523001', '', '9160505057', '', '', '37AAIFA4388F1ZA', NULL, 0, '0.00', '2019-04-03 17:55:30', NULL, '2019-04-03 17:55:30', NULL, '2019-04-03 17:55:30', NULL, '1', NULL, NULL),
-(023, '000023', NULL, 'DAPL', '/', 'M/S.', 'Bhushan Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '20-3-5/3a, 2nd Floor, 2nd Cross,', 'Siva Jyothi Nagar, K.T. Road,Tirupathi', 'IN', 'AP', '517501', '', '9490511155', '', '', '37AGZPN8549A1ZQ', NULL, 0, '0.00', '2019-04-04 01:36:27', NULL, '2019-04-04 01:36:27', NULL, '2019-04-04 01:36:27', NULL, '1', NULL, NULL),
-(024, '000024', NULL, 'DAPL', '/', 'Mr.', 'PK Shefi', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Platform No.1', 'Railway Station,Nellore', 'IN', 'AP', '524101', '', '0000000000', '', '', '37AAOPS9703Q1ZL', NULL, 0, '0.00', '2019-04-14 00:00:00', NULL, '2019-04-04 01:49:46', NULL, '2019-04-04 01:49:46', NULL, '1', 'Administrator', ''),
-(025, '000025', NULL, 'DAPL', '/', 'M/S.', 'Sri Srinivasa Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'D.No.40/582, ', 'Dharmapeta, Kurnool', 'IN', 'AP', '518004', '', '9866918609', '', '', '37ATUPD0973E1ZI', NULL, 0, '0.00', '2019-04-04 06:03:03', NULL, '2019-04-04 06:03:03', NULL, '2019-04-04 06:03:03', NULL, '1', NULL, NULL),
-(026, '000026', NULL, 'DAPL', '/', 'MS.', 'M/S.Pranavi Krishna Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Madanapalli Road,', ' Gangavaram,Palamaneru -', 'IN', 'AP', ' 517408', '', '9701745579', '', '', '37AENPU2710E1ZG', NULL, 0, '0.00', '2019-04-05 00:00:00', NULL, '2019-04-04 18:16:45', NULL, '2019-04-04 18:16:45', NULL, '1', 'T Subbarayulu', ''),
-(027, '000027', NULL, 'DAPL', '/', 'M/S.', 'M/S.Sri Harsha Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'No.6-1459,', 'D.M.M Gate Road,Gunthakal', 'IN', 'AP', '515801', '', '9963466522', '', '', '37AEWPN7157F1ZT', NULL, 0, '0.00', '2019-04-04 19:40:59', NULL, '2019-04-04 19:40:59', NULL, '2019-04-04 19:40:59', NULL, '1', NULL, NULL),
-(028, '000028', '900', 'DAPL', '/', 'M/S.', 'TATA CONSULTANCY SERVICES (Tirupathi)', NULL, 'Retailer', 'Delhi', NULL, '1/1075/1/2 GF4, ', 'Mehrauli, New Delhi - 110030', 'IN', 'DL', '110030', '', '8142421212', '', '', 'NA', NULL, 0, '0.00', '2019-04-04 22:13:32', NULL, '2019-04-04 22:13:32', NULL, '2019-04-04 22:13:32', NULL, '1', NULL, NULL),
-(029, '000029', '900', 'DAPL', '/', 'M/S.', 'TATA CONSULTANCY SERVICES (Kurnool)', NULL, 'Retailer', 'Delhi', NULL, '1/1075/1/2 GF4, ', 'Mehrauli, New Delhi - 110030', 'IN', 'DL', '110030', '', '9700728144', '', '', 'NA', NULL, 0, '0.00', '2019-04-04 22:21:14', NULL, '2019-04-04 22:21:14', NULL, '2019-04-04 22:21:14', NULL, '1', NULL, NULL),
-(030, '000030', NULL, 'DAPL', '/', 'M/S.', 'Al-Amin Traders', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Gooty Kota Road,', 'Gooty', 'IN', 'AP', '515401', '', '9848486739', '', '', '37ATYPM0320N1Z5', NULL, 0, '0.00', '2019-04-05 04:52:07', NULL, '2019-04-05 04:52:07', NULL, '2019-04-05 04:52:07', NULL, '1', NULL, NULL),
-(031, '000031', NULL, 'DAPL', '/', 'M/S.', 'M/S.ARENCO CATERING', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'PLOT FORM NO - 1,', 'RAILWAY STATION,ONGOLE,PRAKASAM.', 'IN', 'AP', '523001', '', '0000000000', '', '', '37AAIFA4388F1ZA', NULL, 0, '0.00', '2019-04-05 06:00:23', NULL, '2019-04-05 06:00:23', NULL, '2019-04-05 06:00:23', NULL, '1', NULL, NULL),
-(032, '000032', NULL, 'DAPL', '/', 'M/S.', 'Sai Prabhakar Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Door No: 3-315,', 'Kummarapet,Puttaparthi ', 'IN', 'AP', '515134', '', '9440556900', '', '', '37BQHPP0039G1ZV', NULL, 0, '0.00', '2019-04-05 23:18:16', NULL, '2019-04-05 23:18:16', NULL, '2019-04-05 23:18:16', NULL, '1', NULL, NULL),
-(033, '000033', NULL, 'DAPL', '/', 'M/S.', 'Sri Lakshmi Narasimha Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'GONEPENT ROAD No.1/1645-1,', 'MARUTHI NAGAR PENUKONDA', 'IN', 'AP', '515110', '', '9989091200', '', '', '37ARXPP3994J1ZL', NULL, 0, '0.00', '2019-04-07 07:32:49', NULL, '2019-04-07 07:32:49', NULL, '2019-04-07 07:32:49', NULL, '1', NULL, NULL),
-(034, '000034', NULL, 'DAPL', '/', 'MS.', 'Padmasree Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '1/236-25,', 'Vajralapeta,Penukonda,Ananthapur', 'IN', 'AP', '515110', '', '9494042419', '', '', '37AAVFP6806A1Z1', NULL, 0, '0.00', '2019-04-09 00:00:00', NULL, '2019-04-07 07:34:58', NULL, '2019-04-07 07:34:58', NULL, '1', 'T Subbarayulu', ''),
-(035, '000035', NULL, 'DAPL', '/', 'M/S.', 'CPC Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Near 1 Town Police Station', 'Hindupur', 'IN', 'AP', '515201', '', '9849849810', '', '', '37EKRPS7245J1Z6', NULL, 0, '0.00', '2019-04-08 07:01:29', NULL, '2019-04-08 07:01:29', NULL, '2019-04-08 07:01:29', NULL, '1', NULL, NULL),
-(036, '000036', NULL, 'DAPL', '/', 'M/S.', 'Shaik Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, ' 1/1106, NH 7 ROAD, ', 'PENUKONDA - 515110', 'IN', 'AP', '515110', '', '0000000000', '', '', '37COSPS3795A1ZB', NULL, 0, '0.00', '2019-04-08 18:55:29', NULL, '2019-04-08 18:55:29', NULL, '2019-04-08 18:55:29', NULL, '1', NULL, NULL),
-(037, '000037', NULL, 'DAPL', '/', 'M/S.', 'Danilei India Ltd', NULL, 'Retailer', 'Andhra Pradesh', NULL, 'No.7000, Central Express Way,', 'Sricity, Sathyavedu Mandal,Chittoor - 517588', 'IN', 'AP', '517588', '', '8297234533', '', '', ' 37AABCG5359E1ZM', NULL, 0, '0.00', '2019-04-08 19:03:09', NULL, '2019-04-08 19:03:09', NULL, '2019-04-08 19:03:09', NULL, '1', NULL, NULL),
-(038, '000038', NULL, 'DAPL', '/', 'M/S.', 'Sree Radha Krishna Associates', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Platform No.01, ', 'Railway station, Ongole', 'IN', 'AP', ' 523001', '', '9160505057', '', '', '37ABPFS1973A1Z0', NULL, 0, '0.00', '2019-04-09 05:59:09', NULL, '2019-04-09 05:59:09', NULL, '2019-04-09 05:59:09', NULL, '1', NULL, NULL),
-(039, '000039', NULL, 'DAPL', '/', 'Mr.', 'Majji Prakasa Rao', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'PLOT FORM NO - 1,', 'RAILWAY STATION,ONGOLE,PRAKASAM.', 'IN', 'AP', '523001', '', '9160505057', '', '', '37AHZPM7623H1ZM', NULL, 0, '0.00', '2019-04-09 06:01:20', NULL, '2019-04-09 06:01:20', NULL, '2019-04-09 06:01:20', NULL, '1', NULL, NULL),
-(040, '000040', NULL, 'DAPL', '/', 'Mr.', 'Chitti Babu', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'PLOT FORM NO - 1,', 'RAILWAY STATION,ONGOLE,PRAKASAM.', 'IN', 'AP', '523001', '', '9160505057', '', '', '37BICPP3020J1ZE', NULL, 0, '0.00', '2019-04-09 06:02:35', NULL, '2019-04-09 06:02:35', NULL, '2019-04-09 06:02:35', NULL, '1', NULL, NULL),
-(041, '000041', NULL, 'DAPL', '/', 'M/S.', 'Sri Srinivasa Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '11/34/1,Nehru Bazar', 'Pileru', 'IN', 'AP', '517214', '', '8008850261', '', '', '37CXFPP7903P1ZO', NULL, 0, '0.00', '2019-04-09 21:47:13', NULL, '2019-04-09 21:47:13', NULL, '2019-04-09 21:47:13', NULL, '1', NULL, NULL),
-(042, '000042', NULL, 'DAPL', '/', 'M/S.', 'M/s.Anjali Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'D.No:15-291-1,', 'Darga Vesdhi,Kutagulla,Kadiri', 'IN', 'AP', ' 515591', '', '9848985698', '', '', '37CGEPM8773Q1ZB', NULL, 0, '0.00', '2019-04-10 01:30:39', NULL, '2019-04-10 01:30:39', NULL, '2019-04-10 01:30:39', NULL, '1', NULL, NULL),
-(043, '000043', NULL, 'DAPL', '/', 'Mr.', 'P Bharath', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Platform No.2 & 3,', ' Railway Station Dhone', 'IN', 'AP', '518222', '', '8309994279', '', '', '37ASZPP7781J1ZG', NULL, 0, '0.00', '2019-04-11 07:41:56', NULL, '2019-04-11 07:41:56', NULL, '2019-04-11 07:41:56', NULL, '1', NULL, NULL),
-(044, '000044', NULL, 'DAPL', '/', 'M/S.', 'Bharath Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, '2-55,Akkagari Peta,', 'Pichatoor,Chittoor Dt.', 'IN', 'AP', '517587', '', '8885020345', '', '', '37ADJPY3442L2ZV', NULL, 0, '0.00', '2019-04-11 08:35:59', NULL, '2019-04-11 08:35:59', NULL, '2019-04-11 08:35:59', NULL, '1', NULL, NULL),
-(045, '000045', NULL, 'DAPL', '/', 'M/S.', 'Keerthi Enterprises', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'D No.28-1357/A,New Balaji Colony,', 'Chittoor ', 'IN', 'AP', ' 517001', '', '9440704005', '', '', '37CVTPS3400A1ZM', NULL, 0, '0.00', '2019-04-11 08:58:45', NULL, '2019-04-11 08:58:45', NULL, '2019-04-11 08:58:45', NULL, '1', NULL, NULL),
-(046, '000046', NULL, 'DAPL', '/', 'M/S.', 'Naga Dheeraj Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'H.No.30/49-2,', ' Polytechnic College Road,Dr. Girinath Centrer, Nandyal', 'IN', 'AP', '518501', '', '9502091487', '', '', '37DJPPS3355M1ZA', NULL, 0, '0.00', '2019-04-12 03:19:38', NULL, '2019-04-12 03:19:38', NULL, '2019-04-12 03:19:38', NULL, '1', NULL, NULL),
-(047, '000047', '76050', 'DAPL', '/', 'M/S.', 'Al-Amal Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'No.11/67, Near Darga, ', 'Kagithala Penta, Kadapa ', 'IN', 'AP', '516001', '', '9440133635', '', '', ' 37ANFPA2881F1Z7', NULL, 0, '0.00', '2019-04-13 06:08:16', NULL, '2019-04-13 06:08:16', NULL, '2019-04-13 06:08:16', NULL, '1', NULL, NULL),
-(048, '000048', NULL, 'DAPL', '/', 'M/S.', 'GREENPLY INDUSTRIES LIMITED', NULL, 'Retailer', 'Andhra Pradesh', NULL, ' SURVEY NO.97/1 AND SURVEY NO.98,99,', 'ROWTHUSURAMALA VILLAGE,THOTTAMBEDU', 'IN', 'AP', '517644', '', '9100953277', '', '', '37AAACG7284R1ZS', NULL, 0, '0.00', '2019-04-14 22:20:54', NULL, '2019-04-14 22:20:54', NULL, '2019-04-14 22:20:54', NULL, '1', NULL, NULL),
-(049, '000049', '75600', 'DAPL', '/', 'M/S.', 'TVR Agencies', NULL, 'Distributor/Supplier', 'Andhra Pradesh', NULL, 'Nagaladinne Road,', 'Mantralayam,Kurnool Dist-', 'IN', 'AP', '518345', '', '9989265920', '', '', '37ACRPY6972G1ZK', NULL, 0, '0.00', '2019-04-15 06:08:35', NULL, '2019-04-15 06:08:35', NULL, '2019-04-15 06:08:35', NULL, '1', NULL, NULL),
-(050, '000050', '3960', 'DAPL', '/', 'M/S.', 'V Mega Pictures LLP', NULL, 'Retailer', 'Andhra Pradesh', NULL, 'V Mega Talkies, Venugopalapuram', 'Ananthapur', 'IN', 'AP', '510051', '', '9704056264', '', '', '37AAQFV3949M1Z5', NULL, 0, '0.00', '2019-04-16 07:19:03', NULL, '2019-04-16 07:19:03', NULL, '2019-04-16 07:19:03', NULL, '1', NULL, NULL);
+(001, 'CUST001', '946', 'DAPL', '/', 'M/S.', 'MAAVIN FOODS', NULL, 'Partner', 'Tamil Nadu', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'IN', 'TN', '600080', '', '9677573737', 'maavin@gmail.com', '', '8898998898998', NULL, 0, '0.00', '2019-10-13 07:35:32', NULL, '2019-10-13 07:35:32', NULL, '2019-10-13 07:35:32', NULL, '1', NULL, NULL),
+(002, 'CUST002', NULL, 'DAPL', '/', 'Mr.', 'Saravanakumar', NULL, 'Retailer', 'Tamil Nadu', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'IN', 'TN', '600080', '9791129332', '9791129332', 'asaravanan248@gmail.com', '', '57346356346224234', NULL, 0, '0.00', '2019-10-13 07:37:13', NULL, '2019-10-13 07:37:13', NULL, '2019-10-13 07:37:13', NULL, '1', NULL, NULL),
+(003, 'CUST003', '-82', 'DAPL', '/', 'M/S.', 'JUICY JUICY', NULL, 'Partner', 'Tamil Nadu', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'IN', 'TN', '600080', '9791129332', '9791129332', 'asaravanan248@gmail.com', 'jknnll', '876868768', NULL, 0, '0.00', '2019-10-13 07:38:17', NULL, '2019-10-13 07:38:17', NULL, '2019-10-13 07:38:17', NULL, '1', NULL, NULL),
+(004, 'CUST004', NULL, 'DAPL', '/', 'Mr.', 'scrap', NULL, 'Wholesaler', 'Tamil Nadu', NULL, 'adAD', 'daad', 'IN', 'MN', '600080', '', '977777', '', '', '', NULL, 0, '0.00', '2019-10-19 08:20:10', NULL, '2019-10-19 08:20:10', NULL, '2019-10-19 08:20:10', NULL, '1', NULL, NULL),
+(006, 'CUST006', NULL, 'DAPL', '/', 'Mr.', 'Scrap Comp', NULL, 'Scrap', '', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AL', 'AR', '600080', '9791129332', '8608902347', 'asaravanan248@gmail.com', '', '', NULL, 0, '0.00', '2019-10-21 10:51:37', NULL, '2019-10-21 10:51:37', NULL, '2019-10-21 10:51:37', NULL, '1', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -9421,9 +9417,8 @@ INSERT INTO `customerprofile` (`id`, `custid`, `cust_opening_bal`, `prefix`, `po
 -- Table structure for table `customer_payments`
 --
 
-DROP TABLE IF EXISTS `customer_payments`;
-CREATE TABLE IF NOT EXISTS `customer_payments` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `customer_payments` (
+  `id` int(10) UNSIGNED NOT NULL,
   `cust_payment_id` varchar(30) NOT NULL,
   `cust_payment_customer` varchar(45) DEFAULT NULL,
   `cust_payment_invoice_no` varchar(45) DEFAULT NULL,
@@ -9431,15 +9426,34 @@ CREATE TABLE IF NOT EXISTS `customer_payments` (
   `cust_payment_credits_used` varchar(100) DEFAULT NULL,
   `cust_payment_date` varchar(45) DEFAULT NULL,
   `cust_payment_mode` varchar(45) DEFAULT NULL,
+  `cust_payment_cheque_status` varchar(15) NOT NULL,
+  `cust_payment_bank` varchar(10) NOT NULL,
   `cust_payment_ref_no` varchar(45) DEFAULT NULL,
   `cust_payment_so_code` varchar(45) DEFAULT NULL,
   `cust_payment_inv_id` varchar(45) DEFAULT NULL,
   `cust_payment_user` varchar(100) DEFAULT NULL,
   `cust_payment_notes` varchar(255) DEFAULT NULL,
   `cust_payment_file` varchar(255) DEFAULT NULL,
-  `cust_payment_notify` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `cust_payment_notify` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `customer_payments`
+--
+
+INSERT INTO `customer_payments` (`id`, `cust_payment_id`, `cust_payment_customer`, `cust_payment_invoice_no`, `cust_payment_amount`, `cust_payment_credits_used`, `cust_payment_date`, `cust_payment_mode`, `cust_payment_cheque_status`, `cust_payment_bank`, `cust_payment_ref_no`, `cust_payment_so_code`, `cust_payment_inv_id`, `cust_payment_user`, `cust_payment_notes`, `cust_payment_file`, `cust_payment_notify`) VALUES
+(1, 'CUSTPAY-00001', 'CUST001', 'INV-00001-10/2019', '260', NULL, '2019-10-19', 'Cheque', '', '', '', 'so98799', 'INV-00001-10/2019', 'Lento', 'aadaSD', NULL, NULL),
+(2, 'CUSTPAY-00002', 'CUST003', 'INV-00004-10/2019', '21.8', '21.8', '2019-10-21', 'Cash', '', '', 'INV-00004-10/2019', 'so23434', 'INV-00004-10/2019', 'Lento', 'intejhjbh', NULL, NULL),
+(3, 'CUSTPAY-00003', 'CUST003', 'INV-00005-10/2019', '50', '50.00', '2019-10-21', 'Cash', '', '', 'INV-00005-10/2019', 'DLALD', 'INV-00005-10/2019', 'Lento', 'asdas', NULL, NULL),
+(4, 'CUSTPAY-00004', 'CUST003', 'INV-00005-10/2019', '50', '50.00', '2019-10-21', 'Cash', '', '', 'INV-00005-10/2019', 'DLALD', 'INV-00005-10/2019', 'Lento', 'asdas', NULL, NULL),
+(5, 'CUSTPAY-00005', 'CUST003', 'INV-00005-10/2019', '50', '50.00', '2019-10-21', 'Cash', '', '', 'INV-00005-10/2019', 'DLALD', 'INV-00005-10/2019', 'Lento', 'asdas', NULL, NULL),
+(6, 'CUSTPAY-00006', 'CUST003', 'INV-00005-10/2019', '50', '50.00', '2019-10-21', 'Cash', '', '', 'INV-00005-10/2019', 'DLALD', 'INV-00005-10/2019', 'Lento', 'asdas', NULL, NULL),
+(7, 'CUSTPAY-00007', 'CUST001', 'INV-00002-10/2019', '0', NULL, '2019-11-17', 'Cheque', 'Uncleared', '--Select B', 'QSLDKDAKSD', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'SS', NULL, NULL),
+(8, 'CUSTPAY-00008', 'CUST001', 'INV-00002-10/2019', '100', NULL, '2019-11-17', 'Bank Transfer', '', '001', 'INV-00002-10/2019', 's0hbbj', 'INV-00002-10/2019', 'Lento', '', NULL, NULL),
+(9, 'CUSTPAY-00009', 'CUST001', 'INV-00002-10/2019', '1', NULL, '2019-12-07', 'Cash', '', '--Select B', 'asd', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'asd', NULL, NULL),
+(10, 'CUSTPAY-000010', 'CUST001', 'INV-00002-10/2019', '1', NULL, '2019-12-07', 'Cash', '', '--Select B', 'asd', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'asdasd', NULL, NULL),
+(11, 'CUSTPAY-000011', 'CUST001', 'INV-00002-10/2019', '1', NULL, '2019-12-07', 'Bank Transfer', '', '001', 'asd', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'asdasd', NULL, NULL),
+(12, 'CUSTPAY-000012', 'CUST001', 'INV-00002-10/2019', '1', NULL, '2019-12-07', 'Bank Transfer', '', '001', 'asd', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'asdasd', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -9447,9 +9461,8 @@ CREATE TABLE IF NOT EXISTS `customer_payments` (
 -- Table structure for table `customer_paymentsacc`
 --
 
-DROP TABLE IF EXISTS `customer_paymentsacc`;
-CREATE TABLE IF NOT EXISTS `customer_paymentsacc` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `customer_paymentsacc` (
+  `id` int(10) UNSIGNED NOT NULL,
   `cust_payment_id` varchar(30) NOT NULL,
   `cust_payment_customer` varchar(45) DEFAULT NULL,
   `cust_payment_invoice_no` varchar(45) DEFAULT NULL,
@@ -9457,15 +9470,35 @@ CREATE TABLE IF NOT EXISTS `customer_paymentsacc` (
   `cust_payment_credits_used` varchar(100) DEFAULT NULL,
   `cust_payment_date` varchar(45) DEFAULT NULL,
   `cust_payment_mode` varchar(45) DEFAULT NULL,
+  `cust_payment_cheque_status` varchar(15) NOT NULL,
+  `cust_payment_bank` varchar(10) NOT NULL,
   `cust_payment_ref_no` varchar(45) DEFAULT NULL,
   `cust_payment_so_code` varchar(45) DEFAULT NULL,
   `cust_payment_inv_id` varchar(45) DEFAULT NULL,
   `cust_payment_user` varchar(100) DEFAULT NULL,
   `cust_payment_notes` varchar(255) DEFAULT NULL,
   `cust_payment_file` varchar(255) DEFAULT NULL,
-  `cust_payment_notify` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `cust_payment_notify` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_refund`
+--
+
+CREATE TABLE `customer_refund` (
+  `id` int(10) NOT NULL,
+  `customer_refund_id` varchar(20) DEFAULT NULL,
+  `customer_refund_creditsid` varchar(20) DEFAULT NULL,
+  `customer_refund_refno` varchar(100) DEFAULT NULL,
+  `customer_refund_paymentmode` varchar(255) DEFAULT NULL,
+  `customer_refund_paymentdate` varchar(10) DEFAULT NULL,
+  `customer_refund_amount` decimal(10,2) DEFAULT NULL,
+  `customer_refund_handler` varchar(100) DEFAULT NULL,
+  `customer_refund_notes` varchar(255) DEFAULT NULL,
+  `customer_refund_date` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -9473,13 +9506,11 @@ CREATE TABLE IF NOT EXISTS `customer_paymentsacc` (
 -- Table structure for table `custype`
 --
 
-DROP TABLE IF EXISTS `custype`;
-CREATE TABLE IF NOT EXISTS `custype` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `custype` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `custype` varchar(100) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+  `description` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `custype`
@@ -9489,7 +9520,9 @@ INSERT INTO `custype` (`id`, `custype`, `description`) VALUES
 (005, 'Distributor/Supplier', 'Distributor'),
 (006, 'Retailer', 'Retailer'),
 (007, 'Marketing agent', 'Marketting Agent'),
-(021, 'Wholesaler', '');
+(021, 'Wholesaler', ''),
+(022, 'Partner', 'Partner'),
+(023, 'Scrap', 'Scrap');
 
 -- --------------------------------------------------------
 
@@ -9497,9 +9530,8 @@ INSERT INTO `custype` (`id`, `custype`, `description`) VALUES
 -- Table structure for table `debitnotes`
 --
 
-DROP TABLE IF EXISTS `debitnotes`;
-CREATE TABLE IF NOT EXISTS `debitnotes` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `debitnotes` (
+  `id` int(10) NOT NULL,
   `debitnote_id` varchar(100) DEFAULT NULL,
   `debitnote_owner` varchar(255) DEFAULT NULL,
   `debitnote_vendor` varchar(20) DEFAULT NULL,
@@ -9527,8 +9559,7 @@ CREATE TABLE IF NOT EXISTS `debitnotes` (
   `debitnote_tc` varchar(255) DEFAULT NULL,
   `debitnote_notes` varchar(255) DEFAULT NULL,
   `debitnote_email_notification` varchar(10) DEFAULT NULL,
-  `debitnote_items` longtext,
-  PRIMARY KEY (`id`)
+  `debitnote_items` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -9537,9 +9568,8 @@ CREATE TABLE IF NOT EXISTS `debitnotes` (
 -- Table structure for table `estimates`
 --
 
-DROP TABLE IF EXISTS `estimates`;
-CREATE TABLE IF NOT EXISTS `estimates` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `estimates` (
+  `id` int(10) NOT NULL,
   `est_code` varchar(100) DEFAULT NULL,
   `est_owner` varchar(255) DEFAULT NULL,
   `est_customer` varchar(20) DEFAULT NULL,
@@ -9565,8 +9595,7 @@ CREATE TABLE IF NOT EXISTS `estimates` (
   `est_value` varchar(100) DEFAULT NULL,
   `est_tc` varchar(255) DEFAULT NULL,
   `est_cust_notes` varchar(255) DEFAULT NULL,
-  `est_items` longtext,
-  PRIMARY KEY (`id`)
+  `est_items` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -9575,13 +9604,11 @@ CREATE TABLE IF NOT EXISTS `estimates` (
 -- Table structure for table `expenseacctmaster`
 --
 
-DROP TABLE IF EXISTS `expenseacctmaster`;
-CREATE TABLE IF NOT EXISTS `expenseacctmaster` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `expenseacctmaster` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `accountname` varchar(100) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+  `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `expenseacctmaster`
@@ -9612,52 +9639,59 @@ INSERT INTO `expenseacctmaster` (`id`, `accountname`, `description`) VALUES
 -- Table structure for table `expensenoteslog`
 --
 
-DROP TABLE IF EXISTS `expensenoteslog`;
-CREATE TABLE IF NOT EXISTS `expensenoteslog` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `expensenoteslog` (
+  `id` int(11) NOT NULL,
   `voucherid` varchar(100) NOT NULL,
   `notes` varchar(255) NOT NULL,
   `createdby` varchar(100) NOT NULL,
   `updatedby` varchar(100) DEFAULT NULL,
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+  `updatedon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `expensenoteslog`
+-- Table structure for table `expenses`
 --
 
-INSERT INTO `expensenoteslog` (`id`, `voucherid`, `notes`, `createdby`, `updatedby`, `createdon`, `updatedon`) VALUES
-(1, '00002', 'sdfsdfsd', ' ', '0', '2018-05-05 00:00:00', '2018-05-05 08:26:39'),
-(2, '', 'Updated on cash', '', '0', '2018-05-05 08:28:36', '2018-05-05 00:00:00'),
-(3, '', 'repairs', '', '0', '2018-05-05 08:31:53', '2018-05-05 00:00:00'),
-(4, '', 'travel expense', '', '0', '2018-05-05 08:33:13', '2018-05-01 00:00:00'),
-(5, '', 'travel', '', '0', '2018-05-05 08:34:38', '2018-05-05 00:00:00'),
-(6, '00003', 'fsdfsdfsd', ' ', '0', '2018-05-05 00:00:00', '2018-05-05 08:36:59'),
-(7, '', 'afdaf', '', '0', '2018-05-05 08:37:13', '2018-05-05 00:00:00'),
-(8, '', 'ffs', '', '0', '2018-05-05 08:38:55', '2018-05-05 00:00:00'),
-(9, '', 'ffs', '', '0', '2018-05-05 08:42:49', '2018-05-05 00:00:00'),
-(10, '', 'ffs', '', '0', '2018-05-05 08:44:07', '2018-05-05 00:00:00'),
-(11, '', 'ffs', '', '0', '2018-05-05 08:48:59', '2018-05-05 00:00:00'),
-(12, '', 'ffs', '', '0', '2018-05-05 08:49:45', '2018-05-05 00:00:00'),
-(13, '00002', 'asfdfsd', '', '0', '2018-05-05 08:50:56', '2018-05-05 00:00:00'),
-(14, '00002', 'asfdfsd', '', '0', '2018-05-05 08:51:40', '2018-05-05 00:00:00'),
-(15, '00002', 'notes', '', '0', '2018-05-05 08:51:51', '2018-05-05 00:00:00'),
-(16, '00002', 'notesdfgfdghfdg', '', '0', '2018-05-05 08:52:12', '2018-05-05 00:00:00'),
-(17, '00004', 'etrtretre', 'Bhairava', '0', '2018-05-11 00:00:00', '2018-05-11 21:45:06'),
-(18, '00004', '', '', '0', '2018-05-11 21:46:10', '2018-05-11 00:00:00'),
-(19, '00004', '', '', '0', '2018-05-11 21:50:28', '2018-05-11 00:00:00'),
-(20, '00004', '', '', '0', '2018-05-11 21:50:56', '2018-05-11 00:00:00'),
-(21, '00002', 'adadas', '', 'Bhairava', '2018-05-12 21:05:46', '2018-05-05 00:00:00'),
-(22, '00004', 'asdsada', '', 'Janessha', '2018-05-12 21:06:31', '2018-05-11 00:00:00'),
-(23, '00004', 'aasdasdsa', '', 'Janessha', '2018-05-12 21:08:45', '2018-05-11 00:00:00'),
-(24, '00004', '', '', 'Janessha', '2018-05-12 21:10:46', '2018-05-11 00:00:00'),
-(25, '00005', 'sfsfsdfs', 'Janessha', NULL, '2018-05-12 00:00:00', '2018-05-12 21:11:19'),
-(26, '00005', 'affdsfsd', '', 'Bhairava', '2018-05-12 21:11:45', '2018-05-12 00:00:00'),
-(27, '00005', 'fgdgd', '', 'Bhairava', '2018-05-12 21:13:17', '2018-05-12 00:00:00'),
-(28, '00005', '', '', 'Bhairava', '2018-05-12 21:13:34', '2018-05-12 00:00:00'),
-(29, '00006', 'fsdfsd', 'Bhairava', NULL, '2018-05-12 00:00:00', '2018-05-12 21:16:38');
+CREATE TABLE `expenses` (
+  `id` int(11) NOT NULL,
+  `expense_no` varchar(20) NOT NULL,
+  `expense_date` varchar(15) NOT NULL,
+  `expense_total_amount` decimal(10,2) NOT NULL,
+  `expense_paid_thru` varchar(100) NOT NULL,
+  `expense_bank` varchar(15) NOT NULL,
+  `expense_cheque_status` varchar(15) NOT NULL,
+  `expense_ref_no` varchar(255) NOT NULL,
+  `expense_payee_type` varchar(50) NOT NULL,
+  `expense_payee` varchar(200) NOT NULL,
+  `expense_invoice_no` varchar(20) NOT NULL,
+  `expense_handler` varchar(50) NOT NULL,
+  `expense_notes` text NOT NULL,
+  `expense_items` text NOT NULL,
+  `expense_updated_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expense_status` varchar(15) NOT NULL,
+  `expense_file_src` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `expenses`
+--
+
+INSERT INTO `expenses` (`id`, `expense_no`, `expense_date`, `expense_total_amount`, `expense_paid_thru`, `expense_bank`, `expense_cheque_status`, `expense_ref_no`, `expense_payee_type`, `expense_payee`, `expense_invoice_no`, `expense_handler`, `expense_notes`, `expense_items`, `expense_updated_on`, `expense_status`, `expense_file_src`) VALUES
+(8, '01', '2019-12-16', '122.00', 'Bank Transfer', '001', '', 'ASDAD', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 21:29:42', 'Created', 'upload/01.png'),
+(9, '09', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:21:17', 'Created', 'upload/09.png'),
+(10, '010', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:21:43', 'Created', 'upload/010.png'),
+(11, '011', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:22:40', 'Created', 'upload/011.png'),
+(12, '012', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:22:49', 'Created', 'upload/012.png'),
+(13, '013', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:23:09', 'Created', 'upload/013.png'),
+(14, '014', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:24:22', 'Created', 'upload/014.png'),
+(15, '015', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:25:16', 'Created', 'upload/015.png'),
+(16, '016', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:26:09', 'Created', 'upload/016.png'),
+(17, '017', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:26:38', 'Created', 'upload/017.png'),
+(18, '018', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:26:59', 'Created', 'upload/018.png'),
+(19, '019', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:31:32', 'Created', 'upload/019.png');
 
 -- --------------------------------------------------------
 
@@ -9665,9 +9699,8 @@ INSERT INTO `expensenoteslog` (`id`, `voucherid`, `notes`, `createdby`, `updated
 -- Table structure for table `grn_notes`
 --
 
-DROP TABLE IF EXISTS `grn_notes`;
-CREATE TABLE IF NOT EXISTS `grn_notes` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `grn_notes` (
+  `id` int(10) NOT NULL,
   `grn_id` varchar(100) DEFAULT NULL,
   `grn_comp_code` varchar(50) DEFAULT NULL,
   `grn_owner` varchar(100) DEFAULT NULL,
@@ -9689,9 +9722,15 @@ CREATE TABLE IF NOT EXISTS `grn_notes` (
   `grn_freight` varchar(100) DEFAULT NULL,
   `grn_status` varchar(45) DEFAULT NULL,
   `grn_notes` varchar(255) DEFAULT NULL,
-  `grn_po_items` longtext,
-  PRIMARY KEY (`id`)
+  `grn_po_items` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `grn_notes`
+--
+
+INSERT INTO `grn_notes` (`id`, `grn_id`, `grn_comp_code`, `grn_owner`, `grn_po_code`, `grn_po_value`, `grn_po_vendor`, `grn_payterm`, `grn_po_payterm`, `grn_po_date`, `grn_po_deliveryat`, `grn_po_shippingvia`, `grn_balance`, `grn_date`, `grn_due_date`, `grn_payment_status`, `grn_invoice_no`, `grn_invoice_date`, `grn_delivery_on`, `grn_freight`, `grn_status`, `grn_notes`, `grn_po_items`) VALUES
+(1, 'GRN-000001', 'COMP001', 'Lento', '', '2000.00', '00001', NULL, '1', '', 'ssfasdf', 'amsdmaldf', '1779', '2019-10-13', NULL, 'Partially Paid', 'invoice13123', '2019-12-04', '2019-10-13', NULL, 'Approved', 'note', '[{\"itemdetails\":\"[LEN-01] Inward Self Item one \",\"itemcode\":\"1\",\"rwqty\":\"20\",\"tax_val\":\"28.00\",\"tax_id\":\"6\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"100.00\",\"rwprice_org\":\"100.00\",\"rwamt\":\"2000\",\"podiscount\":\"0\",\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"KGS\"}]');
 
 -- --------------------------------------------------------
 
@@ -9699,13 +9738,11 @@ CREATE TABLE IF NOT EXISTS `grn_notes` (
 -- Table structure for table `groups`
 --
 
-DROP TABLE IF EXISTS `groups`;
-CREATE TABLE IF NOT EXISTS `groups` (
-  `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `groups` (
+  `id` int(1) UNSIGNED NOT NULL,
   `groupname` varchar(50) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+  `description` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `groups`
@@ -9724,12 +9761,10 @@ INSERT INTO `groups` (`id`, `groupname`, `description`) VALUES
 -- Table structure for table `hsncode_lookups`
 --
 
-DROP TABLE IF EXISTS `hsncode_lookups`;
-CREATE TABLE IF NOT EXISTS `hsncode_lookups` (
-  `id` int(5) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `hsncode_lookups` (
+  `id` int(5) UNSIGNED ZEROFILL NOT NULL,
   `hsncode` varchar(50) NOT NULL,
-  `description` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `description` varchar(50) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -9738,9 +9773,8 @@ CREATE TABLE IF NOT EXISTS `hsncode_lookups` (
 -- Table structure for table `invoices`
 --
 
-DROP TABLE IF EXISTS `invoices`;
-CREATE TABLE IF NOT EXISTS `invoices` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `invoices` (
+  `id` int(10) NOT NULL,
   `inv_code` varchar(100) DEFAULT NULL,
   `inv_type` varchar(30) DEFAULT NULL,
   `inv_owner` varchar(255) DEFAULT NULL,
@@ -9782,16 +9816,19 @@ CREATE TABLE IF NOT EXISTS `invoices` (
   `inv_notes` varchar(255) DEFAULT NULL,
   `inv_items` longtext,
   `inv_truck_no` varchar(255) DEFAULT NULL,
-  `inv_driver_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `inv_driver_name` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `invoices`
 --
 
 INSERT INTO `invoices` (`id`, `inv_code`, `inv_type`, `inv_owner`, `inv_customer`, `inv_comp_code`, `inv_vendor`, `inv_so_code`, `inv_description`, `inv_date`, `inv_duedate`, `inv_cust_ref_phno`, `inv_paymentmode`, `inv_receipt_no`, `inv_payterm`, `inv_payterm_desc`, `inv_shippingvia`, `inv_deliveryat`, `inv_deliverydate`, `inv_status`, `inv_freight`, `inv_shipping_street`, `inv_shipping_city`, `inv_shipping_state`, `inv_shipping_country`, `inv_shipping_zip`, `inv_shipping_phone`, `inv_shipping_gstin`, `inv_billing_street`, `inv_billing_city`, `inv_billing_state`, `inv_billing_country`, `inv_billing_zip`, `inv_billing_phone`, `inv_billing_gstin`, `inv_value`, `inv_balance_amt`, `inv_payment_status`, `inv_tc`, `inv_notes`, `inv_items`, `inv_truck_no`, `inv_driver_name`) VALUES
-(1, 'INV-00001-09/2019', 'Credit Invoice', 'Administrator', '000021', 'DAPL001', NULL, '21312', NULL, '2019-09-13', '2019-09-13', NULL, NULL, NULL, '1', NULL, NULL, 'AP', NULL, 'Created', NULL, 'AIRPORT TERMINAL BUILDING 0-1,', 'TIRUPATHI', 'AP', 'IN', '517501', '0000000000', '37AGMPM5247R1ZG', 'AIRPORT TERMINAL BUILDING 0-1,', 'TIRUPATHI', 'AP', 'IN', '517501', '0000000000', '37AGMPM5247R1ZG', '100.00', '100.00', 'Unpaid', NULL, 'sadas', '[{\"itemdetails\":\"[000001] Demo\",\"itemcode\":\"1\",\"hsncode\":\"2312\",\"rwqty\":\"10\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"10\",\"rwprice_org\":\"10\",\"rwamt\":\"100\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '33', '11');
+(1, 'INV-00001-10/2019', 'Credit Invoice', 'Lento', 'CUST001', 'COMP001', NULL, 'so98799', NULL, '2019-10-13', '2019-10-13', NULL, NULL, NULL, '1', NULL, NULL, 'PB', NULL, 'Closed', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9677573737', '8898998898998', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9677573737', '8898998898998', '260.00', '0', 'Paid', NULL, 'otes', '[{\"itemdetails\":\"[1] outward self item 1\",\"itemcode\":\"1\",\"hsncode\":\"hsn383309\",\"rwqty\":\"1\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"120\",\"rwprice_org\":\"120\",\"rwamt\":\"120\",\"podiscount\":\"0\",\"poadjustmentval\":\"20\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"},{\"itemdetails\":\"[1] outward self item 1\",\"itemcode\":\"1\",\"hsncode\":\"hsn383309\",\"rwqty\":\"1\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"120\",\"rwprice_org\":\"120\",\"rwamt\":\"120\",\"podiscount\":\"0\",\"poadjustmentval\":\"20\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '90', 'kjnk'),
+(2, 'INV-00002-10/2019', 'Credit Invoice', 'Lento', 'CUST001', 'COMP001', NULL, 's0hbbj', NULL, '2019-10-13', '2019-10-13', NULL, NULL, NULL, '1', NULL, NULL, 'AP', NULL, 'Approved', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9677573737', '8898998898998', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9677573737', '8898998898998', '1050.00', '946', 'Partially Paid', NULL, 'ojo', '[{\"itemdetails\":\"[4] outward outsourced maavin item\",\"itemcode\":\"4\",\"hsncode\":\"jsksk\",\"rwqty\":\"10\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"0\",\"rwprice\":\"100\",\"rwprice_org\":\"100\",\"rwamt\":\"1000\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', 'y989', 'fjvj'),
+(3, 'INV-00003-10/2019', 'Credit Invoice', 'Lento', 'CUST002', 'COMP001', NULL, 'so9879879', NULL, '2019-10-13', '2019-10-13', NULL, NULL, NULL, '1', NULL, NULL, 'AP', NULL, 'Created', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '57346356346224234', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '57346356346224234', '240.00', '240.00', 'Unpaid', NULL, 'asdasd', '[{\"itemdetails\":\"[1] outward self item 1\",\"itemcode\":\"1\",\"hsncode\":\"hsn383309\",\"rwqty\":\"2\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"120\",\"rwprice_org\":\"120\",\"rwamt\":\"240\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '6373', '3737'),
+(4, 'INV-00004-10/2019', 'Credit Invoice', 'Lento', 'CUST003', 'COMP001', NULL, 'so23434', NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '2', NULL, NULL, 'AR', NULL, 'Closed', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '876868768', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '876868768', '21.80', '0', 'Paid', NULL, 'jgjb', '[{\"itemdetails\":\"[3] outward outsourced item juicy\",\"itemcode\":\"3\",\"hsncode\":\"hsn6368382\",\"rwqty\":\"1\",\"tax_val\":\"18.00\",\"tax_id\":\"5\",\"tax_type\":\"single\",\"tax_method\":\"0\",\"rwprice\":\"10\",\"rwprice_org\":\"10\",\"rwamt\":\"10\",\"podiscount\":0,\"poadjustmentval\":\"10\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '11313', '3113'),
+(5, 'INV-00005-10/2019', 'Credit Invoice', 'Lento', 'CUST003', 'COMP001', NULL, 'DLALD', NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '2', NULL, NULL, 'AP', NULL, 'Approved', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '876868768', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '876868768', '118.00', '-82', 'Partially Paid', NULL, 'ad', '[{\"itemdetails\":\"[3] outward outsourced item juicy\",\"itemcode\":\"3\",\"hsncode\":\"hsn6368382\",\"rwqty\":\"10\",\"tax_val\":\"18.00\",\"tax_id\":\"5\",\"tax_type\":\"single\",\"tax_method\":\"0\",\"rwprice\":\"10\",\"rwprice_org\":\"10\",\"rwamt\":\"100\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '22', '2232');
 
 -- --------------------------------------------------------
 
@@ -9799,9 +9836,8 @@ INSERT INTO `invoices` (`id`, `inv_code`, `inv_type`, `inv_owner`, `inv_customer
 -- Table structure for table `invoicesacc`
 --
 
-DROP TABLE IF EXISTS `invoicesacc`;
-CREATE TABLE IF NOT EXISTS `invoicesacc` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `invoicesacc` (
+  `id` int(10) NOT NULL,
   `inv_code` varchar(100) DEFAULT NULL,
   `inv_type` varchar(30) DEFAULT NULL,
   `inv_owner` varchar(255) DEFAULT NULL,
@@ -9843,38 +9879,17 @@ CREATE TABLE IF NOT EXISTS `invoicesacc` (
   `inv_notes` varchar(255) DEFAULT NULL,
   `inv_items` longtext,
   `inv_truck_no` varchar(255) DEFAULT NULL,
-  `inv_driver_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `inv_driver_name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `itemaster`
+-- Dumping data for table `invoicesacc`
 --
 
-DROP TABLE IF EXISTS `itemaster`;
-CREATE TABLE IF NOT EXISTS `itemaster` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `itemname` varchar(100) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `itemaster`
---
-
-INSERT INTO `itemaster` (`id`, `itemname`, `description`) VALUES
-(3, 'Pectin', 'pectin'),
-(4, 'Potassium Sorbate', 'Potassium'),
-(5, 'Ascarbic Acid', 'acid'),
-(6, '(KMS) potassium Meta BI Sulphite', 'Sulphite'),
-(7, 'Sunset Yellow', 'sunset'),
-(8, 'Mango Flavour S3212', 'Mango Flavour '),
-(9, 'Mango Pulp', 'Pulp'),
-(10, 'Sugar', 'Sugar'),
-(11, 'Apple Pulp 200ML', 'Petbottle');
+INSERT INTO `invoicesacc` (`id`, `inv_code`, `inv_type`, `inv_owner`, `inv_customer`, `inv_comp_code`, `inv_vendor`, `inv_so_code`, `inv_description`, `inv_date`, `inv_duedate`, `inv_cust_ref_phno`, `inv_paymentmode`, `inv_receipt_no`, `inv_payterm`, `inv_payterm_desc`, `inv_shippingvia`, `inv_deliveryat`, `inv_deliverydate`, `inv_status`, `inv_freight`, `inv_shipping_street`, `inv_shipping_city`, `inv_shipping_state`, `inv_shipping_country`, `inv_shipping_zip`, `inv_shipping_phone`, `inv_shipping_gstin`, `inv_billing_street`, `inv_billing_city`, `inv_billing_state`, `inv_billing_country`, `inv_billing_zip`, `inv_billing_phone`, `inv_billing_gstin`, `inv_value`, `inv_balance_amt`, `inv_payment_status`, `inv_tc`, `inv_notes`, `inv_items`, `inv_truck_no`, `inv_driver_name`) VALUES
+(1, 'INVAC-00001-1019', 'Credit Invoice', 'Lento', 'CUST006', 'COMP001', NULL, NULL, NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '1', NULL, NULL, 'ML', NULL, 'Created', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, '1200.00', '1200.00', 'Unpaid', NULL, 'ADAD', '[{\"itemdetails\":\"[LENSCRAP-0019] Sugar bags\",\"itemcode\":\"LENSCRAP-0019\",\"rwqty\":\"12\",\"tax_val\":\"\",\"tax_type\":\"\",\"tax_method\":1,\"rwprice\":\"100\",\"rwamt\":\"1200\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"KIT\"}]', '12213', '13123'),
+(2, 'INVAC-00002-1019', 'Credit Invoice', 'Lento', 'CUST006', 'COMP001', NULL, NULL, NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '1', NULL, NULL, 'ML', NULL, 'Created', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, '1200.00', '1200.00', 'Unpaid', NULL, 'ADAD', '[{\"itemdetails\":\"[LENSCRAP-0019] Sugar bags\",\"itemcode\":\"LENSCRAP-0019\",\"rwqty\":\"12\",\"tax_val\":\"\",\"tax_type\":\"\",\"tax_method\":1,\"rwprice\":\"100\",\"rwamt\":\"1200\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"KIT\"}]', '12213', '13123'),
+(3, 'INVAC-00003-1019', 'Credit Invoice', 'Lento', 'CUST006', 'COMP001', NULL, NULL, NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '1', NULL, NULL, 'AS', NULL, 'Created', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, '20.00', '20.00', 'Unpaid', NULL, 'AASD', '[{\"itemdetails\":\"[LENSCRAP-0019] Sugar bags\",\"itemcode\":\"LENSCRAP-0019\",\"rwqty\":\"2\",\"tax_val\":\"\",\"tax_type\":\"\",\"tax_method\":1,\"rwprice\":\"10\",\"rwprice_org\":\"10\",\"rwamt\":\"20\",\"podiscount\":\"0\",\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"CVR\"}]', '12312', 'sfsdf');
 
 -- --------------------------------------------------------
 
@@ -9882,23 +9897,19 @@ INSERT INTO `itemaster` (`id`, `itemname`, `description`) VALUES
 -- Table structure for table `itemcategory`
 --
 
-DROP TABLE IF EXISTS `itemcategory`;
-CREATE TABLE IF NOT EXISTS `itemcategory` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `itemcategory` (
+  `id` int(11) NOT NULL,
   `code` varchar(30) NOT NULL,
   `category` varchar(50) NOT NULL,
-  `description` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  `description` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `itemcategory`
 --
 
 INSERT INTO `itemcategory` (`id`, `code`, `category`, `description`) VALUES
-(1, '01', 'Raw Materials', 'Raw Materials'),
-(2, '02', 'Scrap Materials', 'Scrap Materials'),
-(3, '03', 'Sales Products', 'Sales Items');
+(1, 'CAT001', 'Mango Pulp', 'Mango Pulp');
 
 -- --------------------------------------------------------
 
@@ -9906,13 +9917,11 @@ INSERT INTO `itemcategory` (`id`, `code`, `category`, `description`) VALUES
 -- Table structure for table `location`
 --
 
-DROP TABLE IF EXISTS `location`;
-CREATE TABLE IF NOT EXISTS `location` (
-  `id` int(2) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `location` (
+  `id` int(2) UNSIGNED ZEROFILL NOT NULL,
   `locname` varchar(100) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
+  `description` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `location`
@@ -9925,12 +9934,35 @@ INSERT INTO `location` (`id`, `locname`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `partnerentries`
+--
+
+CREATE TABLE `partnerentries` (
+  `id` int(10) NOT NULL,
+  `pe_code` varchar(10) NOT NULL,
+  `pe_orgid` varchar(10) NOT NULL,
+  `entrytype` varchar(20) NOT NULL DEFAULT 'outsourced',
+  `pe_items` text NOT NULL,
+  `pe_status` varchar(10) NOT NULL,
+  `pe_updatedon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `pe_handler` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `partnerentries`
+--
+
+INSERT INTO `partnerentries` (`id`, `pe_code`, `pe_orgid`, `entrytype`, `pe_items`, `pe_status`, `pe_updatedon`, `pe_handler`) VALUES
+(7, 'MAAPE-001', 'CUST001', 'outsourced', '[{\"item\":\"MAA-02\",\"itemname\":\"MAA-02-inward outsourced item one maavin\",\"uom\":\"BND\",\"qty\":\"244\"}]', 'Approved', '2019-10-19 07:56:19', 'Lento');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `payments`
 --
 
-DROP TABLE IF EXISTS `payments`;
-CREATE TABLE IF NOT EXISTS `payments` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `payments` (
+  `id` int(10) UNSIGNED NOT NULL,
   `payment_id` varchar(12) NOT NULL,
   `payment_vendor` varchar(45) DEFAULT NULL,
   `payment_invoice_no` varchar(45) DEFAULT NULL,
@@ -9938,6 +9970,7 @@ CREATE TABLE IF NOT EXISTS `payments` (
   `payment_credits_used` varchar(100) DEFAULT NULL,
   `payment_date` varchar(45) DEFAULT NULL,
   `payment_mode` varchar(45) DEFAULT NULL,
+  `payment_cheque_status` varchar(15) NOT NULL,
   `payment_ref_no` varchar(45) DEFAULT NULL,
   `payment_bank` varchar(255) DEFAULT NULL,
   `payment_po_code` varchar(45) DEFAULT NULL,
@@ -9945,9 +9978,27 @@ CREATE TABLE IF NOT EXISTS `payments` (
   `payment_user` varchar(100) DEFAULT NULL,
   `payment_notes` varchar(255) DEFAULT NULL,
   `payment_file` varchar(255) DEFAULT NULL,
-  `payment_notify` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `payment_notify` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `payment_id`, `payment_vendor`, `payment_invoice_no`, `payment_amount`, `payment_credits_used`, `payment_date`, `payment_mode`, `payment_cheque_status`, `payment_ref_no`, `payment_bank`, `payment_po_code`, `payment_grn_id`, `payment_user`, `payment_notes`, `payment_file`, `payment_notify`) VALUES
+(1, '000001', '00001', 'invoice13123', '200', '100.00', '2019-10-19', 'Cash', '', 'hbhbj', 'hgjbkk', '', 'GRN-000001', 'Lento', 'kkjk', NULL, NULL),
+(2, '000002', '00001', 'invoice13123', '10', NULL, '2019-11-17', 'Bank Transfer', 'Uncleared', 'sdfasdf', '001', '', 'GRN-000001', 'Lento', 'sas', NULL, NULL),
+(3, '000003', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(4, '000004', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(5, '000005', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(6, '000006', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(7, '000007', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(8, '000008', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Credit Card', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(9, '000009', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Credit Card', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(10, '0000010', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Credit Card', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(11, '0000011', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Bank Transfer', '', 'SAD', '001', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(12, '0000012', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Bank Transfer', '', 'SAD', '001', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
+(13, '0000013', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Bank Transfer', '', 'SAD', '001', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -9955,14 +10006,12 @@ CREATE TABLE IF NOT EXISTS `payments` (
 -- Table structure for table `paymentterm`
 --
 
-DROP TABLE IF EXISTS `paymentterm`;
-CREATE TABLE IF NOT EXISTS `paymentterm` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `paymentterm` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `paymentterm` varchar(40) NOT NULL,
   `noofdays` varchar(50) NOT NULL,
-  `description` varchar(40) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+  `description` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `paymentterm`
@@ -9980,28 +10029,29 @@ INSERT INTO `paymentterm` (`id`, `paymentterm`, `noofdays`, `description`) VALUE
 -- --------------------------------------------------------
 
 --
--- Table structure for table `proditemaster`
+-- Table structure for table `petty_cash_conversion`
 --
 
-DROP TABLE IF EXISTS `proditemaster`;
-CREATE TABLE IF NOT EXISTS `proditemaster` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `itemcode` varchar(100) NOT NULL,
-  `itemname` varchar(100) NOT NULL,
-  `prodqty` decimal(10,2) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+CREATE TABLE `petty_cash_conversion` (
+  `id` int(10) NOT NULL,
+  `conv_no` varchar(25) NOT NULL,
+  `conv_amt` decimal(10,2) NOT NULL,
+  `conv_row` varchar(25) NOT NULL,
+  `conv_handler` varchar(50) NOT NULL,
+  `conv_trans_id` varchar(20) NOT NULL,
+  `conv_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `proditemaster`
+-- Dumping data for table `petty_cash_conversion`
 --
 
-INSERT INTO `proditemaster` (`id`, `itemcode`, `itemname`, `prodqty`, `description`) VALUES
-(1, 'P001', 'Apple Pulp 200ml', '0.00', '200ml'),
-(2, 'P002', 'Mango Pulp', '0.00', 'Totapuri'),
-(3, 'P003', 'Gova Pulp 200ML', '0.00', 'Pulp'),
-(4, 'P004', 'demo', '0.00', '');
+INSERT INTO `petty_cash_conversion` (`id`, `conv_no`, `conv_amt`, `conv_row`, `conv_handler`, `conv_trans_id`, `conv_date`) VALUES
+(1, 'CONV01', '0.00', '', '', '', '2019-12-16 22:25:16'),
+(2, 'CONV02', '64.00', '016', 'Lento', '', '2019-12-16 22:26:09'),
+(3, 'CONV03', '58.00', '017', 'Lento', '', '2019-12-16 22:26:38'),
+(4, 'CONV04', '0.00', '018', 'Lento', '', '2019-12-16 22:26:59'),
+(5, 'CONV05', '0.00', '019', 'Lento', '', '2019-12-16 22:31:33');
 
 -- --------------------------------------------------------
 
@@ -10009,9 +10059,10 @@ INSERT INTO `proditemaster` (`id`, `itemcode`, `itemname`, `prodqty`, `descripti
 -- Table structure for table `productionlist`
 --
 
-DROP TABLE IF EXISTS `productionlist`;
-CREATE TABLE IF NOT EXISTS `productionlist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `productionlist` (
+  `id` int(11) NOT NULL,
+  `entrytype` varchar(20) DEFAULT NULL,
+  `orgid` varchar(10) DEFAULT NULL,
   `prod_code` varchar(20) DEFAULT NULL,
   `prod_handler` varchar(100) DEFAULT NULL,
   `prod_company` varchar(100) DEFAULT NULL,
@@ -10023,25 +10074,22 @@ CREATE TABLE IF NOT EXISTS `productionlist` (
   `prod_raw_items` text,
   `prod_notes` varchar(355) DEFAULT NULL,
   `prod_edit` int(1) DEFAULT NULL,
-  `prod_created_date` varchar(12) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+  `prod_created_date` varchar(12) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `productionlist`
 --
 
-INSERT INTO `productionlist` (`id`, `prod_code`, `prod_handler`, `prod_company`, `prod_item`, `prod_qty`, `prod_uom`, `prod_date`, `prod_status`, `prod_raw_items`, `prod_notes`, `prod_edit`, `prod_created_date`) VALUES
-(2, '001PRD-01', 'Lento', '001', '000002', 22, 'BAG', '2019-09-24', 'Created', '[{\"item\":\"LRM01\",\"uom\":\"BAG\",\"qty\":\"1\"}]', 'sss', 0, '2019-09-24'),
-(3, '002PRD-03', 'Lento', '002', '000002', 2, 'BKT', '2019-09-24', 'Created', '[{\"item\":\"LRM01\",\"uom\":\"BAG\",\"qty\":\"1\"}]', 'cc', 0, '2019-09-24'),
-(4, '002PRD-04', 'Lento', '002', '000001', 22, 'BAG', '2019-09-24', 'Created', '[{\"item\":\"LRM01\",\"uom\":\"BAG\",\"qty\":\"1\"}]', 'cc', 0, '2019-09-24'),
-(5, '002PRD-05', 'Lento', '002', '000001', 9, 'CRD', '2019-09-24', 'Created', '[{\"item\":\"LRM01\",\"uom\":\"BAG\",\"qty\":\"1\"}]', 'ddd', 0, '2019-09-24'),
-(6, '002PRD-06', 'Lento', '002', '000001', 22, 'BKT', '2019-09-24', 'Completed', '[{\"item\":\"LRM01\",\"uom\":\"BAG\",\"qty\":\"1\"}]', 'kkk', 0, '2019-09-24'),
-(7, 'LENPRD-07', 'Lento', '001', '000001', 70, 'KGS', '2019-09-29', 'Completed', '[{\"item\":\"LEN01\",\"uom\":\"KGS\",\"qty\":\".15\"},{\"item\":\"LEN02\",\"uom\":\"KGS\",\"qty\":\".25\"},{\"item\":\"MAA03\",\"uom\":\"KGS\",\"qty\":\".89\"}]', 'added', NULL, '2019-09-29'),
-(8, 'LENPRD-08', 'Lento', '001', '000001', 10, 'KGS', '2019-09-29', 'Created', '[{\"item\":\"LEN01\",\"uom\":\"KGS\",\"qty\":\".15\"},{\"item\":\"LEN02\",\"uom\":\"KGS\",\"qty\":\".25\"},{\"item\":\"MAA03\",\"uom\":\"KGS\",\"qty\":\".89\"}]', 'added', NULL, '2019-09-29'),
-(9, 'LENPRD-09', 'Lento', '001', '000001', 10, 'CS', '2019-09-29', 'Created', '[{\"item\":\"LEN01\",\"uom\":\"KGS\",\"qty\":\".15\"},{\"item\":\"LEN02\",\"uom\":\"KGS\",\"qty\":\".25\"},{\"item\":\"MAA03\",\"uom\":\"KGS\",\"qty\":\".89\"}]', 'added', NULL, '2019-09-29'),
-(10, 'MAAPRD-010', 'Lento', '003', 'MAA-01', 10, 'BAG', '2019-09-29', 'Completed', '[{\"item\":\"\",\"uom\":\"\",\"qty\":\"\"}]', 'added', NULL, '2019-09-29'),
-(12, 'MAAPRD-011', 'Lento', '003', 'MAA-01', 50, 'CS', '2019-09-29', 'Completed', '[{\"item\":\"MAA03\",\"uom\":\"KGS\",\"qty\":\".035\"}]', 'added', NULL, '2019-09-29');
+INSERT INTO `productionlist` (`id`, `entrytype`, `orgid`, `prod_code`, `prod_handler`, `prod_company`, `prod_item`, `prod_qty`, `prod_uom`, `prod_date`, `prod_status`, `prod_raw_items`, `prod_notes`, `prod_edit`, `prod_created_date`) VALUES
+(1, 'self', 'COMP001', 'LENPRD-01', 'Lento', 'COMP001', 'LEN-01', 12, 'BKT', '2019-10-13', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"BAG\",\"qty\":\"10\"}]', 'nr', NULL, '2019-10-13'),
+(2, 'outsourced', 'CUST001', 'MAAPRD-02', 'Lento', 'CUST001', 'MAA-04', 10, 'BKT', '2019-10-13', 'Completed', '[{\"item\":\"MAA-02\",\"uom\":\"BND\",\"qty\":\"22\"}]', 'maavin', NULL, '2019-10-13'),
+(3, 'self', 'COMP001', 'LENPRD-03', 'Lento', 'COMP001', 'LEN-01', 8, 'BAG', '2019-10-15', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"BAG\",\"qty\":\"5.92\"}]', 'jjj', NULL, '2019-10-15'),
+(4, 'self', 'COMP001', 'LENPRD-04', 'Lento', 'COMP001', 'LEN-01', 10, 'BAG', '2019-10-18', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"BAG\",\"qty\":\"7.4\"}]', 'aSDasd', NULL, '2019-10-18'),
+(5, 'outsourced', 'CUST001', 'MAAPRD-05', 'Lento', 'CUST001', 'MAA-04', 11, 'BAG', '2019-10-18', 'Completed', '[{\"item\":\"MAA-02\",\"uom\":\"BND\",\"qty\":\"242\"}]', 'sdasd', NULL, '2019-10-18'),
+(6, 'self', 'COMP001', 'LENPRD-06', 'Lento', 'COMP001', 'LEN-01', 1, 'BAG', '2019-10-18', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"KGS\",\"qty\":\"11\"},{\"item\":\"LEN-04\",\"uom\":\"CVR\",\"qty\":\"10\"}]', 'SDAd', NULL, '2019-10-18'),
+(7, 'self', 'COMP001', 'LENPRD-07', 'Lento', 'COMP001', 'LEN-01', 1, 'BAG', '2019-10-18', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"KGS\",\"qty\":\"11\"},{\"item\":\"LEN-04\",\"uom\":\"CVR\",\"qty\":\"10\"}]', 'asasd', NULL, '2019-10-18'),
+(8, 'self', 'COMP001', 'LENPRD-08', 'Lento', 'COMP001', 'LEN-01', 1, 'BAG', '2019-10-19', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"KGS\",\"qty\":\"11\"},{\"item\":\"LEN-04\",\"uom\":\"CVR\",\"qty\":\"10\"}]', 'hchch', NULL, '2019-10-19');
 
 -- --------------------------------------------------------
 
@@ -10049,10 +10097,10 @@ INSERT INTO `productionlist` (`id`, `prod_code`, `prod_handler`, `prod_company`,
 -- Table structure for table `purchaseitemaster`
 --
 
-DROP TABLE IF EXISTS `purchaseitemaster`;
-CREATE TABLE IF NOT EXISTS `purchaseitemaster` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `orgid` varchar(50) NOT NULL,
+CREATE TABLE `purchaseitemaster` (
+  `id` int(10) NOT NULL,
+  `entrytype` varchar(50) DEFAULT NULL,
+  `orgid` varchar(50) DEFAULT NULL,
   `itemcode` varchar(100) NOT NULL,
   `itemname` varchar(50) NOT NULL,
   `category` varchar(50) DEFAULT ' ',
@@ -10080,19 +10128,18 @@ CREATE TABLE IF NOT EXISTS `purchaseitemaster` (
   `handler` varchar(30) NOT NULL,
   `notes` varchar(255) NOT NULL,
   `updatedon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `image` varchar(155) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `image` varchar(155) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `purchaseitemaster`
 --
 
-INSERT INTO `purchaseitemaster` (`id`, `orgid`, `itemcode`, `itemname`, `category`, `description`, `vendor`, `hsncode`, `status`, `priceperqty`, `salespriceperqty`, `uom`, `taxmethod`, `taxname`, `taxrate`, `taxtype`, `taxid`, `taxamount`, `itemcost`, `taxableprice`, `pricedatefrom`, `stockinqty`, `stockinuom`, `lowstockalert`, `stockasofdate`, `usageunit`, `handler`, `notes`, `updatedon`, `image`) VALUES
-(1, '001', 'LEN01', 'Citric Acid', '01', NULL, 'Open Vendors', '', '1', '100.00', NULL, 'KGS', '1', '18%(GST)', '18.00', 'split', '7', '18.00', '82.00', '100.00', '2019-09-28', '999.40', 'KGS', '100', '2019-09-28', NULL, 'Lento', 'added', '2019-09-28 09:53:25', NULL),
-(2, '001', 'LEN02', 'Sodium Benzoate', '01', '', '00001', '', '1', '10.00', NULL, 'KGS', '1', '0%', '18.00', 'single', '7', '1.80', '8.20', '10.00', '2019-09-28', '1099.00', 'KGS', '100', '2019-09-28', NULL, 'Lento', 'added', '2019-09-28 09:55:55', NULL),
-(3, '003', 'MAA03', 'Citric Acid', '01', NULL, 'Open Vendors', '', '1', '0.00', NULL, 'KGS', '1', '18%(GST)', '18.00', 'split', '7', '0.00', '0.00', '0.00', '2019-09-28', '1000.01', 'KGS', '100', '2019-09-28', NULL, 'Lento', 'added', '2019-09-28 09:57:07', NULL),
-(4, '002', 'LEN04', 'Citric Acid', '01', NULL, 'Open Vendors', '', '1', '0.00', NULL, 'KGS', '1', '18%(GST)', '18.00', 'split', '7', '0.00', '0.00', '0.00', '2019-09-28', '1000.00', 'KGS', '100', '2019-09-28', NULL, 'Lento', 'added', '2019-09-28 09:58:06', NULL);
+INSERT INTO `purchaseitemaster` (`id`, `entrytype`, `orgid`, `itemcode`, `itemname`, `category`, `description`, `vendor`, `hsncode`, `status`, `priceperqty`, `salespriceperqty`, `uom`, `taxmethod`, `taxname`, `taxrate`, `taxtype`, `taxid`, `taxamount`, `itemcost`, `taxableprice`, `pricedatefrom`, `stockinqty`, `stockinuom`, `lowstockalert`, `stockasofdate`, `usageunit`, `handler`, `notes`, `updatedon`, `image`) VALUES
+(1, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', 'CAT001', NULL, '00001', 'hsn34444sss', '1', '100.00', NULL, 'KGS', '1', '1000', '0.00', 'split', '6', '0.00', '72.00', '100.00', '2019-10-13', '-75.32', 'KGS', '5', '2019-10-13', NULL, 'Lento', 'notes', '2019-10-13 02:14:39', NULL),
+(2, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', 'CAT001', NULL, '00001', 'hsn399939393', '1', '0.00', NULL, 'BAG', 'Select Tax Method', '', '0.00', '', '0', '0.00', '0.00', '0.00', '2019-10-13', '100.00', 'BND', '5', '2019-10-13', NULL, 'Lento', 'nonond', '2019-10-13 02:19:43', NULL),
+(3, 'outsourced', 'CUST003', 'JUI-03', 'inward outsourced item two juicy', 'CAT001', NULL, '00001', 'hsn38339', '1', '0.00', NULL, '0', 'Select Tax Method', '', '0.00', '', '0', '0.00', '0.00', '0.00', '2019-10-13', '110.00', '0', '5', '2019-10-13', NULL, 'Lento', 'ASDasdqD', '2019-10-13 02:22:04', NULL),
+(4, 'self', 'COMP001', 'LEN-04', 'Inward one ', 'CAT001', NULL, '00001', 'hsn2222', '1', '10.00', NULL, 'BAG', '0', '18%(IGST)', '0.00', 'single', '5', '0.00', '10.00', '11.80', '2019-10-15', '-50.00', 'CVR', '10', '2019-10-15', NULL, 'Lento', 'notes', '2019-10-15 15:06:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -10100,51 +10147,55 @@ INSERT INTO `purchaseitemaster` (`id`, `orgid`, `itemcode`, `itemname`, `categor
 -- Table structure for table `purchaseitemlog`
 --
 
-DROP TABLE IF EXISTS `purchaseitemlog`;
-CREATE TABLE IF NOT EXISTS `purchaseitemlog` (
-  `id` int(4) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
-  `orgid` varchar(50) NOT NULL,
+CREATE TABLE `purchaseitemlog` (
+  `id` int(4) UNSIGNED ZEROFILL NOT NULL,
+  `entrytype` varchar(20) DEFAULT NULL,
+  `orgid` varchar(50) DEFAULT NULL,
   `itemcode` varchar(50) NOT NULL,
   `itemname` varchar(100) NOT NULL,
   `qtyonhand` decimal(10,2) DEFAULT NULL,
   `newqty` decimal(10,2) DEFAULT NULL,
   `qtyadjusted` decimal(10,2) DEFAULT '0.00',
   `uom` varchar(100) DEFAULT NULL,
-  `adjustedon` date DEFAULT NULL,
+  `adjustedon` datetime DEFAULT CURRENT_TIMESTAMP,
   `handler` varchar(100) NOT NULL,
-  `notes` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+  `notes` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `purchaseitemlog`
 --
 
-INSERT INTO `purchaseitemlog` (`id`, `orgid`, `itemcode`, `itemname`, `qtyonhand`, `newqty`, `qtyadjusted`, `uom`, `adjustedon`, `handler`, `notes`) VALUES
-(0001, '001', 'LRM04', 'Sodium Citrate', '100.00', NULL, '0.00', 'KGS', '2019-09-18', 'Lento', 'added'),
-(0002, '001', 'LRM05', 'Potassium Sorbate', '100.00', NULL, '0.00', 'BAG', '2019-09-18', 'Lento', 'added'),
-(0003, '001', 'LRM06', 'Ascarbic Acid', '100.00', NULL, '0.00', 'GAL', '2019-09-18', 'Lento', 'added'),
-(0004, '001', 'LRM07', '(KMS) Potassium metta BI Sulphite', '100.00', NULL, '0.00', 'DRM', '2019-09-18', 'Lento', 'added'),
-(0005, '001', 'LRM08', 'Sunset Yellow', '100.00', NULL, '0.00', 'BAG', '2019-09-18', 'Lento', 'added'),
-(0006, '001', 'LRM09', 'Mango Flavour S3212', '100.00', NULL, '0.00', 'IN', '2019-09-18', 'Lento', 'added'),
-(0007, '001', 'LRM010', 'Mango Pulp', '100.00', NULL, '0.00', 'KGS', '2019-09-18', 'Lento', 'added'),
-(0008, '001', 'LRM011', 'Sugar', '100.00', NULL, '0.00', 'BAG', '2019-09-18', 'Lento', 'added'),
-(0009, '001', 'LRM012', 'demotest', '99.00', NULL, '0.00', '0', '2019-09-18', 'Lento', 'added'),
-(0010, '002', 'LRM012', 'ssss', '100.00', NULL, '0.00', '0', '2019-09-19', 'Lento', ''),
-(0011, '001', 'LenLRM014', 'sample', '100.00', NULL, '0.00', 'BAG', '2019-09-24', 'Lento', ''),
-(0012, '003', 'MAALRM015', 'citric acid', '100.00', NULL, '0.00', 'BAG', '2019-09-27', 'Lento', 'added'),
-(0013, '003', 'MAA016', 'pectin', '800.00', NULL, '0.00', 'BAG', '2019-09-27', 'Lento', 'added'),
-(0014, '001', 'LEN1', 'Ctric Acid', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'Added'),
-(0015, '001', 'LEN2', 'Sodium Benzoate', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0016, '001', 'LEN3', 'Sodium Benzoate', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0017, '001', 'LEN1', 'Citric Acid', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0018, '001', 'LEN2', 'Sodium Benzoate', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0019, '001', 'LEN3', 'Sodium Benzoate', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0020, '001', 'LEN01', 'Citric Acid', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0021, '001', 'LEN02', 'Sodium Benzoate', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0022, '003', 'MAA03', 'Citric Acid', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0023, '002', 'LEN04', 'Citric Acid', '1000.00', NULL, '0.00', 'KGS', '2019-09-28', 'Lento', 'added'),
-(0024, '001', 'LEN02', 'Sodium Benzoate', '1100.00', NULL, '100.00', 'KGS', '2019-09-28', 'Lento', '');
+INSERT INTO `purchaseitemlog` (`id`, `entrytype`, `orgid`, `itemcode`, `itemname`, `qtyonhand`, `newqty`, `qtyadjusted`, `uom`, `adjustedon`, `handler`, `notes`) VALUES
+(0001, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '0.00', '20.00', '20.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'notes'),
+(0002, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '0.00', '20.00', '20.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'notes'),
+(0003, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', '100.00', '100.00', '0.00', 'BND', '2019-10-13 00:00:00', 'Lento', 'nonond'),
+(0004, 'outsourced', 'CUST003', 'JUI-03', 'inward outsourced item two juicy', '0.00', '0.00', '0.00', '0', '2019-10-13 00:00:00', 'Lento', 'ASDasdqD'),
+(0005, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '30.00', NULL, '10.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'GRN-000001'),
+(0006, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '40.00', NULL, '10.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'GRN-000001'),
+(0007, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '40.00', NULL, '10.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'GRN-000001'),
+(0008, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '40.00', NULL, '10.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'GRN-000001'),
+(0009, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '40.00', '30.00', '10.00', 'KGS', '2019-10-13 08:23:19', 'Lento', NULL),
+(0010, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', '120.00', '98.00', '22.00', 'BND', '2019-10-13 08:26:34', 'Lento', NULL),
+(0011, 'self', 'COMP001', 'LEN-04', 'Inward one ', '0.00', '0.00', '0.00', 'CVR', '2019-10-15 00:00:00', 'Lento', 'notes'),
+(0012, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '30.00', '24.08', '5.92', 'KGS', '2019-10-15 21:54:30', 'Lento', NULL),
+(0013, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '24.08', '16.68', '7.40', 'KGS', '2019-10-18 20:31:46', 'Lento', NULL),
+(0014, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '16.68', '9.28', '7.40', 'KGS', '2019-10-18 20:32:23', 'Lento', NULL),
+(0015, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '9.28', '1.88', '7.40', 'KGS', '2019-10-18 20:33:18', 'Lento', NULL),
+(0016, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '1.88', '-5.52', '7.40', 'KGS', '2019-10-18 20:35:10', 'Lento', NULL),
+(0017, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-5.52', '-12.92', '7.40', 'KGS', '2019-10-18 20:54:38', 'Lento', NULL),
+(0018, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', '98.00', '-144.00', '242.00', 'BND', '2019-10-18 20:59:52', 'Lento', NULL),
+(0019, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-12.92', '-20.32', '7.40', 'KGS', '2019-10-18 21:05:39', 'Lento', NULL),
+(0020, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-20.32', '-31.32', '11.00', 'KGS', '2019-10-18 21:11:55', 'Lento', NULL),
+(0021, 'self', 'COMP001', 'LEN-04', 'Inward one ', '0.00', '-10.00', '10.00', 'CVR', '2019-10-18 21:11:55', 'Lento', NULL),
+(0022, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-31.32', '-42.32', '11.00', 'KGS', '2019-10-18 21:12:14', 'Lento', NULL),
+(0023, 'self', 'COMP001', 'LEN-04', 'Inward one ', '-10.00', '-20.00', '10.00', 'CVR', '2019-10-18 21:12:14', 'Lento', NULL),
+(0024, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-42.32', '-53.32', '11.00', 'KGS', '2019-10-18 21:12:35', 'Lento', NULL),
+(0025, 'self', 'COMP001', 'LEN-04', 'Inward one ', '-20.00', '-30.00', '10.00', 'CVR', '2019-10-18 21:12:35', 'Lento', NULL),
+(0026, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-53.32', '-64.32', '11.00', 'KGS', '2019-10-18 21:12:50', 'Lento', NULL),
+(0027, 'self', 'COMP001', 'LEN-04', 'Inward one ', '-30.00', '-40.00', '10.00', 'CVR', '2019-10-18 21:12:50', 'Lento', NULL),
+(0028, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-64.32', '-75.32', '11.00', 'KGS', '2019-10-19 08:08:49', 'Lento', NULL),
+(0029, 'self', 'COMP001', 'LEN-04', 'Inward one ', '-40.00', '-50.00', '10.00', 'CVR', '2019-10-19 08:08:50', 'Lento', NULL);
 
 -- --------------------------------------------------------
 
@@ -10152,9 +10203,8 @@ INSERT INTO `purchaseitemlog` (`id`, `orgid`, `itemcode`, `itemname`, `qtyonhand
 -- Table structure for table `purchaseorders`
 --
 
-DROP TABLE IF EXISTS `purchaseorders`;
-CREATE TABLE IF NOT EXISTS `purchaseorders` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `purchaseorders` (
+  `id` int(10) NOT NULL,
   `po_code` varchar(100) DEFAULT NULL,
   `po_owner` varchar(255) DEFAULT NULL,
   `po_comp_code` varchar(100) DEFAULT NULL,
@@ -10185,8 +10235,7 @@ CREATE TABLE IF NOT EXISTS `purchaseorders` (
   `po_value` varchar(100) DEFAULT NULL,
   `po_tc` varchar(255) DEFAULT NULL,
   `po_notes` varchar(255) DEFAULT NULL,
-  `po_items` longtext,
-  PRIMARY KEY (`id`)
+  `po_items` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -10195,26 +10244,16 @@ CREATE TABLE IF NOT EXISTS `purchaseorders` (
 -- Table structure for table `purpricemaster`
 --
 
-DROP TABLE IF EXISTS `purpricemaster`;
-CREATE TABLE IF NOT EXISTS `purpricemaster` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `purpricemaster` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `itemcode` varchar(30) NOT NULL,
   `taxmethod` varchar(30) NOT NULL,
   `taxrate` decimal(10,1) NOT NULL,
   `priceperqty` decimal(10,1) NOT NULL,
   `priceperuom` decimal(10,1) NOT NULL,
   `datefrom` date NOT NULL,
-  `notes` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `purpricemaster`
---
-
-INSERT INTO `purpricemaster` (`id`, `itemcode`, `taxmethod`, `taxrate`, `priceperqty`, `priceperuom`, `datefrom`, `notes`) VALUES
-(003, 'DAPL/Cap/001', '0', '12.5', '12.2', '120.2', '2017-04-10', 'sadasda'),
-(005, 'DAPL/Bott/005', '0', '18.5', '12.2', '120.8', '2017-04-18', 'Notes');
+  `notes` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -10222,30 +10261,17 @@ INSERT INTO `purpricemaster` (`id`, `itemcode`, `taxmethod`, `taxrate`, `pricepe
 -- Table structure for table `rawitemaster`
 --
 
-DROP TABLE IF EXISTS `rawitemaster`;
-CREATE TABLE IF NOT EXISTS `rawitemaster` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `rawitemaster` (
+  `id` int(10) NOT NULL,
+  `entrytype` varchar(50) DEFAULT NULL,
   `rw_code` varchar(10) NOT NULL,
   `orgid` varchar(10) DEFAULT NULL,
   `proditemcode` varchar(100) DEFAULT NULL,
   `raw_items` text,
   `handler` varchar(255) DEFAULT NULL,
-  `createdon` date DEFAULT NULL,
-  `createdby` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `rawitemaster`
---
-
-INSERT INTO `rawitemaster` (`id`, `rw_code`, `orgid`, `proditemcode`, `raw_items`, `handler`, `createdon`, `createdby`) VALUES
-(14, 'RWP-00001', '001', '01', '[{\"item\":\"LRM01\",\"itemname\":\"LRM01-Citric Acid\",\"uom\":\"KGS\",\"qty\":\".010\"}]', 'Lento', NULL, NULL),
-(22, 'RM-0022', '001', '000001', '[{\"item\":\"LEN01\",\"itemname\":\"LEN01-Citric Acid\",\"uom\":\"KGS\",\"qty\":\".15\"},{\"item\":\"LEN02\",\"itemname\":\"LEN02-Sodium Benzoate\",\"uom\":\"KGS\",\"qty\":\".25\"},{\"item\":\"MAA03\",\"itemname\":\"MAA03-Citric Acid\",\"uom\":\"KGS\",\"qty\":\".89\"}]', 'Lento', NULL, NULL),
-(18, 'RWP-000018', '001', '-Select Production Itemname-', '[{\"item\":\"LRM02\",\"itemname\":\"LRM02-Sodium Benzoate\",\"uom\":\"CS\",\"qty\":\".20\"}]', 'Lento', NULL, NULL),
-(24, 'RM-0024', '001', 'LEN-02', '[{\"item\":\"LEN01\",\"itemname\":\"LEN01-Citric Acid\",\"uom\":\"KGS\",\"qty\":\"10\"}]', 'Lento', NULL, NULL),
-(23, 'RM-0023', '003', 'MAA-01', '[{\"item\":\"MAA03\",\"itemname\":\"MAA03-Citric Acid\",\"uom\":\"KGS\",\"qty\":\".035\"}]', 'Lento', NULL, NULL),
-(21, 'RM-0019', '003', '000001', '[{\"item\":\"MAA03\",\"itemname\":\"MAA03-Citric Acid\",\"uom\":\"KGS\",\"qty\":\".015\"}]', 'Lento', NULL, NULL);
+  `createdon` datetime DEFAULT CURRENT_TIMESTAMP,
+  `createdby` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -10253,9 +10279,8 @@ INSERT INTO `rawitemaster` (`id`, `rw_code`, `orgid`, `proditemcode`, `raw_items
 -- Table structure for table `recordexpense`
 --
 
-DROP TABLE IF EXISTS `recordexpense`;
-CREATE TABLE IF NOT EXISTS `recordexpense` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `recordexpense` (
+  `id` int(11) NOT NULL,
   `voucherid` varchar(50) NOT NULL,
   `date` date NOT NULL,
   `accountname` varchar(250) NOT NULL,
@@ -10268,8 +10293,7 @@ CREATE TABLE IF NOT EXISTS `recordexpense` (
   `createdby` varchar(100) DEFAULT NULL,
   `createdon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedby` varchar(100) NOT NULL,
-  `updatedon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  `updatedon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -10278,9 +10302,8 @@ CREATE TABLE IF NOT EXISTS `recordexpense` (
 -- Table structure for table `recordpayments`
 --
 
-DROP TABLE IF EXISTS `recordpayments`;
-CREATE TABLE IF NOT EXISTS `recordpayments` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `recordpayments` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `transid` varchar(50) NOT NULL,
   `date` date NOT NULL,
   `partyname` varchar(155) NOT NULL,
@@ -10293,46 +10316,7 @@ CREATE TABLE IF NOT EXISTS `recordpayments` (
   `createdby` varchar(100) DEFAULT NULL,
   `createdon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedby` varchar(100) DEFAULT NULL,
-  `updatedon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `salesitemaster`
---
-
-DROP TABLE IF EXISTS `salesitemaster`;
-CREATE TABLE IF NOT EXISTS `salesitemaster` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `itemcode` varchar(40) NOT NULL,
-  `itemname` varchar(255) NOT NULL,
-  `category` varchar(50) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  `vendor` varchar(255) NOT NULL,
-  `hsncode` varchar(100) NOT NULL,
-  `status` varchar(15) NOT NULL DEFAULT '1',
-  `priceperqty` decimal(10,2) NOT NULL,
-  `salespriceperqty` decimal(10,2) NOT NULL,
-  `uom` varchar(100) NOT NULL,
-  `taxmethod` varchar(20) NOT NULL DEFAULT '0',
-  `taxname` varchar(100) NOT NULL,
-  `taxrate` decimal(10,1) NOT NULL,
-  `taxamount` decimal(10,1) NOT NULL,
-  `itemcost` decimal(10,1) NOT NULL,
-  `taxableprice` decimal(10,1) NOT NULL,
-  `pricedatefrom` date NOT NULL,
-  `stockinqty` int(20) NOT NULL,
-  `stockinuom` int(20) NOT NULL,
-  `lowstockalert` varchar(50) NOT NULL,
-  `stockasofdate` date NOT NULL,
-  `usageunit` varchar(30) NOT NULL,
-  `handler` varchar(30) NOT NULL,
-  `notes` varchar(255) NOT NULL,
-  `updatedon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `image` varchar(155) NOT NULL,
-  PRIMARY KEY (`id`)
+  `updatedon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -10341,11 +10325,11 @@ CREATE TABLE IF NOT EXISTS `salesitemaster` (
 -- Table structure for table `salesitemaster2`
 --
 
-DROP TABLE IF EXISTS `salesitemaster2`;
-CREATE TABLE IF NOT EXISTS `salesitemaster2` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `orgid` varchar(10) DEFAULT NULL,
+CREATE TABLE `salesitemaster2` (
+  `id` int(10) NOT NULL,
+  `entrytype` varchar(20) DEFAULT NULL,
   `itemcode` varchar(100) DEFAULT NULL,
+  `orgid` varchar(10) DEFAULT NULL,
   `itemname` varchar(50) DEFAULT NULL,
   `category` varchar(50) DEFAULT NULL,
   `description` varchar(100) DEFAULT NULL,
@@ -10380,17 +10364,17 @@ CREATE TABLE IF NOT EXISTS `salesitemaster2` (
   `handler` varchar(30) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `updatedon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `image` varchar(155) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `image` varchar(155) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `salesitemaster2`
 --
 
-INSERT INTO `salesitemaster2` (`id`, `orgid`, `itemcode`, `itemname`, `category`, `description`, `sales_vendorid`, `hsncode`, `sales_priceperqty`, `priceperqty`, `sales_uom`, `uom`, `sales_taxmethod`, `taxmethod`, `sales_taxname`, `taxname`, `sales_taxrate`, `taxrate`, `sales_taxtype`, `taxtype`, `sales_taxamount`, `taxamount`, `sales_taxid`, `taxid`, `itemcost`, `taxableprice`, `sales_pricedatefrom`, `pricedatefrom`, `stockinqty`, `stockinqty_date`, `stockinuom`, `lowstockalert`, `stockasofdate`, `usageunit`, `handler`, `notes`, `updatedon`, `image`) VALUES
-(1, '003', 'MAA-01', 'Apple Juice 200ml', '03', NULL, 'Open Vendors', '', '10', '', 'KGS', '0', '1', '', '5%GST', '', '5.00', '0', 'split', '', '0.50', '0.00', '3', '0', '9.5', NULL, '2019-09-29', '2019-09-29', '160.00', '2019-09-29', NULL, '10', NULL, NULL, 'Lento', 'added', '2019-09-29 03:45:38', NULL),
-(2, '001', 'LEN-02', 'Apple Juice 200ML', '03', NULL, 'Open Vendors', '', '10', '', 'CS', '0', '1', '', '18%(GST)', '', '18.00', '0', 'split', '', '1.80', '0.00', '7', '0', '8.2', NULL, '2019-09-29', '2019-09-29', '1000.00', '2019-09-29', NULL, '100', NULL, NULL, 'Lento', 'added', '2019-09-29 06:33:05', NULL);
+INSERT INTO `salesitemaster2` (`id`, `entrytype`, `itemcode`, `orgid`, `itemname`, `category`, `description`, `sales_vendorid`, `hsncode`, `sales_priceperqty`, `priceperqty`, `sales_uom`, `uom`, `sales_taxmethod`, `taxmethod`, `sales_taxname`, `taxname`, `sales_taxrate`, `taxrate`, `sales_taxtype`, `taxtype`, `sales_taxamount`, `taxamount`, `sales_taxid`, `taxid`, `itemcost`, `taxableprice`, `sales_pricedatefrom`, `pricedatefrom`, `stockinqty`, `stockinqty_date`, `stockinuom`, `lowstockalert`, `stockasofdate`, `usageunit`, `handler`, `notes`, `updatedon`, `image`) VALUES
+(1, 'self', 'LEN-01', 'COMP001', 'outward self item 1', 'CAT001', NULL, '00001', 'hsn383309', '120', '', 'BAG', '0', '1', '', '5%GST', '', '5.00', '0', 'split', '', '6.00', '0.00', '3', '0', '114', NULL, '2019-10-13', '2019-10-13', '81.00', '2019-10-13', NULL, '5', NULL, NULL, 'Lento', 'notes', '2019-10-13 02:40:02', NULL),
+(3, 'outsourced', 'JUI-03', 'CUST003', 'outward outsourced item juicy', 'CAT001', NULL, '00001', 'hsn6368382', '10', '', 'BAG', '0', '0', '', '18%(IGST)', '', '18.00', '0', 'single', '', '1.80', '0.00', '5', '0', '10', NULL, '2019-10-13', '2019-10-13', '90.00', '2019-10-13', NULL, '5', NULL, NULL, 'Lento', 'notes', '2019-10-13 02:41:38', NULL),
+(4, 'outsourced', 'MAA-04', 'CUST001', 'outward outsourced maavin item', 'CAT001', NULL, '00001', 'jsksk', '100', '', 'BAG', '0', '0', '', '5%GST', '', '5.00', '0', 'split', '', '5.00', '0.00', '3', '0', '100', NULL, '2019-10-13', '2019-10-13', '111.00', '2019-10-13', NULL, '5', NULL, NULL, 'Lento', 'otes', '2019-10-13 02:46:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -10398,9 +10382,11 @@ INSERT INTO `salesitemaster2` (`id`, `orgid`, `itemcode`, `itemname`, `category`
 -- Table structure for table `salesitemlog`
 --
 
-DROP TABLE IF EXISTS `salesitemlog`;
-CREATE TABLE IF NOT EXISTS `salesitemlog` (
-  `id` int(15) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `salesitemlog` (
+  `id` int(15) NOT NULL,
+  `entrytype` varchar(20) DEFAULT NULL,
+  `orgid` varchar(10) DEFAULT NULL,
+  `custid` varchar(10) DEFAULT NULL,
   `itemcode` varchar(50) NOT NULL,
   `itemname` varchar(100) NOT NULL,
   `category` varchar(100) NOT NULL,
@@ -10428,8 +10414,7 @@ CREATE TABLE IF NOT EXISTS `salesitemlog` (
   `newpriceasofdate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `taxableprice` decimal(10,1) NOT NULL,
   `hsncode` varchar(100) NOT NULL,
-  `newtaxrate` decimal(10,1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `newtaxrate` decimal(10,1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -10438,35 +10423,55 @@ CREATE TABLE IF NOT EXISTS `salesitemlog` (
 -- Table structure for table `salesitemlognew`
 --
 
-DROP TABLE IF EXISTS `salesitemlognew`;
-CREATE TABLE IF NOT EXISTS `salesitemlognew` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `salesitemlognew` (
+  `id` int(10) NOT NULL,
+  `entrytype` varchar(20) DEFAULT NULL,
+  `orgid` varchar(10) DEFAULT NULL,
   `itemcode` varchar(50) NOT NULL,
   `itemname` varchar(100) DEFAULT NULL,
   `qtyonhand` decimal(10,2) DEFAULT NULL,
   `newqty` decimal(10,2) DEFAULT NULL,
   `qtyadjusted` decimal(10,2) DEFAULT '0.00',
   `uom` varchar(100) DEFAULT NULL,
-  `adjustedon` date DEFAULT NULL,
+  `adjustedon` datetime DEFAULT CURRENT_TIMESTAMP,
   `handler` varchar(100) DEFAULT NULL,
-  `notes` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+  `notes` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `salesitemlognew`
 --
 
-INSERT INTO `salesitemlognew` (`id`, `itemcode`, `itemname`, `qtyonhand`, `newqty`, `qtyadjusted`, `uom`, `adjustedon`, `handler`, `notes`) VALUES
-(1, '000001', 'Demo', '90.00', NULL, '0.00', 'BAG', '2019-09-13', 'Administrator', 'gghgh'),
-(2, '000001', ' Demo', '80.00', NULL, '-10.00', 'BAG', '2019-09-13', 'Administrator', 'INV-00001-09/2019'),
-(3, '000001', ' Demo', '70.00', NULL, '-10.00', 'BAG', '2019-09-13', 'Administrator', 'INV-00002-09/2019'),
-(4, '000002', 'Mango Juice 200ml', '100.00', NULL, '0.00', 'BAG', '2019-09-18', 'Lento', 'added'),
-(5, '000003', 'sara', '100.00', NULL, '0.00', 'BAG', '2019-09-25', 'Lento', 'dd'),
-(6, '000001', 'apple juice 200ml', '1000.00', NULL, '0.00', 'BAG', '2019-09-27', 'Lento', 'added'),
-(7, 'MAA005', 'Mango Juice 200ML', '1000.00', NULL, '0.00', 'BAG', '2019-09-29', 'Lento', 'Added'),
-(8, 'MAA-01', 'Apple Juice 200ml', '100.00', NULL, '0.00', 'KGS', '2019-09-29', 'Lento', 'added'),
-(9, 'LEN-02', 'Apple Juice 200ML', '1000.00', NULL, '0.00', 'CS', '2019-09-29', 'Lento', 'added');
+INSERT INTO `salesitemlognew` (`id`, `entrytype`, `orgid`, `itemcode`, `itemname`, `qtyonhand`, `newqty`, `qtyadjusted`, `uom`, `adjustedon`, `handler`, `notes`) VALUES
+(1, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '0.00', '0.00', '0.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'notes'),
+(2, 'outsourced', 'CUST001', 'MAA-02', 'outward outsourced item 1 ', '0.00', '0.00', '0.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'notes'),
+(3, 'outsourced', 'CUST003', 'JUI-03', 'outward outsourced item juicy', '0.00', '0.00', '0.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'notes'),
+(4, 'outsourced', 'COMP001', 'MAA-02', 'outward outsourced item 1 ', '0.00', '10.00', '10.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'notes'),
+(5, 'outsourced', 'CUST001', 'MAA-04', 'outward outsourced maavin item', '100.00', '100.00', '0.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'otes'),
+(6, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '0.00', '12.00', '12.00', 'BAG', '2019-10-13 08:23:19', 'Lento', NULL),
+(7, 'outsourced', 'CUST001', 'MAA-04', 'outward outsourced maavin item', '100.00', '110.00', '10.00', 'BAG', '2019-10-13 08:26:35', 'Lento', NULL),
+(8, NULL, NULL, '000004', ' outward outsourced maavin item', '109.00', NULL, '-1.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00001-10/2019'),
+(9, NULL, NULL, '00000', ' outward self item 1', '0.00', NULL, '-1.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00001-10/2019'),
+(10, NULL, NULL, '000001', ' outward self item 1', '11.00', NULL, '-1.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00001-10/2019'),
+(11, NULL, NULL, '000004', ' outward outsourced maavin item', '100.00', NULL, '-10.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00002-10/2019'),
+(12, NULL, NULL, '000001', ' outward self item 1', '8.00', NULL, '-2.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00003-10/2019'),
+(13, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '8.00', '16.00', '8.00', 'BAG', '2019-10-15 21:54:31', 'Lento', NULL),
+(14, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '16.00', '26.00', '10.00', 'BAG', '2019-10-18 20:31:46', 'Lento', NULL),
+(15, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '26.00', '36.00', '10.00', 'BAG', '2019-10-18 20:32:24', 'Lento', NULL),
+(16, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '36.00', '46.00', '10.00', 'BAG', '2019-10-18 20:33:18', 'Lento', NULL),
+(17, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '46.00', '56.00', '10.00', 'BAG', '2019-10-18 20:35:10', 'Lento', NULL),
+(18, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '56.00', '66.00', '10.00', 'BAG', '2019-10-18 20:54:38', 'Lento', NULL),
+(19, 'outsourced', 'CUST001', 'MAA-04', 'outward outsourced maavin item', '100.00', '111.00', '11.00', 'BAG', '2019-10-18 20:59:52', 'Lento', NULL),
+(20, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '66.00', '76.00', '10.00', 'BAG', '2019-10-18 21:05:39', 'Lento', NULL),
+(21, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '76.00', '77.00', '1.00', 'BAG', '2019-10-18 21:11:55', 'Lento', NULL),
+(22, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '77.00', '78.00', '1.00', 'BAG', '2019-10-18 21:12:14', 'Lento', NULL),
+(23, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '78.00', '79.00', '1.00', 'BAG', '2019-10-18 21:12:35', 'Lento', NULL),
+(24, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '79.00', '80.00', '1.00', 'BAG', '2019-10-18 21:12:50', 'Lento', NULL),
+(25, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '80.00', '81.00', '1.00', 'BAG', '2019-10-19 08:08:50', 'Lento', NULL),
+(26, NULL, NULL, '00000LENSCRAP-0019', ' Sugar bags', '-12.00', NULL, '-12.00', 'KIT', '2019-10-21 00:00:00', 'Lento', 'INVAC-00001-1019'),
+(27, NULL, NULL, '00000LENSCRAP-0019', ' Sugar bags', '-12.00', NULL, '-12.00', 'KIT', '2019-10-21 00:00:00', 'Lento', 'INVAC-00002-1019'),
+(28, NULL, NULL, '000003', ' outward outsourced item juicy', '-1.00', NULL, '-1.00', 'BAG', '2019-10-21 00:00:00', 'Lento', 'INV-00004-10/2019'),
+(29, NULL, NULL, '000003', ' outward outsourced item juicy', '90.00', NULL, '-10.00', 'BAG', '2019-10-21 00:00:00', 'Lento', 'INV-00005-10/2019');
 
 -- --------------------------------------------------------
 
@@ -10474,9 +10479,8 @@ INSERT INTO `salesitemlognew` (`id`, `itemcode`, `itemname`, `qtyonhand`, `newqt
 -- Table structure for table `salesorders`
 --
 
-DROP TABLE IF EXISTS `salesorders`;
-CREATE TABLE IF NOT EXISTS `salesorders` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `salesorders` (
+  `id` int(10) NOT NULL,
   `so_code` varchar(100) DEFAULT NULL,
   `so_owner` varchar(255) DEFAULT NULL,
   `so_comp_code` varchar(100) DEFAULT NULL,
@@ -10509,9 +10513,40 @@ CREATE TABLE IF NOT EXISTS `salesorders` (
   `so_value` varchar(100) DEFAULT NULL,
   `so_tc` varchar(255) DEFAULT NULL,
   `so_notes` varchar(255) DEFAULT NULL,
-  `so_items` longtext,
-  PRIMARY KEY (`id`)
+  `so_items` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `scrapinventory`
+--
+
+CREATE TABLE `scrapinventory` (
+  `id` int(11) NOT NULL,
+  `entrytype` varchar(20) NOT NULL,
+  `scrap_itemcode` varchar(20) NOT NULL,
+  `scrap_itemname` varchar(100) NOT NULL,
+  `scrap_qty` decimal(10,2) NOT NULL,
+  `scrap_uom` varchar(10) NOT NULL,
+  `scrap_orgid` varchar(10) NOT NULL,
+  `scrap_from_itemcode` varchar(10) NOT NULL,
+  `scrap_from_itemname` varchar(100) NOT NULL,
+  `scrap_from_qty` decimal(10,2) NOT NULL,
+  `scrap_from_uom` varchar(30) NOT NULL,
+  `scrap_inventory_qty` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `scrap_inventory_uom` varchar(30) NOT NULL,
+  `scrap_updated_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `handler` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `scrapinventory`
+--
+
+INSERT INTO `scrapinventory` (`id`, `entrytype`, `scrap_itemcode`, `scrap_itemname`, `scrap_qty`, `scrap_uom`, `scrap_orgid`, `scrap_from_itemcode`, `scrap_from_itemname`, `scrap_from_qty`, `scrap_from_uom`, `scrap_inventory_qty`, `scrap_inventory_uom`, `scrap_updated_on`, `handler`) VALUES
+(18, 'self', 'LENSCRAP-001', 'scrap one', '1.00', 'GROSS', 'COMP001', 'LEN-04', 'Inward one ', '10.00', 'CVR', '10.00', 'GROSS', '2019-10-19 08:01:43', 'Lento'),
+(19, 'self', 'LENSCRAP-0019', 'Sugar bags', '1.00', 'BAG', 'COMP001', 'LEN-04', 'Inward one ', '50.00', 'CVR', '8.00', 'BAG', '2019-10-19 08:03:34', 'Lento');
 
 -- --------------------------------------------------------
 
@@ -10519,8 +10554,7 @@ CREATE TABLE IF NOT EXISTS `salesorders` (
 -- Table structure for table `state`
 --
 
-DROP TABLE IF EXISTS `state`;
-CREATE TABLE IF NOT EXISTS `state` (
+CREATE TABLE `state` (
   `id` int(10) NOT NULL DEFAULT '0',
   `code` varchar(30) NOT NULL,
   `description` varchar(100) NOT NULL
@@ -10766,8 +10800,7 @@ INSERT INTO `state` (`id`, `code`, `description`) VALUES
 -- Table structure for table `state_lookups`
 --
 
-DROP TABLE IF EXISTS `state_lookups`;
-CREATE TABLE IF NOT EXISTS `state_lookups` (
+CREATE TABLE `state_lookups` (
   `id` int(10) NOT NULL DEFAULT '0',
   `code` varchar(30) NOT NULL,
   `description` varchar(100) NOT NULL
@@ -11013,9 +11046,8 @@ INSERT INTO `state_lookups` (`id`, `code`, `description`) VALUES
 -- Table structure for table `stock_movement`
 --
 
-DROP TABLE IF EXISTS `stock_movement`;
-CREATE TABLE IF NOT EXISTS `stock_movement` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `stock_movement` (
+  `id` int(10) NOT NULL,
   `stk_mov_id` varchar(15) DEFAULT NULL,
   `stk_mov_type` varchar(10) DEFAULT NULL,
   `stk_mov_owner` varchar(100) DEFAULT NULL,
@@ -11026,8 +11058,7 @@ CREATE TABLE IF NOT EXISTS `stock_movement` (
   `stk_mov_docref` varchar(255) DEFAULT NULL,
   `stk_mov_status` varchar(100) DEFAULT NULL,
   `stk_mov_items` longtext,
-  `stk_mov_notes` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `stk_mov_notes` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -11036,18 +11067,16 @@ CREATE TABLE IF NOT EXISTS `stock_movement` (
 -- Table structure for table `suppbank`
 --
 
-DROP TABLE IF EXISTS `suppbank`;
-CREATE TABLE IF NOT EXISTS `suppbank` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `suppbank` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `supcode` varchar(25) NOT NULL,
   `bankname` varchar(25) DEFAULT NULL,
   `acctno` varchar(20) NOT NULL,
   `acctname` varchar(40) NOT NULL,
   `acctype` varchar(20) NOT NULL,
   `branch` varchar(30) NOT NULL,
-  `ifsc` varchar(25) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+  `ifsc` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `suppbank`
@@ -11065,13 +11094,11 @@ INSERT INTO `suppbank` (`id`, `supcode`, `bankname`, `acctno`, `acctname`, `acct
 -- Table structure for table `suptype`
 --
 
-DROP TABLE IF EXISTS `suptype`;
-CREATE TABLE IF NOT EXISTS `suptype` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `suptype` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `suptype` varchar(100) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `description` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `suptype`
@@ -11089,9 +11116,8 @@ INSERT INTO `suptype` (`id`, `suptype`, `description`) VALUES
 -- Table structure for table `taxmaster`
 --
 
-DROP TABLE IF EXISTS `taxmaster`;
-CREATE TABLE IF NOT EXISTS `taxmaster` (
-  `id` int(3) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `taxmaster` (
+  `id` int(3) NOT NULL,
   `prefix` varchar(10) DEFAULT NULL,
   `postfix` varchar(10) DEFAULT NULL,
   `taxname` varchar(100) NOT NULL,
@@ -11099,9 +11125,8 @@ CREATE TABLE IF NOT EXISTS `taxmaster` (
   `taxtype` varchar(50) NOT NULL,
   `taxrate` decimal(10,2) NOT NULL,
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+  `updatedon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `taxmaster`
@@ -11121,16 +11146,49 @@ INSERT INTO `taxmaster` (`id`, `prefix`, `postfix`, `taxname`, `description`, `t
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` int(10) NOT NULL,
+  `trans_id` varchar(15) NOT NULL,
+  `trans_entry_type` varchar(10) NOT NULL DEFAULT 'Normal',
+  `trans_entry_ref` varchar(25) NOT NULL,
+  `trans_row_id` varchar(15) NOT NULL,
+  `trans_type` varchar(10) NOT NULL,
+  `trans_entity` varchar(100) NOT NULL,
+  `trans_amt` decimal(10,2) NOT NULL,
+  `trans_mode` varchar(15) NOT NULL,
+  `trans_bank` varchar(10) NOT NULL,
+  `total_closing_bal` decimal(10,2) NOT NULL,
+  `total_cash_on_hand` decimal(10,2) NOT NULL,
+  `total_petty_cash` decimal(10,2) NOT NULL,
+  `trans_entry` text NOT NULL,
+  `trans_status` varchar(10) NOT NULL,
+  `trans_handler` varchar(50) NOT NULL,
+  `trans_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `trans_id`, `trans_entry_type`, `trans_entry_ref`, `trans_row_id`, `trans_type`, `trans_entity`, `trans_amt`, `trans_mode`, `trans_bank`, `total_closing_bal`, `total_cash_on_hand`, `total_petty_cash`, `trans_entry`, `trans_status`, `trans_handler`, `trans_date`) VALUES
+(1, 'TRN-001', 'normal', '', 'TRANSC-01', 'credit', 'bankdeposit', '100.00', 'Cash', '001', '10100.00', '2600.00', '4800.00', '{\"depositdate\":\"2019-12-26\",\"compcode\":\"COMP001\",\"bankname\":\"001\",\"acctno\":\"1234567890\",\"amount\":\"100\",\"paymethod\":\"Cash\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"12312\",\"notes\":\"aa\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\",\"trans_bank\":\"001\"}', 'Completed', 'Lento', '2019-12-26 15:05:54'),
+(2, 'TRN-002', 'reverse', '', 'TRANSC-01', 'credit', 'bankdeposit', '100.00', 'Cash', '001', '10000.00', '2700.00', '4800.00', '{\"depositdate\":\"2019-12-26\",\"compcode\":\"COMP001\",\"bankname\":\"001\",\"acctno\":\"1234567890\",\"amount\":\"100.00\",\"paymethod\":\"Cash\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"\",\"notes\":\"\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\",\"trans_bank\":\"001\"}', 'Completed', 'Lento', '2019-12-26 15:06:45'),
+(3, 'TRN-003', 'normal', '', 'TRANSC-01', 'credit', 'bankdeposit', '200.00', 'Cash', '001', '10200.00', '2500.00', '4800.00', '{\"depositdate\":\"2019-12-26\",\"compcode\":\"COMP001\",\"bankname\":\"001\",\"acctno\":\"1234567890\",\"amount\":\"200\",\"paymethod\":\"Cash\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"\",\"notes\":\"\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\",\"trans_bank\":\"001\"}', 'Completed', 'Lento', '2019-12-26 15:06:45');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `transportmaster`
 --
 
-DROP TABLE IF EXISTS `transportmaster`;
-CREATE TABLE IF NOT EXISTS `transportmaster` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `transportmaster` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `transname` varchar(40) NOT NULL,
-  `vtype` varchar(40) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `vtype` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `transportmaster`
@@ -11145,9 +11203,8 @@ INSERT INTO `transportmaster` (`id`, `transname`, `vtype`) VALUES
 -- Table structure for table `uom`
 --
 
-DROP TABLE IF EXISTS `uom`;
-CREATE TABLE IF NOT EXISTS `uom` (
-  `id` int(11) NOT NULL DEFAULT '0',
+CREATE TABLE `uom` (
+  `id` int(11) NOT NULL,
   `code` varchar(50) NOT NULL,
   `description` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -11157,141 +11214,53 @@ CREATE TABLE IF NOT EXISTS `uom` (
 --
 
 INSERT INTO `uom` (`id`, `code`, `description`) VALUES
-(1, 'BAG', 'Bag'),
-(2, 'BKT', 'Bucket'),
-(3, 'BND', 'Bundle'),
-(4, 'BOWL', 'Bowl'),
-(5, 'BX', 'Box'),
-(6, 'CRD', 'Card'),
-(7, 'CAN', 'Cans'),
-(8, 'CM', 'Centimeters'),
-(9, 'CS', 'Case'),
-(10, 'CTN', 'Carton'),
-(11, 'DZ', 'Dozen'),
-(12, 'DRM', 'Drums'),
-(13, 'EA', 'Each'),
-(14, 'FT', 'Foot'),
-(15, 'GAL', 'Gallon'),
-(16, 'GROSS', 'Gross'),
-(17, 'IN', 'Inches'),
-(18, 'KIT', 'Kit'),
-(19, 'LOT', 'Lot'),
-(20, 'M', 'Meter'),
-(21, 'MM', 'Millimeter'),
-(22, 'PC', 'Piece'),
-(23, 'PK', 'Pack'),
-(24, 'PK100', 'Pack 100'),
-(25, 'PK50', 'Pack 50'),
-(26, 'PR', 'Pair'),
-(27, 'RACK', 'Rack'),
-(28, 'RL', 'Roll'),
-(29, 'SET', 'Set'),
-(30, 'SET3', 'Set of 3'),
-(31, 'SET4', 'Set of 4'),
-(32, 'SET5', 'Set of 5'),
-(33, 'SGL', 'Single'),
-(34, 'SHT', 'Sheet'),
-(35, 'SQFT', 'Square ft'),
-(36, 'TUBE', 'Tube'),
-(37, 'YD', 'Yard'),
-(38, 'KGS', 'Kiliograms'),
-(39, 'KLR', 'Kilolitter'),
-(40, 'NOS', 'Numbers'),
-(41, 'TON ', 'Tonnes'),
-(42, 'TUB ', 'Tubes'),
-(43, 'BTL', 'Bottles'),
-(44, 'UNT', 'Units'),
-(45, 'OTH', 'Others'),
-(1, 'BAG', 'Bag'),
-(2, 'BKT', 'Bucket'),
-(3, 'BND', 'Bundle'),
-(4, 'BOWL', 'Bowl'),
-(5, 'BX', 'Box'),
-(6, 'CRD', 'Card'),
-(7, 'CAN', 'Cans'),
-(8, 'CM', 'Centimeters'),
-(9, 'CS', 'Case'),
-(10, 'CTN', 'Carton'),
-(11, 'DZ', 'Dozen'),
-(12, 'DRM', 'Drums'),
-(13, 'EA', 'Each'),
-(14, 'FT', 'Foot'),
-(15, 'GAL', 'Gallon'),
-(16, 'GROSS', 'Gross'),
-(17, 'IN', 'Inches'),
-(18, 'KIT', 'Kit'),
-(19, 'LOT', 'Lot'),
-(20, 'M', 'Meter'),
-(21, 'MM', 'Millimeter'),
-(22, 'PC', 'Piece'),
-(23, 'PK', 'Pack'),
-(24, 'PK100', 'Pack 100'),
-(25, 'PK50', 'Pack 50'),
-(26, 'PR', 'Pair'),
-(27, 'RACK', 'Rack'),
-(28, 'RL', 'Roll'),
-(29, 'SET', 'Set'),
-(30, 'SET3', 'Set of 3'),
-(31, 'SET4', 'Set of 4'),
-(32, 'SET5', 'Set of 5'),
-(33, 'SGL', 'Single'),
-(34, 'SHT', 'Sheet'),
-(35, 'SQFT', 'Square ft'),
-(36, 'TUBE', 'Tube'),
-(37, 'YD', 'Yard'),
-(38, 'KGS', 'Kiliograms'),
-(39, 'KLR', 'Kilolitter'),
-(40, 'NOS', 'Numbers'),
-(41, 'TON ', 'Tonnes'),
-(42, 'TUB ', 'Tubes'),
-(43, 'BTL', 'Bottles'),
-(44, 'UNT', 'Units'),
-(45, 'OTH', 'Others'),
-(1, 'BAG', 'Bag'),
-(2, 'BKT', 'Bucket'),
-(3, 'BND', 'Bundle'),
-(4, 'BOWL', 'Bowl'),
-(5, 'BX', 'Box'),
-(6, 'CRD', 'Card'),
-(7, 'CAN', 'Cans'),
-(8, 'CM', 'Centimeters'),
-(9, 'CS', 'Case'),
-(10, 'CTN', 'Carton'),
-(11, 'DZ', 'Dozen'),
-(12, 'DRM', 'Drums'),
-(13, 'EA', 'Each'),
-(14, 'FT', 'Foot'),
-(15, 'GAL', 'Gallon'),
-(16, 'GROSS', 'Gross'),
-(17, 'IN', 'Inches'),
-(18, 'KIT', 'Kit'),
-(19, 'LOT', 'Lot'),
-(20, 'M', 'Meter'),
-(21, 'MM', 'Millimeter'),
-(22, 'PC', 'Piece'),
-(23, 'PK', 'Pack'),
-(24, 'PK100', 'Pack 100'),
-(25, 'PK50', 'Pack 50'),
-(26, 'PR', 'Pair'),
-(27, 'RACK', 'Rack'),
-(28, 'RL', 'Roll'),
-(29, 'SET', 'Set'),
-(30, 'SET3', 'Set of 3'),
-(31, 'SET4', 'Set of 4'),
-(32, 'SET5', 'Set of 5'),
-(33, 'SGL', 'Single'),
-(34, 'SHT', 'Sheet'),
-(35, 'SQFT', 'Square ft'),
-(36, 'TUBE', 'Tube'),
-(37, 'YD', 'Yard'),
-(38, 'KGS', 'Kiliograms'),
-(39, 'KLR', 'Kilolitter'),
-(40, 'NOS', 'Numbers'),
-(41, 'TON ', 'Tonnes'),
-(42, 'TUB ', 'Tubes'),
-(43, 'BTL', 'Bottles'),
-(44, 'UNT', 'Units'),
-(45, 'OTH', 'Others');
+(1, 'CVR', 'COVER'),
+(2, 'BAG', 'Bag'),
+(3, 'BKT', 'Bucket'),
+(4, 'BND', 'Bundle'),
+(5, 'BOWL', 'Bowl'),
+(6, 'BX', 'Box'),
+(7, 'CRD', 'Card'),
+(8, 'CAN', 'Cans'),
+(9, 'CM', 'Centimeters'),
+(10, 'CS', 'Case'),
+(11, 'CTN', 'Carton'),
+(12, 'DZ', 'Dozen'),
+(13, 'DRM', 'Drums'),
+(14, 'EA', 'Each'),
+(15, 'FT', 'Foot'),
+(16, 'GAL', 'Gallon'),
+(17, 'GROSS', 'Gross'),
+(18, 'IN', 'Inches'),
+(19, 'KIT', 'Kit'),
+(20, 'LOT', 'Lot'),
+(21, 'M', 'Meter'),
+(22, 'MM', 'Millimeter'),
+(23, 'PC', 'Piece'),
+(24, 'PK', 'Pack'),
+(25, 'PK100', 'Pack 100'),
+(26, 'PK50', 'Pack 50'),
+(27, 'PR', 'Pair'),
+(28, 'RACK', 'Rack'),
+(29, 'RL', 'Roll'),
+(30, 'SET', 'Set'),
+(31, 'SET3', 'Set of 3'),
+(32, 'SET4', 'Set of 4'),
+(33, 'SET5', 'Set of 5'),
+(34, 'SGL', 'Single'),
+(35, 'SHT', 'Sheet'),
+(36, 'SQFT', 'Square ft'),
+(37, 'TUBE', 'Tube'),
+(38, 'YD', 'Yard'),
+(39, 'KGS', 'Kiliograms'),
+(40, 'KLR', 'Kilolitter'),
+(41, 'NOS', 'Numbers'),
+(42, 'TON ', 'Tonnes'),
+(43, 'TUB ', 'Tubes'),
+(44, 'BTL', 'Bottles'),
+(45, 'UNT', 'Units'),
+(46, 'OTH', 'Others'),
+(47, 'CVR', 'COVER');
 
 -- --------------------------------------------------------
 
@@ -11299,9 +11268,8 @@ INSERT INTO `uom` (`id`, `code`, `description`) VALUES
 -- Table structure for table `uom_lookups`
 --
 
-DROP TABLE IF EXISTS `uom_lookups`;
-CREATE TABLE IF NOT EXISTS `uom_lookups` (
-  `id` int(11) NOT NULL DEFAULT '0',
+CREATE TABLE `uom_lookups` (
+  `id` int(11) NOT NULL,
   `code` varchar(50) NOT NULL,
   `description` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -11311,145 +11279,53 @@ CREATE TABLE IF NOT EXISTS `uom_lookups` (
 --
 
 INSERT INTO `uom_lookups` (`id`, `code`, `description`) VALUES
-(1, 'BAG', 'Bag'),
-(2, 'BKT', 'Bucket'),
-(3, 'BND', 'Bundle'),
-(4, 'BOWL', 'Bowl'),
-(5, 'BX', 'Box'),
-(6, 'CRD', 'Card'),
-(7, 'CAN', 'Cans'),
-(8, 'CM', 'Centimeters'),
-(9, 'CS', 'Case'),
-(10, 'CTN', 'Carton'),
-(11, 'DZ', 'Dozen'),
-(12, 'DRM', 'Drums'),
-(13, 'EA', 'Each'),
-(14, 'FT', 'Foot'),
-(15, 'GAL', 'Gallon'),
-(16, 'GROSS', 'Gross'),
-(17, 'IN', 'Inches'),
-(18, 'KIT', 'Kit'),
-(19, 'LOT', 'Lot'),
-(20, 'M', 'Meter'),
-(21, 'MM', 'Millimeter'),
-(22, 'PC', 'Piece'),
-(23, 'PK', 'Pack'),
-(24, 'PK100', 'Pack 100'),
-(25, 'PK50', 'Pack 50'),
-(26, 'PR', 'Pair'),
-(27, 'RACK', 'Rack'),
-(28, 'RL', 'Roll'),
-(29, 'SET', 'Set'),
-(30, 'SET3', 'Set of 3'),
-(31, 'SET4', 'Set of 4'),
-(32, 'SET5', 'Set of 5'),
-(33, 'SGL', 'Single'),
-(34, 'SHT', 'Sheet'),
-(35, 'SQFT', 'Square ft'),
-(36, 'TUBE', 'Tube'),
-(37, 'YD', 'Yard'),
-(38, 'KGS', 'Kiliograms'),
-(39, 'KLR', 'Kilolitter'),
-(40, 'NOS', 'Numbers'),
-(41, 'TON ', 'Tonnes'),
-(42, 'TUB ', 'Tubes'),
-(43, 'BTL', 'Bottles'),
-(44, 'UNT', 'Units'),
-(45, 'OTH', 'Others'),
-(1, 'BAG', 'Bag'),
-(2, 'BKT', 'Bucket'),
-(3, 'BND', 'Bundle'),
-(4, 'BOWL', 'Bowl'),
-(5, 'BX', 'Box'),
-(6, 'CRD', 'Card'),
-(7, 'CAN', 'Cans'),
-(8, 'CM', 'Centimeters'),
-(9, 'CS', 'Case'),
-(10, 'CTN', 'Carton'),
-(11, 'DZ', 'Dozen'),
-(12, 'DRM', 'Drums'),
-(13, 'EA', 'Each'),
-(14, 'FT', 'Foot'),
-(15, 'GAL', 'Gallon'),
-(16, 'GROSS', 'Gross'),
-(17, 'IN', 'Inches'),
-(18, 'KIT', 'Kit'),
-(19, 'LOT', 'Lot'),
-(20, 'M', 'Meter'),
-(21, 'MM', 'Millimeter'),
-(22, 'PC', 'Piece'),
-(23, 'PK', 'Pack'),
-(24, 'PK100', 'Pack 100'),
-(25, 'PK50', 'Pack 50'),
-(26, 'PR', 'Pair'),
-(27, 'RACK', 'Rack'),
-(28, 'RL', 'Roll'),
-(29, 'SET', 'Set'),
-(30, 'SET3', 'Set of 3'),
-(31, 'SET4', 'Set of 4'),
-(32, 'SET5', 'Set of 5'),
-(33, 'SGL', 'Single'),
-(34, 'SHT', 'Sheet'),
-(35, 'SQFT', 'Square ft'),
-(36, 'TUBE', 'Tube'),
-(37, 'YD', 'Yard'),
-(38, 'KGS', 'Kiliograms'),
-(39, 'KLR', 'Kilolitter'),
-(40, 'NOS', 'Numbers'),
-(41, 'TON ', 'Tonnes'),
-(42, 'TUB ', 'Tubes'),
-(43, 'BTL', 'Bottles'),
-(44, 'UNT', 'Units'),
-(45, 'OTH', 'Others'),
-(1, 'BAG', 'Bag'),
-(2, 'BKT', 'Bucket'),
-(3, 'BND', 'Bundle'),
-(4, 'BOWL', 'Bowl'),
-(5, 'BX', 'Box'),
-(6, 'CRD', 'Card'),
-(7, 'CAN', 'Cans'),
-(8, 'CM', 'Centimeters'),
-(9, 'CS', 'Case'),
-(10, 'CTN', 'Carton'),
-(11, 'DZ', 'Dozen'),
-(12, 'DRM', 'Drums'),
-(13, 'EA', 'Each'),
-(14, 'FT', 'Foot'),
-(15, 'GAL', 'Gallon'),
-(16, 'GROSS', 'Gross'),
-(17, 'IN', 'Inches'),
-(18, 'KIT', 'Kit'),
-(19, 'LOT', 'Lot'),
-(20, 'M', 'Meter'),
-(21, 'MM', 'Millimeter'),
-(22, 'PC', 'Piece'),
-(23, 'PK', 'Pack'),
-(24, 'PK100', 'Pack 100'),
-(25, 'PK50', 'Pack 50'),
-(26, 'PR', 'Pair'),
-(27, 'RACK', 'Rack'),
-(28, 'RL', 'Roll'),
-(29, 'SET', 'Set'),
-(30, 'SET3', 'Set of 3'),
-(31, 'SET4', 'Set of 4'),
-(32, 'SET5', 'Set of 5'),
-(33, 'SGL', 'Single'),
-(34, 'SHT', 'Sheet'),
-(35, 'SQFT', 'Square ft'),
-(36, 'TUBE', 'Tube'),
-(37, 'YD', 'Yard'),
-(38, 'KGS', 'Kiliograms'),
-(39, 'KLR', 'Kilolitter'),
-(40, 'NOS', 'Numbers'),
-(41, 'TON ', 'Tonnes'),
-(42, 'TUB ', 'Tubes'),
-(43, 'BTL', 'Bottles'),
-(44, 'UNT', 'Units'),
-(45, 'OTH', 'Others'),
-(0, 'CVR', 'COVER'),
-(46, 'CVR', 'COVER'),
-(46, 'CVR', 'COVER'),
-(0, 'CVR', 'COVER');
+(1, 'CVR', 'COVER'),
+(2, 'BAG', 'Bag'),
+(3, 'BKT', 'Bucket'),
+(4, 'BND', 'Bundle'),
+(5, 'BOWL', 'Bowl'),
+(6, 'BX', 'Box'),
+(7, 'CRD', 'Card'),
+(8, 'CAN', 'Cans'),
+(9, 'CM', 'Centimeters'),
+(10, 'CS', 'Case'),
+(11, 'CTN', 'Carton'),
+(12, 'DZ', 'Dozen'),
+(13, 'DRM', 'Drums'),
+(14, 'EA', 'Each'),
+(15, 'FT', 'Foot'),
+(16, 'GAL', 'Gallon'),
+(17, 'GROSS', 'Gross'),
+(18, 'IN', 'Inches'),
+(19, 'KIT', 'Kit'),
+(20, 'LOT', 'Lot'),
+(21, 'M', 'Meter'),
+(22, 'MM', 'Millimeter'),
+(23, 'PC', 'Piece'),
+(24, 'PK', 'Pack'),
+(25, 'PK100', 'Pack 100'),
+(26, 'PK50', 'Pack 50'),
+(27, 'PR', 'Pair'),
+(28, 'RACK', 'Rack'),
+(29, 'RL', 'Roll'),
+(30, 'SET', 'Set'),
+(31, 'SET3', 'Set of 3'),
+(32, 'SET4', 'Set of 4'),
+(33, 'SET5', 'Set of 5'),
+(34, 'SGL', 'Single'),
+(35, 'SHT', 'Sheet'),
+(36, 'SQFT', 'Square ft'),
+(37, 'TUBE', 'Tube'),
+(38, 'YD', 'Yard'),
+(39, 'KGS', 'Kiliograms'),
+(40, 'KLR', 'Kilolitter'),
+(41, 'NOS', 'Numbers'),
+(42, 'TON ', 'Tonnes'),
+(43, 'TUB ', 'Tubes'),
+(44, 'BTL', 'Bottles'),
+(45, 'UNT', 'Units'),
+(46, 'OTH', 'Others'),
+(47, 'CVR', 'COVER');
 
 -- --------------------------------------------------------
 
@@ -11457,12 +11333,10 @@ INSERT INTO `uom_lookups` (`id`, `code`, `description`) VALUES
 -- Table structure for table `usergroups`
 --
 
-DROP TABLE IF EXISTS `usergroups`;
-CREATE TABLE IF NOT EXISTS `usergroups` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `usergroups` (
+  `id` int(11) UNSIGNED NOT NULL,
   `userid` int(11) UNSIGNED NOT NULL,
-  `groupid` mediumint(8) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`)
+  `groupid` mediumint(8) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -11471,9 +11345,8 @@ CREATE TABLE IF NOT EXISTS `usergroups` (
 -- Table structure for table `userprofile`
 --
 
-DROP TABLE IF EXISTS `userprofile`;
-CREATE TABLE IF NOT EXISTS `userprofile` (
-  `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `userprofile` (
+  `id` int(1) UNSIGNED NOT NULL,
   `userid` varchar(100) NOT NULL,
   `username` varchar(255) NOT NULL,
   `firstname` varchar(40) NOT NULL,
@@ -11493,16 +11366,16 @@ CREATE TABLE IF NOT EXISTS `userprofile` (
   `emailverified` varchar(10) NOT NULL DEFAULT '0',
   `createdon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdby` varchar(30) DEFAULT NULL,
-  `validtill` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `validtill` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `userprofile`
 --
 
 INSERT INTO `userprofile` (`id`, `userid`, `username`, `firstname`, `lastname`, `designation`, `gender`, `useremail`, `userpassword`, `repass`, `mobile`, `address`, `groupname`, `compcode`, `status`, `image_name`, `image`, `emailverified`, `createdon`, `createdby`, `validtill`) VALUES
-(1, 'L001', 'Lento', 'Lento Agro India Pvt ', 'Ltd', 'Administrator', '1', 'lento@gmail.com', 'Lento@2019', 'Lento@2019', '9750996500', 'Pochampalli', 'Admin', '001 Lento(Registered)', '1', 'upload/lento-logo.png', NULL, '0', '2019-09-14 06:07:13', NULL, '2019-09-14 06:07:13');
+(1, 'L001', 'Lento', 'Lento Agro India Pvt ', 'Ltd', 'Administrator', '1', 'lento@gmail.com', 'Lento@2019', 'Lento@2019', '9750996500', 'Pochampalli', 'Executive', 'COMP001', '1', 'upload/logo.png', NULL, '0', '2019-09-14 06:07:13', NULL, '2019-09-14 06:07:13'),
+(2, 'L002', 'Saravanakumar', 'Saravana', 'Kumar', 'Manager', '1', 'saravanas.office@gmail.com', 'Demo@2019', 'Demo@2019', '9677573737', 'bargur', 'Executive', 'Open Compcode', '1', 'upload/logo.png', NULL, '0', '2019-10-06 12:37:28', NULL, '2019-10-06 12:37:28');
 
 -- --------------------------------------------------------
 
@@ -11510,8 +11383,7 @@ INSERT INTO `userprofile` (`id`, `userid`, `username`, `firstname`, `lastname`, 
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE `users` (
   `user_name` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
   `user_pass` varchar(255) NOT NULL,
@@ -11522,11 +11394,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_status` varchar(10) NOT NULL DEFAULT '0',
   `image_name` varchar(155) NOT NULL,
   `image` longblob NOT NULL,
-  `user_createdon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_name`),
-  UNIQUE KEY `user_name` (`user_name`),
-  UNIQUE KEY `user_email` (`user_email`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `user_createdon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -11534,14 +11403,12 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Table structure for table `user_forgot_password`
 --
 
-DROP TABLE IF EXISTS `user_forgot_password`;
-CREATE TABLE IF NOT EXISTS `user_forgot_password` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `user_forgot_password` (
+  `id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `token` varchar(500) NOT NULL,
-  `createdon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+  `createdon` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `user_forgot_password`
@@ -11560,13 +11427,16 @@ INSERT INTO `user_forgot_password` (`id`, `email`, `token`, `createdon`) VALUES
 -- Table structure for table `vendorcredits`
 --
 
-DROP TABLE IF EXISTS `vendorcredits`;
-CREATE TABLE IF NOT EXISTS `vendorcredits` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `vendorcredits` (
+  `id` int(10) NOT NULL,
   `v_credits_id` varchar(20) DEFAULT NULL,
   `v_credits_suptype` varchar(100) DEFAULT NULL,
+  `v_credits_compId` varchar(15) NOT NULL,
   `v_credits_vendorid` varchar(10) DEFAULT NULL,
   `v_credits_paymentmode` varchar(255) DEFAULT NULL,
+  `v_credits_ref_no` varchar(100) DEFAULT NULL,
+  `v_credits_bank` varchar(10) NOT NULL,
+  `v_credits_cheque_status` varchar(50) NOT NULL,
   `v_credits_refno` varchar(100) DEFAULT NULL,
   `v_credits_paymentdate` varchar(10) DEFAULT NULL,
   `v_credits_amount` decimal(10,2) DEFAULT NULL,
@@ -11575,8 +11445,7 @@ CREATE TABLE IF NOT EXISTS `vendorcredits` (
   `v_credits_notes` varchar(255) DEFAULT NULL,
   `v_credits_image` varchar(155) DEFAULT NULL,
   `v_credits_date` datetime DEFAULT CURRENT_TIMESTAMP,
-  `v_credits_email_notification` varchar(5) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `v_credits_email_notification` varchar(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -11585,9 +11454,8 @@ CREATE TABLE IF NOT EXISTS `vendorcredits` (
 -- Table structure for table `vendorcredits_log`
 --
 
-DROP TABLE IF EXISTS `vendorcredits_log`;
-CREATE TABLE IF NOT EXISTS `vendorcredits_log` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `vendorcredits_log` (
+  `id` int(10) NOT NULL,
   `creditrefno` varchar(50) NOT NULL,
   `vendorid` varchar(50) NOT NULL,
   `oldcredits` decimal(10,2) NOT NULL,
@@ -11595,8 +11463,7 @@ CREATE TABLE IF NOT EXISTS `vendorcredits_log` (
   `dateofpayment` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `handler` varchar(100) NOT NULL,
   `notes` varchar(255) NOT NULL,
-  `image` varchar(155) NOT NULL,
-  PRIMARY KEY (`id`)
+  `image` varchar(155) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -11605,9 +11472,8 @@ CREATE TABLE IF NOT EXISTS `vendorcredits_log` (
 -- Table structure for table `vendorprofile`
 --
 
-DROP TABLE IF EXISTS `vendorprofile`;
-CREATE TABLE IF NOT EXISTS `vendorprofile` (
-  `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
+CREATE TABLE `vendorprofile` (
+  `id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `vendorid` varchar(50) NOT NULL,
   `vendor_opening_bal` varchar(100) DEFAULT NULL,
   `prefix` varchar(15) DEFAULT 'DAPL',
@@ -11637,16 +11503,15 @@ CREATE TABLE IF NOT EXISTS `vendorprofile` (
   `updatedby` varchar(100) DEFAULT NULL,
   `status` varchar(10) NOT NULL DEFAULT '1',
   `handler` varchar(100) DEFAULT NULL,
-  `notes` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `notes` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `vendorprofile`
 --
 
 INSERT INTO `vendorprofile` (`id`, `vendorid`, `vendor_opening_bal`, `prefix`, `postfix`, `title`, `supname`, `portal`, `suptype`, `blocation`, `industry`, `address`, `city`, `country`, `state`, `zip`, `workphone`, `mobile`, `email`, `web`, `gstin`, `gstregdate`, `openbalance`, `obasofdate`, `createdon`, `createdby`, `updatedon`, `updatedby`, `status`, `handler`, `notes`) VALUES
-(001, '00001', NULL, 'DAPL', '/', 'MS.', 'PARLE AGRO PVT LTD', NULL, 'Material Supplier', 'Dadra and Nagar Haveli', NULL, 'PLOT NO.258/, VILLAGE SAYLI', 'SILVASSA ', 'IN', 'DH', '396230', '', '0260-6631101', '', 'info@parleagro.com', '26AAACP8416G1ZH', NULL, '0.00', '2019-02-05', '2019-02-05 05:16:06', NULL, '2019-02-05 05:16:06', NULL, '1', 'Administrator', ''),
+(001, '00001', '1779', 'DAPL', '/', 'MS.', 'PARLE AGRO PVT LTD', NULL, 'Material Supplier', 'Dadra and Nagar Haveli', NULL, 'PLOT NO.258/, VILLAGE SAYLI', 'SILVASSA ', 'IN', 'DH', '396230', '', '0260-6631101', '', 'info@parleagro.com', '26AAACP8416G1ZH', NULL, '0.00', '2019-02-05', '2019-02-05 05:16:06', NULL, '2019-02-05 05:16:06', NULL, '1', 'Administrator', ''),
 (002, '00002', '177000', 'DAPL', '/', 'M/S.', 'PADMAVATHI CORRUGATED CONTAINERS', NULL, 'Material Supplier', 'Andhra Pradesh', NULL, 'NARSINGAPURAM', 'CHANDRAGIRI MANDAL , TIRUPATHI', 'IN', 'AP', '517102', '', '0877-2276396', 'padmavathicc@gmail.com', '', '37AAGFP6789B1ZW', NULL, '0.00', NULL, '2019-02-05 05:18:29', NULL, '2019-02-05 05:18:29', NULL, '1', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -11655,9 +11520,8 @@ INSERT INTO `vendorprofile` (`id`, `vendorid`, `vendor_opening_bal`, `prefix`, `
 -- Table structure for table `vendor_refund`
 --
 
-DROP TABLE IF EXISTS `vendor_refund`;
-CREATE TABLE IF NOT EXISTS `vendor_refund` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `vendor_refund` (
+  `id` int(10) NOT NULL,
   `v_refund_id` varchar(20) DEFAULT NULL,
   `v_refund_creditsid` varchar(20) DEFAULT NULL,
   `v_refund_refno` varchar(100) DEFAULT NULL,
@@ -11666,8 +11530,7 @@ CREATE TABLE IF NOT EXISTS `vendor_refund` (
   `v_refund_amount` decimal(10,2) DEFAULT NULL,
   `v_refund_handler` varchar(100) DEFAULT NULL,
   `v_refund_notes` varchar(255) DEFAULT NULL,
-  `v_refund_date` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  `v_refund_date` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -11676,14 +11539,12 @@ CREATE TABLE IF NOT EXISTS `vendor_refund` (
 -- Table structure for table `warehouse`
 --
 
-DROP TABLE IF EXISTS `warehouse`;
-CREATE TABLE IF NOT EXISTS `warehouse` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `warehouse` (
+  `id` int(10) NOT NULL,
   `location_id` varchar(20) NOT NULL,
   `warehousename` varchar(100) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  `description` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `warehouse`
@@ -11693,6 +11554,706 @@ INSERT INTO `warehouse` (`id`, `location_id`, `warehousename`, `description`) VA
 (2, 'LOC001', 'Raw Material Store', 'Raw Material Store'),
 (3, 'LOC003', 'Production Center', 'Production Center'),
 (4, 'LOC004', 'Export Store', 'Export Store');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `bankdeposit`
+--
+ALTER TABLE `bankdeposit`
+  ADD UNIQUE KEY `depost` (`id`);
+
+--
+-- Indexes for table `bankwithdrawels`
+--
+ALTER TABLE `bankwithdrawels`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cashmemos`
+--
+ALTER TABLE `cashmemos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `compbank`
+--
+ALTER TABLE `compbank`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `comprofile`
+--
+ALTER TABLE `comprofile`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `creditnotes`
+--
+ALTER TABLE `creditnotes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customercredits`
+--
+ALTER TABLE `customercredits`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customerprofile`
+--
+ALTER TABLE `customerprofile`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customer_payments`
+--
+ALTER TABLE `customer_payments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customer_paymentsacc`
+--
+ALTER TABLE `customer_paymentsacc`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customer_refund`
+--
+ALTER TABLE `customer_refund`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `custype`
+--
+ALTER TABLE `custype`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `debitnotes`
+--
+ALTER TABLE `debitnotes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `estimates`
+--
+ALTER TABLE `estimates`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `expenseacctmaster`
+--
+ALTER TABLE `expenseacctmaster`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `expensenoteslog`
+--
+ALTER TABLE `expensenoteslog`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `expenses`
+--
+ALTER TABLE `expenses`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `grn_notes`
+--
+ALTER TABLE `grn_notes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `groups`
+--
+ALTER TABLE `groups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `hsncode_lookups`
+--
+ALTER TABLE `hsncode_lookups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `invoices`
+--
+ALTER TABLE `invoices`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `invoicesacc`
+--
+ALTER TABLE `invoicesacc`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `itemcategory`
+--
+ALTER TABLE `itemcategory`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `location`
+--
+ALTER TABLE `location`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `partnerentries`
+--
+ALTER TABLE `partnerentries`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `paymentterm`
+--
+ALTER TABLE `paymentterm`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `petty_cash_conversion`
+--
+ALTER TABLE `petty_cash_conversion`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `productionlist`
+--
+ALTER TABLE `productionlist`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `purchaseitemaster`
+--
+ALTER TABLE `purchaseitemaster`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `purchaseitemlog`
+--
+ALTER TABLE `purchaseitemlog`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `purchaseorders`
+--
+ALTER TABLE `purchaseorders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `purpricemaster`
+--
+ALTER TABLE `purpricemaster`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `rawitemaster`
+--
+ALTER TABLE `rawitemaster`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `recordexpense`
+--
+ALTER TABLE `recordexpense`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `recordpayments`
+--
+ALTER TABLE `recordpayments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `salesitemaster2`
+--
+ALTER TABLE `salesitemaster2`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `salesitemlog`
+--
+ALTER TABLE `salesitemlog`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `salesitemlognew`
+--
+ALTER TABLE `salesitemlognew`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `salesorders`
+--
+ALTER TABLE `salesorders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `scrapinventory`
+--
+ALTER TABLE `scrapinventory`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stock_movement`
+--
+ALTER TABLE `stock_movement`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `suppbank`
+--
+ALTER TABLE `suppbank`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `suptype`
+--
+ALTER TABLE `suptype`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `taxmaster`
+--
+ALTER TABLE `taxmaster`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `transportmaster`
+--
+ALTER TABLE `transportmaster`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `uom`
+--
+ALTER TABLE `uom`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `uom_lookups`
+--
+ALTER TABLE `uom_lookups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `usergroups`
+--
+ALTER TABLE `usergroups`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `userprofile`
+--
+ALTER TABLE `userprofile`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_name`),
+  ADD UNIQUE KEY `user_name` (`user_name`),
+  ADD UNIQUE KEY `user_email` (`user_email`);
+
+--
+-- Indexes for table `user_forgot_password`
+--
+ALTER TABLE `user_forgot_password`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vendorcredits`
+--
+ALTER TABLE `vendorcredits`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vendorcredits_log`
+--
+ALTER TABLE `vendorcredits_log`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vendorprofile`
+--
+ALTER TABLE `vendorprofile`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vendor_refund`
+--
+ALTER TABLE `vendor_refund`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `warehouse`
+--
+ALTER TABLE `warehouse`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `bankdeposit`
+--
+ALTER TABLE `bankdeposit`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `bankwithdrawels`
+--
+ALTER TABLE `bankwithdrawels`
+  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `cashmemos`
+--
+ALTER TABLE `cashmemos`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `compbank`
+--
+ALTER TABLE `compbank`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `comprofile`
+--
+ALTER TABLE `comprofile`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `creditnotes`
+--
+ALTER TABLE `creditnotes`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customercredits`
+--
+ALTER TABLE `customercredits`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customerprofile`
+--
+ALTER TABLE `customerprofile`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `customer_payments`
+--
+ALTER TABLE `customer_payments`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `customer_paymentsacc`
+--
+ALTER TABLE `customer_paymentsacc`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customer_refund`
+--
+ALTER TABLE `customer_refund`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `custype`
+--
+ALTER TABLE `custype`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT for table `debitnotes`
+--
+ALTER TABLE `debitnotes`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `estimates`
+--
+ALTER TABLE `estimates`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `expenseacctmaster`
+--
+ALTER TABLE `expenseacctmaster`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `expensenoteslog`
+--
+ALTER TABLE `expensenoteslog`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `expenses`
+--
+ALTER TABLE `expenses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `grn_notes`
+--
+ALTER TABLE `grn_notes`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `groups`
+--
+ALTER TABLE `groups`
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `hsncode_lookups`
+--
+ALTER TABLE `hsncode_lookups`
+  MODIFY `id` int(5) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `invoices`
+--
+ALTER TABLE `invoices`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `invoicesacc`
+--
+ALTER TABLE `invoicesacc`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `itemcategory`
+--
+ALTER TABLE `itemcategory`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `location`
+--
+ALTER TABLE `location`
+  MODIFY `id` int(2) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `partnerentries`
+--
+ALTER TABLE `partnerentries`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `paymentterm`
+--
+ALTER TABLE `paymentterm`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- AUTO_INCREMENT for table `petty_cash_conversion`
+--
+ALTER TABLE `petty_cash_conversion`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `productionlist`
+--
+ALTER TABLE `productionlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `purchaseitemaster`
+--
+ALTER TABLE `purchaseitemaster`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `purchaseitemlog`
+--
+ALTER TABLE `purchaseitemlog`
+  MODIFY `id` int(4) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `purchaseorders`
+--
+ALTER TABLE `purchaseorders`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `purpricemaster`
+--
+ALTER TABLE `purpricemaster`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `rawitemaster`
+--
+ALTER TABLE `rawitemaster`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `recordexpense`
+--
+ALTER TABLE `recordexpense`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `recordpayments`
+--
+ALTER TABLE `recordpayments`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `salesitemaster2`
+--
+ALTER TABLE `salesitemaster2`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `salesitemlog`
+--
+ALTER TABLE `salesitemlog`
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `salesitemlognew`
+--
+ALTER TABLE `salesitemlognew`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `salesorders`
+--
+ALTER TABLE `salesorders`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `scrapinventory`
+--
+ALTER TABLE `scrapinventory`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `stock_movement`
+--
+ALTER TABLE `stock_movement`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `suppbank`
+--
+ALTER TABLE `suppbank`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `suptype`
+--
+ALTER TABLE `suptype`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `taxmaster`
+--
+ALTER TABLE `taxmaster`
+  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `transportmaster`
+--
+ALTER TABLE `transportmaster`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `uom`
+--
+ALTER TABLE `uom`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT for table `uom_lookups`
+--
+ALTER TABLE `uom_lookups`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT for table `usergroups`
+--
+ALTER TABLE `usergroups`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `userprofile`
+--
+ALTER TABLE `userprofile`
+  MODIFY `id` int(1) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `user_forgot_password`
+--
+ALTER TABLE `user_forgot_password`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `vendorcredits`
+--
+ALTER TABLE `vendorcredits`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `vendorcredits_log`
+--
+ALTER TABLE `vendorcredits_log`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `vendorprofile`
+--
+ALTER TABLE `vendorprofile`
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `vendor_refund`
+--
+ALTER TABLE `vendor_refund`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `warehouse`
+--
+ALTER TABLE `warehouse`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

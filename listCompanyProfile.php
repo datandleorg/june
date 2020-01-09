@@ -40,12 +40,14 @@
 										<thead>
 											<tr>
 												  	<th style="width:20px">Logo</th>
-													<th style="width:60px">Org ID</th>
-													<th style="width:230px">Name</th>
-													<th style="width:40px">Type</th>
+													<th style="width:40px">Org ID</th>
+													<th style="width:260px">Name</th>
+													<th style="width:20px">Org Type</th>
+													<th style="width:40px">Undeposited Funds</th>
+													<th style="width:60px">Petty Cash Bal</th>
 													<th style="width:20px">Email</th>
 													<th style="width:20px">Mobile</th>
-													<th style="width:40px">Actions</th>
+													<th style="width:20px">Actions</th>
 													</tr>
 										</thead>										
 										<tbody>
@@ -54,7 +56,7 @@
 													
 													//$sql = "select image,compcode,concat(title,name) as name,
 													//ctype,location,email,mobile,id from comprofile";
-													$sql = "SELECT image,orgid, concat(title,' ',orgname) as orgname,blocation,orgtype,email,mobile,id from comprofile
+													$sql = "SELECT image,orgid, concat(title,' ',orgname) as orgname,orgtype,cash_on_hand,petty_cash_bal,email,mobile,id from comprofile
 															order by id asc";
 													$result = mysqli_query($dbcon,$sql);
 													if ($result->num_rows > 0){
@@ -80,7 +82,8 @@
 													</td>
 													
 													<?php
-													
+													echo '<td>'.$row['cash_on_hand'].'</td>';
+													echo '<td>'.$row['petty_cash_bal'].'</td>';													
 													echo '<td>'.$row['email'].'</td>';
 													echo '<td>'.$row['mobile'].'</td>';
 													

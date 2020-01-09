@@ -84,21 +84,15 @@ include('workers/getters/functions.php');
                                     <span id="po_reports_div"></span>
                                     <table id="po_reports" class="table table-bordered" style="width:130%">
                                         <thead>
-                                            <tr>
-                                            <th>Id</th>
-                                            <th>Trans Id</th>
-                                            <th>Date</th>
-                                            <th>Details</th>
-                                            <th>Credit</th>
                                             <th>Debit</th>
                                             <th>Payment Mode</th>
                                             <th>Bank</th>
                                             <th>Closing Bal</th>
-                                            <th>Cash On Hand</th>
+                                            <th>Undeposited Funds</th>
                                             <th>Petty Cash</th>
                                             <th>Status</th>
                                             </tr>
-                                        </thead>
+                                 </thead>
                                         <tbody>
                                             <?php
                                             if((isset($_GET['st'])&&$_GET['st']!='')||(isset($_GET['end'])&&$_GET['end']!='') ||(isset($_GET['payment_mode']))){ 
