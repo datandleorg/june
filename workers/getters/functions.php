@@ -424,6 +424,24 @@ function updatebyand($dbcon,$col_val,$table,$col,$cond_col,$cond_val){
     return $return;
 }
 
+function updateNumericbyand($dbcon,$col_val,$table,$col,$cond_col,$cond_val){
+   $sql=" UPDATE  $table SET $col=$col$col_val "; 
+    if($cond_col){
+        $sql.=" WHERE $cond_col='$cond_val'; "; 
+    }else{
+        $sql.=";";
+    }
+
+    if (mysqli_query($dbcon,$sql)) {
+        $return['status']=true;
+
+    }else{
+        $return['status']=false;
+        $return['error']=mysqli_error($dbcon);
+    }
+    return $return;
+}
+
 function updatevalbyand($dbcon,$col_val,$table,$col,$cond_col,$cond_val){
    $sql=" UPDATE  $table SET $col= $col+($col_val) "; 
     if($cond_col){

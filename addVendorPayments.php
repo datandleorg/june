@@ -1,9 +1,54 @@
 
 <?php include('header.php');?>
 <!-- End Sidebar -->
+<!-- Button trigger modal -->
 
 
-<div class="content-page">
+
+<div class="content-page" ng-app="paymentPages" ng-controller="formCtrl" ng-init="formInit()">
+
+
+<!-- Modal -->
+<div class="modal fade" id="pettyCashConvModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Petty Cash Conversion </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+               <div class="d-flex justify-content-between">
+               <div class="p-2">Current Petty Cash Balance : </div>
+               <div class="p-2">{{comprofile.petty_cash_bal}}</div>
+               </div>
+
+               <div class="d-flex justify-content-between">
+               <div class="p-2">Current Undeposited Cash Balance : </div>
+               <div class="p-2">{{comprofile.cash_on_hand}}</div>
+               </div>
+
+               <div class="d-flex justify-content-between align-items-center">
+               <div class="p-2">
+               <div class="form-group">
+                 <label for="">Enter Amount to be converted</label>
+                 <input type="text"
+                   class="form-control" name="conv_amt" id="conv_amt" ng-model="conv_amt"  aria-describedby="helpId" placeholder="">
+                 <!-- <small id="helpId" class="form-text text-muted">Help text</small> -->
+               </div>      
+               <div class="form-group">
+                 <label for=""></label>
+                 <textarea class="form-control" name="conv_remarks" id="conv_remarks"  ng-model="conv_remarks" name="" id="" rows="3"></textarea>
+               </div> 
+            </div>
+               <div class="p-2"><button type="button" class="btn btn-primary" ng-click="convertToPettyCash()">Convert to Petty Cash</button></div>
+               </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Start content -->
     <div class="content">
@@ -52,11 +97,23 @@
 
                                         <div class="form-row">
                                             <div class="form-group col-md-8" >
-                                                <label for="inputState">Vendor Name</label>
-                                                <select id="payment_vendor" onchange="onvendor_select(this.value);" class="form-control form-control-sm"  required name="payment_vendor" autocomplete="off">
-                                                    <option selected>Open Vendors</option>
 
+                                                <label for="inputState">Vendor Name<span class="text-danger">*</span></label>
+                                                <select required id="payment_vendor" ng-model="vp.payment_vendor"
+                                                    ng-change="onVendorChange()" class="form-control form-control-sm"
+                                                    name="payment_vendor">
+                                                    <option value="">--Select Vendor Code--</option>
+                                                    <?php
+                                                    $sql = "SELECT * FROM vendorprofile ";
+                                                    $result = mysqli_query($dbcon, $sql);
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        $vendorid = $row['vendorid'];
+                                                        $supname = $row['supname'];
+                                                        echo '<option  value="' . $vendorid . '" >' . $supname . '</option>';
+                                                    }
+                                                    ?>
                                                 </select>
+
                                             </div>
                                         </div>
 
@@ -66,17 +123,25 @@
 
                                             <div class="form-group col-md-4">
                                                 <label for="inputState">Invoice#</label>
-                                                <select id="payment_invoice_no"  class="form-control form-control-sm"  onchange="oninvoice_select(this.value);" required name="payment_invoice_no" autocomplete="off">
-                                                    <option selected>Select Invoice</option>
-
+                         
+                                                <select ng-model="vp.payment_invoice_no" ng-change="onInvoiceChange()"  class="select2 form-control">
+                                                       <option selected value="">Select Invoice</option>
+                                                       <option ng-repeat="invoice in invoices">{{invoice.grn_invoice_no}}</option>
                                                 </select>
+
                                             </div>
 
                                             <div class="form-group col-md-4">										
                                                 <label>Enter Amount <span class="text-danger">*&nbsp;</span><i class="fa fa-rupee fonts" aria-hidden="true"></i>&nbsp;[INR]</label>
-                                                <input onkeypress="show_credits_input();"   onkeyup="show_credits_input();" type="text" class="form-control form-control-sm" name="payment_amount" id="payment_amount" placeholder="Enter Amount" required class="form-control" autocomplete="off" value="0" />
+                                                <input 
+                                                ng-model="vp.payment_amount"
+                                                ng-change="show_credits_input()"
+                                                type="text" class="form-control form-control-sm" 
+                                                name="payment_amount" id="payment_amount" 
+                                                placeholder="Enter Amount" required class="form-control" 
+                                                autocomplete="off" value="0" />
                                             </div>
-
+                                        
                                         </div>
 
                                         <div class="form-row" id="show_credit_div" style="display:none;">
@@ -88,38 +153,49 @@
 
                                             <div class="form-group col-md-4">										
                                                 <label>Enter Credit Amount <span class="text-danger">*&nbsp;</span><i class="fa fa-rupee fonts" aria-hidden="true"></i>&nbsp;[INR]</label>
-                                                <input onkeypress="show_credits_input();"   onkeyup="show_credits_input();" 
+                                                <input 
+                                                ng-model="vp.payment_amount_credit"
+                                                ng-change="show_credits_input()"
                                                 type="text" class="form-control form-control-sm" id="payment_amount_credit" 
                                                 placeholder="Enter Credit Amount" class="form-control" autocomplete="off" />
                                             </div>
-
+                        
                                         </div>
 
 
                                         <div class="form-row">
                                             <div class="form-group col-md-4">
                                                 <label>Payment Date<span class="text-danger">*</span></label>									 
-                                                <input type="payment_date" class="form-control form-control-sm"  name="payment_date" value="<?php echo date("Y-m-d");?>">					  
+                                                <input type="date" 
+                                                class="form-control form-control-sm"
+                                                ng-model="vp.payment_date"
+                                                name="payment_date">
+			  
                                             </div>
 
                                             <div class="form-group col-md-4">
                                                 <label >Payment Mode<span class="text-danger">*</span></label>
-                                                <select required id="payment_mode" data-parsley-trigger="change"  
-                                                onchange="modifyRefNoField(this.value)" 
+                                                <select 
+                                                required id="payment_mode" 
+                                                data-parsley-trigger="change"
+                                                ng-model="vp.payment_mode"
+                                                ng-change="onPaymentModeChange()"  
                                                 class="form-control form-control-sm"  name="payment_mode" >
                                                     <option value="">-- Select Payment Mode --</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Cheque">Cheque</option>
                                                     <option value="Bank Transfer">Bank Transfer</option>
                                                 </select>
+                                                <p ng-if="vp.payment_mode==='Cash'">Petty Cash Balance:<span id="petty_cash_bal">{{comprofile.petty_cash_bal}}</span>  &nbsp;<span class="fa fa-exchange mr-2 text-primary" data-toggle="modal" data-target="#pettyCashConvModal" title="Convert To petty cash" ng-click="onConv()"></span> </p>
                                             </div>
                                         </div>
-
+                        
                                         
                                         <div class="form-row" id="payment_cheque_status_row">
                                             <div class="form-group col-md-6">
                                                 <label>Cheque Status<span class="text-danger">*</span></label>
                                                 <select required name="payment_cheque_status" id="payment_cheque_status" 
+                                                ng-model="vp.payment_cheque_status"
                                                 data-parsley-trigger="change" class="form-control form-control-sm">
                                                     <option value="">-- Select Cheque Status --</option>
                                                     <option value="Cleared">Cleared</option>
@@ -127,6 +203,7 @@
                                                 </select>
                                             </div>
                                          </div>
+                                         
 
 
 
@@ -135,7 +212,9 @@
                                         <label> Bank<span class="text-danger">*</span></label>
 
                                         <select id="payment_bank" class="form-control form-control-sm" 
-                                        onchange="printBankDetails(this.value)" name="payment_bank">
+                                        ng-model="vp.payment_bank"
+                                        ng-change="printBankDetails()"
+                                        name="payment_bank">
                                             <option selected>--Select Bank--</option> ';
                                             <?php
                                             $sql = "SELECT * FROM compbank where orgid='COMP001' ";
@@ -149,6 +228,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                           
 
                                 <div class="form-row">
                                     <div class="form-group col-md-6" id="vendor_bank_details">
@@ -161,36 +241,52 @@
                                         <div class="form-row">								
                                             <div class="form-group col-md-8">										
                                                 <label>Reference #</label>
-                                                <input type="text" class="form-control form-control-sm" name="payment_ref_no" id="payment_ref_no" placeholder=" Reference Number(optional)"  class="form-control" autocomplete="off" />
+                                                <input type="text" class="form-control form-control-sm" 
+                                                name="payment_ref_no" id="payment_ref_no" 
+                                                ng-model="vp.payment_ref_no"
+                                                ng-change="printBankDetails()"
+                                                placeholder=" Reference Number(optional)"  class="form-control" autocomplete="off" />
                                             </div>
                                         </div>
 
+                      
 
                                         <div class="form-row">
                                             <div class="form-group col-md-8">
                                                 <label for="inputState">Handler</label>
 
-                                                <input type="text" class="form-control form-control-sm" name="payment_user" id="payment_user" readonly class="form-control form-control-sm" value="<?php echo $session_user; ?>" required />
+                                                <input type="text" class="form-control form-control-sm" name="payment_user"
+                                                ng-model="vp.payment_user"
+                                                id="payment_user" readonly class="form-control form-control-sm" 
+                                                value="<?php echo $session_user; ?>" required />
 
                                             </div>
                                         </div>
 
+
+
                                         <div class="form-row">
                                             <div class="form-group col-md-8">
                                                 <label>Add Notes</label>
-                                                <textarea rows="2" class="form-control editor" id="payment_notes" name="payment_notes" placeholder="Internal Notes"></textarea>
+                                                <textarea rows="2" 
+                                                ng-model="vp.payment_notes" 
+                                                class="form-control editor" id="payment_notes" name="payment_notes" placeholder="Internal Notes"></textarea>
                                             </div> 
                                         </div>
+
+                                        
 
 
                                         <div class="form-row">
                                             <div class="col-md-12 col-md-offset-12">
-                                                <input type="checkbox" id="paymentemail" name="paymentemail" value="payment_email">
+                                                <input type="checkbox" ng-model="vp.paymentemail"  id="paymentemail" name="paymentemail" value="payment_email">
                                                 <label for="subscribeNews">Send a Payment Made email notification to Vendor</label>									
                                             </div>
                                         </div><br/>
 
 
+                                        
+                                        
 
 
                                         <div class="form-row">
@@ -220,7 +316,7 @@
                                             <p><b>GRN # :</b></p>
                                         </div>
                                         <div class="col-md-5">
-                                            <p id="text_grn_id"></p>
+                                            <p id="text_grn_id">{{grn_values.grn_id}}</p>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -228,31 +324,16 @@
                                             <p><b>PO # :</b></p>
                                         </div>
                                         <div class="col-md-5">
-                                            <p id="text_po_code"></p>
+                                            <p id="text_po_code">{{grn_values.grn_po_code !=="" ? grn_values.grn_po_code : "-"}}</p>
                                         </div>
                                     </div>
-                                    <!--                 <div class="row">
-<div class="col-md-7">
-<p><b>Credits Available :</b></p>
-</div>
-<div class="col-md-5">
-<p id="text_amount_payable"></p>
-</div>
-</div>-->
-                                    <!--    <div class="row">
-<div class="col-md-7">
-<p><b>Amount Payable :</b></p>
-</div>
-<div class="col-md-5">
-<p id="text_amount_payable"></p>
-</div>
-</div>-->
+   
                                     <div class="row">
                                         <div class="col-md-7">
                                             <p><b>Amount Paid :</b></p>
                                         </div>
                                         <div class="col-md-5">
-                                            <p id="text_amount_paid"></p>
+                                            <p id="text_amount_paid">{{eval(grn_values.grn_po_value)-eval(grn_values.grn_balance)}}</p>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -260,7 +341,7 @@
                                             <p><b>Amount Payable :</b></p>
                                         </div>
                                         <div class="col-md-5">
-                                            <p id="text_balance"></p>
+                                            <p id="text_balance">{{grn_values.grn_balance}}</p>
                                         </div>
                                     </div>
                                     <div class="row" id="credit_balance_div" style="display:none;">
@@ -269,17 +350,11 @@
                                         </div>
                                         <div class="col-md-5">
                                             <p id="credit_balance">
-
+                                            {{grn_values.grn_id}}
                                             </p>
                                         </div>
                                     </div>
-                                    <!--                                    <div class="row" id="use_credits_row" style="display:none;">
-<div class="col-md-7">
-</div>
-<div class="col-md-5">
-<a href="#" onclick="show_credits_input();">Use Credits</a>
-</div>
-</div>-->
+         
                                 </div>
                             </div>
 
@@ -296,154 +371,296 @@
         </div>
         <!-- BEGIN Java Script for this page -->
         <script>
-
-
-            var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
-            var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
-            var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
-            var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
-            var page_payment_v_credits_id = "<?php if(isset($_GET['v_credits_id'])){ echo $_GET['v_credits_id']; } ?>";
-
-            $(function(){
-                var vendor_params =[];
-                Page.load_select_options('payment_vendor',vendor_params,'vendorprofile','Vendor Code','vendorid','supname'); 
-
-                if(page_action=="add"&&page_payment_invoice_no){
-                    $('#payment_vendor').val(page_vendor);
-                    onvendor_select(page_vendor);
-                    $('#payment_invoice_no').val(page_payment_invoice_no);
-                    oninvoice_select(page_payment_invoice_no);
-
+            var config = {
+                headers : {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
                 }
-
-            });
-
-        function printBankDetails(bankid) {
-            if (bankid != '') {
-                var bank_data = Page.get_edit_vals(bankid, "compbank", "id");
-                var bank_div = '';
-                bank_div += '<h6>Bank Details</h6>';
-                bank_div += '<p>';
-                bank_div += '<b>' + bank_data.bankname + '</b><br/>';
-                bank_div += bank_data.acctname + '<br/>';
-                bank_div += bank_data.acctno + '<br/>';
-                bank_div += bank_data.acctype + '<br/>';
-                bank_div += bank_data.branch + '<br/>';
-                bank_div += bank_data.ifsc + '<br/>';
-                bank_div += '</p>';
-                $('#vendor_bank_details').html(bank_div);
-            } else {
-                $('#vendor_bank_details').html('');
-
             }
-        }
+            
 
-            function modifyRefNoField(modeOfPayment){
-
-                if (modeOfPayment == "Bank Transfer" || modeOfPayment == "Bank Remittance") {
-                    $('#payment_bank_row').show();
-                    $('#payment_cheque_status_row').hide();
-                    $('#vendor_bank_details').show();
-                } else {
-                    $('#payment_bank_row').hide();
-                    $('#vendor_bank_details').hide();
-
-                }
-
-                if (modeOfPayment == "Cheque") {
-                    $('#payment_cheque_status_row').show();
-                    $('#payment_bank_row').hide();
-                    $('#vendor_bank_details').hide();
-                    $('#payment_cheque_status').val('Uncleared');
-               } else {
-                    $('#payment_cheque_status_row').hide();
-                }
-
-                if(modeOfPayment!=="Cash"){
-                    $('#payment_ref_no').attr("required",true);
-                }else{
-                    $('#payment_ref_no').attr("required",false);
-                }
-}
-
-            function onvendor_select(val){
-
-                $.ajax ({
-                    url: 'workers/getters/get_invoices.php',
-                    type: 'post',
-                    async:false,
-                    data: {payment_vendor:val},
-                    dataType: 'json',
-                    success:function(response){
-                        Page.plant("payment_invoice_no",response.status,response.values,"grn_invoice_no",null,null,"Invoices");
-
-                    }
+        var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
+        var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
+        var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
+        var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
+        var page_payment_id = "<?php if(isset($_GET['payment_id'])){ echo $_GET['payment_id']; } ?>";
 
 
-                });
-
-                if(page_payment_v_credits_id!=''){
-                    var credits_data = Page.get_edit_vals(page_payment_v_credits_id,'vendorcredits','v_credits_id');
-
-                    $('#credit_balance').text(credits_data.v_credits_availcredits);   
-                    $('#credit_balance_div').show();   
-                    if(credits_data.v_credits_availcredits>0){
-                        show_credits_input();
-                        $('#show_credit_div').show();
-                        $('#payment_amount_credit').val(credits_data.v_credits_availcredits); 
-                        show_credits_input();
-                    }
-                }
-
-
-            }
-
-            function show_credits_input(){
-                var amount = $('#payment_amount').val()?$('#payment_amount').val():0;
-                var credit = $('#payment_amount_credit').val()?$('#payment_amount_credit').val():0;
-                var curr_total_amt = eval(credit)+eval(amount);
-                $('#total_amount').text(curr_total_amt);
-
-            }
-
-            function oninvoice_select(val){
-
-                var grn_data = get_grn_values(val);
-                $('#text_grn_id').text(grn_data.grn_id);
-                $('#text_po_code').text(grn_data.grn_po_code);
-                $('#text_amount_payable').text(grn_data.grn_po_value); 
-                $('#text_amount_paid').text(eval(grn_data.grn_po_value)-eval(grn_data.grn_balance)); 
-                $('#text_balance').text(grn_data.grn_balance); 
-
-            }
-
-
-            function get_form_values(code){
-                var edit_data = Page.get_edit_vals(code,'payments','payment_id');
-                return edit_data;
-            }
-
-            function get_grn_values(code){
-                var edit_data = Page.get_edit_vals(code,'grn_notes','grn_invoice_no');
-                return edit_data;
-            }
-
-            function getFormData($form){
-                var unindexed_array = $form.serializeArray();
-                var indexed_array = {};
-
-                $.map(unindexed_array, function(n, i){
-
-                    if(n['name']=="id"||n['payment_amount_credit']){
-
+        var error = false;
+        var app = angular.module('paymentPages', []);
+        app.controller('formCtrl', function ($scope, $http) {
+            $scope.formInit = () =>{
+                if (page_action == "edit") {
+                    var credits_data = Page.get_edit_vals(page_payment_id, "payments", "payment_id");                    
+                    $scope.vp = credits_data;
+                    $scope.vp.payment_date = new Date($scope.vp.payment_date);
+                    $scope.onVendorChange();
+                    $scope.onPaymentModeChange();
+                    if($scope.vp.payment_mode==="Cash"){
                     }else{
-                        indexed_array[n['name']] = n['value'];
+                        $scope.onBankChange();
+                    }
+                    $scope.onCreditChange();
+                    $scope.editMode = true;
+                }
+            }
+            $scope.test = "test";
+            $scope.invoices =[];
+            $scope.vp = {
+                payment_vendor: "",
+                payment_invoice_no: "",
+                payment_amount: "",
+                payment_amount_credit: "",
+                payment_date: new Date(),
+                payment_mode: "",
+                payment_cheque_status: "Uncleared",
+                payment_bank: 0,
+                payment_ref_no: 0,
+                payment_user: "<?php echo $session_user; ?>",
+                payment_notes: "",
+                paymentemail: false
+            };
 
+            $scope.creditAmtValidation = true;
+
+
+            $scope.onPaymentModeChange = () => {
+                let comprofile = Page.get_edit_vals('<?php echo $session_org;?>', "comprofile", "orgid");
+                $scope.comprofile = comprofile;
+            }
+
+            $scope.getCompanyDetails = () => {
+                let comprofile = Page.get_edit_vals('<?php echo $session_org;?>', "comprofile", "orgid");
+                $scope.comprofile = comprofile;
+            }
+
+
+            $scope.onBankChange = () => {
+                let selectedBank = Page.get_edit_vals($scope.vp.payment_bank, "compbank", "id");
+                $scope.selectedBank = selectedBank;
+            }
+
+            $scope.onVendorChange = () => {
+                let vendorProfile = Page.get_edit_vals($scope.vp.payment_vendor, "vendorprofile",
+                    "vendorid");
+                $scope.vendorProfile = vendorProfile;
+
+                var data = $.param({
+                    payment_vendor: vendorProfile.vendorid
+                });
+        
+                $http.post("workers/getters/get_invoices.php",data,config)
+                .then(function(response) {
+                    if(response.data.status){
+                        $scope.invoices = response.data.values;
+                       //Page.plant("payment_invoice_no",response.data.status,response.data.values,"grn_invoice_no",null,null,"Invoices");
+                    }
+                });
+            }
+
+            $scope.onInvoiceChange = () =>{
+                console.log($scope.vp);
+                let grn_values = Page.get_edit_vals($scope.vp.payment_invoice_no,'grn_notes','grn_invoice_no');
+                $scope.grn_values = grn_values;
+            }
+
+            $scope.onCreditChange = () => {
+                if ($scope.vc.v_credits_paymentmode === "Cash") {
+                     $scope.creditAmtValidation = +$scope.vc.v_credits_amount > +$scope.comprofile
+                        .petty_cash_bal ? false : true;
+        
+                        
+                } else {
+                    $scope.creditAmtValidation = +$scope.vp.payment_amount > +$scope.selectedBank
+                        .closing_bal ? false : true;
+                }
+
+                error = !$scope.creditAmtValidation;
+            }
+
+            $scope.convertToPettyCash = () =>{
+                
+                let obj = {
+                    conv_amt:$scope.conv_amt,
+                    handler:"<?php echo $session_user;?>",
+                    compId: "<?php echo $session_org;?>",
+                    conv_remarks:$scope.conv_remarks ? $scope.conv_remarks : "",
+                    action:"add",
+                    table:"petty_cas_conv"
+                };
+
+                $http({
+                        method: 'POST',
+                        url: "workers/setters/save_conversion.php",
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        transformRequest: function(obj) {
+                            var str = [];
+                            for(var p in obj)
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                            return str.join("&");
+                        },
+                        data: obj
+                    }) .then(function(response) {
+                    if(response.data.status){
+                        $scope.conv_amt="";
+                        $scope.conv_remarks = "";
+                        $scope.getCompanyDetails();
+                        $("#pettyCashConvModal").modal('hide');
                     }
                 });
 
-                return indexed_array;
             }
+        });
+
+        // $(function(){
+        //     var vendor_params =[];
+        //     Page.load_select_options('payment_vendor',vendor_params,'vendorprofile','Vendor Code','vendorid','supname'); 
+
+        //     if(page_action=="add"&&page_payment_invoice_no){
+        //         $('#payment_vendor').val(page_vendor);
+        //         onvendor_select(page_vendor);
+        //         $('#payment_invoice_no').val(page_payment_invoice_no);
+        //         oninvoice_select(page_payment_invoice_no);
+
+        //     }
+
+        // });
+
+//         function printBankDetails(bankid) {
+//             if (bankid != '') {
+//                 var bank_data = Page.get_edit_vals(bankid, "compbank", "id");
+//                 var bank_div = '';
+//                 bank_div += '<h6>Bank Details</h6>';
+//                 bank_div += '<p>';
+//                 bank_div += '<b>' + bank_data.bankname + '</b><br/>';
+//                 bank_div += bank_data.acctname + '<br/>';
+//                 bank_div += bank_data.acctno + '<br/>';
+//                 bank_div += bank_data.acctype + '<br/>';
+//                 bank_div += bank_data.branch + '<br/>';
+//                 bank_div += bank_data.ifsc + '<br/>';
+//                 bank_div += '</p>';
+//                 $('#vendor_bank_details').html(bank_div);
+//             } else {
+//                 $('#vendor_bank_details').html('');
+
+//             }
+//         }
+
+//         function modifyRefNoField(modeOfPayment){
+//                 console.log(modeOfPayment);
+                
+//                 if (modeOfPayment === "Bank Transfer") {
+//                     $('#payment_bank_row').show();
+//                     $('#payment_cheque_status_row').hide();
+//                     $('#vendor_bank_details').show();
+                    
+//                 } else {
+//                     $('#payment_bank_row').hide();
+//                     $('#vendor_bank_details').hide();
+
+//                 }
+
+//                 if (modeOfPayment === "Cheque") {
+//                     $('#payment_bank_row').show();
+//                     $('#payment_cheque_status_row').show();
+//                     $('#vendor_bank_details').show();
+                    
+//                 } else {
+//                     $('#payment_bank_row').hide();
+//                     $('#vendor_bank_details').hide();
+//                     $('#payment_cheque_status_row').hide();
+
+//                 }
+
+//                 if(modeOfPayment!=="Cash"){
+//                     $('#payment_ref_no').attr("required",true);
+//                 }else{
+//                     $('#payment_ref_no').attr("required",false);
+//                 }
+
+//                 if(modeOfPayment=="Cash"){
+//                     var comprofile = Page.get_edit_vals("COMP001", "comprofile", "orgid");
+//                     $("#petty_cash_bal").html(comprofile.petty_cash_bal);
+//                 }
+// }
+
+//         function onvendor_select(val){
+
+//                 $.ajax ({
+//                     url: 'workers/getters/get_invoices.php',
+//                     type: 'post',
+//                     async:false,
+//                     data: {payment_vendor:val},
+//                     dataType: 'json',
+//                     success:function(response){
+//                         Page.plant("payment_invoice_no",response.status,response.values,"grn_invoice_no",null,null,"Invoices");
+
+//                     }
+
+
+//                 });
+
+//                 if(page_payment_v_credits_id!=''){
+//                     var credits_data = Page.get_edit_vals(page_payment_v_credits_id,'vendorcredits','v_credits_id');
+
+//                     $('#credit_balance').text(credits_data.v_credits_availcredits);   
+//                     $('#credit_balance_div').show();   
+//                     if(credits_data.v_credits_availcredits>0){
+//                         show_credits_input();
+//                         $('#show_credit_div').show();
+//                         $('#payment_amount_credit').val(credits_data.v_credits_availcredits); 
+//                         show_credits_input();
+//                     }
+//                 }
+
+
+//         }
+
+            // function show_credits_input(){
+            //     var amount = $('#payment_amount').val()?$('#payment_amount').val():0;
+            //     var credit = $('#payment_amount_credit').val()?$('#payment_amount_credit').val():0;
+            //     var curr_total_amt = eval(credit)+eval(amount);
+            //     $('#total_amount').text(curr_total_amt);
+
+            // }
+
+            // function oninvoice_select(val){
+
+            //     var grn_data = get_grn_values(val);
+            //     $('#text_grn_id').text(grn_data.grn_id);
+            //     $('#text_po_code').text(grn_data.grn_po_code);
+            //     $('#text_amount_payable').text(grn_data.grn_po_value); 
+            //     $('#text_amount_paid').text(eval(grn_data.grn_po_value)-eval(grn_data.grn_balance)); 
+            //     $('#text_balance').text(grn_data.grn_balance); 
+
+            // }
+
+
+            // function get_form_values(code){
+            //     var edit_data = Page.get_edit_vals(code,'payments','payment_id');
+            //     return edit_data;
+            // }
+
+            // function get_grn_values(code){
+            //     var edit_data = Page.get_edit_vals(code,'grn_notes','grn_invoice_no');
+            //     return edit_data;
+            // }
+
+            // function getFormData($form){
+            //     var unindexed_array = $form.serializeArray();
+            //     var indexed_array = {};
+
+            //     $.map(unindexed_array, function(n, i){
+
+            //         if(n['name']=="id"||n['payment_amount_credit']){
+
+            //         }else{
+            //             indexed_array[n['name']] = n['value'];
+
+            //         }
+            //     });
+
+            //     return indexed_array;
+            // }
 
 
             $("#cancel-form").click(function(){
