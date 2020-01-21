@@ -291,7 +291,7 @@ if(isset($_GET['grn_id']))
                                                 <div class="col-md-8">
 
                                                     <div id="ember1600" class="input-group ember-view col-md-7" style="padding-left:0px;">
-                                                        <input type="text" class="form-control text-right ember-text-field text-right ember-view" id="podiscount" style=".375rem .75rem;" onkeypress="rowitem.update_math_vals();"   onkeyup="rowitem.update_math_vals();" placeholder="Discount"> 
+                                                        <input type="text" class="form-control text-right ember-text-field text-right ember-view" id="podiscount" style="padding:.375rem .75rem;" onkeypress="rowitem.update_math_vals();"   onkeyup="rowitem.update_math_vals();" placeholder="Discount"> 
                                                         <!----> <div class="input-group-btn" style="width:20%;"><button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle discount-btn" data-meth="flat" id="discoutTypeTextbutton">
                                                         <span id="discoutTypeText">₹</span>  <span class="caret"></span></button> <ul class="dropdown-menu pull-right text-center" style="min-width:4rem;" id="discoutType">
                                                         <li onclick="rowitem.chgdiscount_type(this);" data-meth="percent"><a data-ember-action="" data-ember-action-1602="1602"  >%</a></li> 

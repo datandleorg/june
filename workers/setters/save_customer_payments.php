@@ -4,6 +4,10 @@ include('../../database/db_conection.php');
 
 include('../getters/functions.php');
 
+try{
+
+    $dbcon->begin_transaction();
+
 if (isset($_POST['array'])) {
     $array=$_POST['array'];
     $cust_payment_id=$_POST['cust_payment_id'];
@@ -18,7 +22,6 @@ if (isset($_POST['array'])) {
     $return=array();
 
     if ($cust_payment_id=="") {
-
         $cust_payment_id = get_id($dbcon,$table,"CUSTPAY-0000");
     }
 
@@ -61,42 +64,51 @@ if (isset($_POST['array'])) {
                 }else{
                     $return['status']=false;
                     $return['error']=mysqli_error($dbcon);
+                    throw new Exception();
                 }
             }
 
             // correct verson
-            if ($return['status']){
-            $entry['data'] = json_decode($array,true);
-            $entry['rowId'] = $cust_payment_id;
-            $entry['colName'] = "cust_payment_id";
-            $entry['entity'] = "Customer Payments";
-
-                $transData = array();
-                $transData['trans_type'] = "debit";
-                $transData['trans_amt'] = $entry['data']['cust_payment_amount'];
-                $transData['trans_bank'] = $entry['data']['cust_payment_mode']!=="Cash" ? $entry['data']['cust_payment_bank'] : "";
-                $transData['trans_entry'] = json_encode($entry);
-                $transData['trans_status'] = "Completed";
-                $transData['trans_handler'] = $handler;
-                $transData['trans_mode'] = $entry['data']['cust_payment_mode'];
-                
-                $return = handleTransaction($dbcon,$compId,$entry,'',$transData);
-            
-            }else{
-                $return['status']=false;
-                $return['error']=mysqli_error($dbcon);
+            if($return['status']){
+                $entryData = json_decode($array,true);
+                $entryData['amount'] = $entryData['cust_payment_amount'];
+                $entryData['payment_mode'] = $entryData['cust_payment_mode'];
+                $entryData['trans_bank'] = $entryData['cust_payment_mode']!=="Cash" ? $entryData['cust_payment_bank'] : "";
+                $entryData['payment_status'] = $entryData['cust_payment_mode']==="Cheque"?$entryData['cust_payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+                $rowId = $cust_payment_id;
+                $entity = $table;
+                if($entryData['payment_status']==="Completed"){
+                    $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+ 
+                    if(!$return['status']){
+                        throw new Exception();
+                    }
+                }
             }
 
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);
+            throw new Exception();
         }
     }else{
         $return = update_query($dbcon,$array,$payment_id,$table,"payment_id");
     }
 
 }
-echo json_encode($return);
+// Commit transaction
+$dbcon->commit();
 
+
+}catch(Exception $e){
+// Rollback transaction
+ "rollback";
+ $dbcon->rollback();
+
+}finally{
+// Close connection
+ $dbcon->close();
+ echo json_encode($return);
+}
 
 ?>

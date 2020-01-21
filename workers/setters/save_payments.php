@@ -24,21 +24,22 @@ if (isset($_POST['array'])) {
 
     if ($payment_id=="") {
 
-        $payment_id = get_id($dbcon,$table,"00000");
+        $payment_id = get_id($dbcon,$table,"VP00");
     }
 
 
     if($action=="add"){
-        $sql2 = "INSERT INTO payments (payment_id) VALUES ('$payment_id')";
+     $sql2 = "INSERT INTO payments (payment_id) VALUES ('$payment_id')";
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$payment_id,$table,"payment_id");
-
             if($return['status']){
                 $grn_val_arr = findbyand($dbcon,$payment_grn_id,"grn_notes","grn_id");
                 $balance = $grn_val_arr['values'][0]['grn_balance']-$payment_amount;
                 $return = updatebyand($dbcon,$balance,"grn_notes","grn_balance","grn_id",$payment_grn_id);
-                if($return['status']){
-                    $return = update_open_balance($dbcon,'payables');
+
+                // if($return['status']){
+                //     $return = update_open_balance($dbcon,'payables');
+
                     if($return['status']){
                         $grn_val_arr = findbyand($dbcon,$payment_grn_id,"grn_notes","grn_id");
 
@@ -83,13 +84,28 @@ if (isset($_POST['array'])) {
                             }
                         }
 
+                        if($return['status']){
+                            $entryData = json_decode($array,true);
+                            $entryData['amount'] = $entryData['payment_amount'];
+                            $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ? $entryData['payment_bank'] : "";
+                            $entryData['payment_status'] = $entryData['payment_mode']==="Cheque"?$entryData['payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+                            $rowId = $payment_id;
+                            $entity = $table;
+                            if($entryData['payment_status']==="Completed"){
+                                $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+             
+                                if(!$return['status']){
+                                    throw new Exception();
+                                }
+                            }
+                        }
                         
                     }else{
                         throw new Exception();
                     }
-                }else{
-                    throw new Exception();
-                }
+                // }else{
+                //     throw new Exception();
+                // }
 
             }else{
                 throw new Exception();
