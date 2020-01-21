@@ -620,6 +620,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
     $compData = getTotalClosingBal($dbcon,$compId);
     $compBank = $data['trans_bank']!=="" ? findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0] : "";
     $res = array();
+    //echo $entity;
     if($entity==="bankdeposit"){
 
            if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
@@ -712,8 +713,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
                 $res['status'] = false;
             }
 
-    }else if($entity==="vendorpayments"){
-
+    }else if($entity==="payments"){
             
         if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
 
@@ -732,6 +732,8 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         }
 
         if($res['status']){
+            $compBank = $data['payment_mode']!=="Cash" ? findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0] : "";
+            $compData = getTotalClosingBal($dbcon,$compId);
             $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"credit":"debit");
         }else{
             $res['status'] = false;
@@ -780,15 +782,14 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
             $res['status'] = false;
         }
 
-    }else if($entity==="customerpayments"){
+    }else if($entity==="customer_payments"){
 
-            
+                //   print_r($data);
         if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
             $res = modifyCompValues($dbcon,"cash_on_hand",$data['amount'],$compId,$trans_dir==="normal"?"credit":"debit");
         }else{
             $compBank = findbyand($dbcon,$data['bankname'],'compbank','id')['values'][0];
             $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['bankname'],$compId,$trans_dir==="normal"?"credit":"debit");
-                
         }
 
         if($res['status']){

@@ -121,9 +121,7 @@
                                                     <option value="">-- Select Payment Mode --</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Cheque">Cheque</option>
-                                                    <option value="Credit Card">Credit Card</option>
                                                     <option value="Bank Transfer">Bank Transfer</option>
-                                                    <option value="Bank Remittance">Bank Remittance</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -327,8 +325,8 @@
 
             if (modeOfPayment == "Cheque") {
                 $('#cust_payment_cheque_status_row').show();
-                $('#cust_payment_bank_row').hide();
-                $('#vendor_bank_details').hide();
+                $('#cust_payment_bank_row').show();
+                $('#vendor_bank_details').show();
                 $('#cust_payment_cheque_status').val('Uncleared');
             } else {
                 $('#cust_payment_cheque_status_row').hide();
@@ -503,7 +501,7 @@
                     },
                     dataType: 'json',
                     success:function(response){
-                     //   location.href="listInvoices.php";
+                        location.href="listInvoices.php";
                     }
 
 

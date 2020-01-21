@@ -93,7 +93,7 @@
                                 <div class="col-md-8">
 
                                     <!--form autocomplete="off" action="#"-->
-                                    <form  autocomplete="off" action="#" id="add_payment_form" enctype="multipart/form-data" novalidate>
+                                    <form ng-submit="makePayment()" >
 
                                         <div class="form-row">
                                             <div class="form-group col-md-8" >
@@ -144,19 +144,18 @@
                                         
                                         </div>
 
-                                        <div class="form-row" id="show_credit_div" style="display:none;">
+                                        <div class="form-row" ng-if="showCreditInput">
 
                                             <div class="form-group col-md-4">
                                                 <label for="inputState">Total Amount</label>
-                                                <p id="total_amount"></p>
+                                                <p id="total_amount">{{+vp.payment_credits_used+(+vp.payment_amount)}}</p>
                                             </div>
 
                                             <div class="form-group col-md-4">										
                                                 <label>Enter Credit Amount <span class="text-danger">*&nbsp;</span><i class="fa fa-rupee fonts" aria-hidden="true"></i>&nbsp;[INR]</label>
                                                 <input 
-                                                ng-model="vp.payment_amount_credit"
-                                                ng-change="show_credits_input()"
-                                                type="text" class="form-control form-control-sm" id="payment_amount_credit" 
+                                                ng-model="vp.payment_credits_used"
+                                                type="text" class="form-control form-control-sm" id="payment_credits_used" 
                                                 placeholder="Enter Credit Amount" class="form-control" autocomplete="off" />
                                             </div>
                         
@@ -191,12 +190,12 @@
                                         </div>
                         
                                         
-                                        <div class="form-row" id="payment_cheque_status_row">
+                                        <div class="form-row" ng-if="vp.payment_mode==='Cheque'">
                                             <div class="form-group col-md-6">
                                                 <label>Cheque Status<span class="text-danger">*</span></label>
                                                 <select required name="payment_cheque_status" id="payment_cheque_status" 
                                                 ng-model="vp.payment_cheque_status"
-                                                data-parsley-trigger="change" class="form-control form-control-sm">
+                                                data-parsley-trigger="change" class="form-control form-control-sm select2">
                                                     <option value="">-- Select Cheque Status --</option>
                                                     <option value="Cleared">Cleared</option>
                                                     <option value="Uncleared">Uncleared</option>
@@ -207,32 +206,38 @@
 
 
 
-                                <div class="form-row" id="payment_bank_row">
+                                <div class="form-row" ng-if="vp.payment_mode!=='Cash' && vp.payment_mode!==''">
                                     <div class="form-group col-sm-6">
                                         <label> Bank<span class="text-danger">*</span></label>
-
-                                        <select id="payment_bank" class="form-control form-control-sm" 
+                                        <select id="payment_bank" class="select2 form-control form-control-sm " 
                                         ng-model="vp.payment_bank"
-                                        ng-change="printBankDetails()"
+                                        ng-change="onBankChange()"
                                         name="payment_bank">
-                                            <option selected>--Select Bank--</option> ';
+                                            <option value="">--Select Bank--</option> ';
                                             <?php
-                                            $sql = "SELECT * FROM compbank where orgid='COMP001' ";
-                                            $result = mysqli_query($dbcon, $sql);
-                                            while ($row = $result->fetch_assoc()) {
-                                                $bankid = $row['id'];
-                                                $bankname = $row['bankname'];
-                                                echo '<option  value="' . $bankid . '" >' . $bankname . '</option>';
-                                            }
+                                                $sql = "SELECT * FROM compbank where orgid='COMP001' ";
+                                                $result = mysqli_query($dbcon, $sql);
+                                                while ($row = $result->fetch_assoc()) {
+                                                    $bankid = $row['id'];
+                                                    $bankname = $row['bankname'];
+                                                    echo '<option  value="' . $bankid . '" >' . $bankname . '</option>';
+                                                }
                                             ?>
                                         </select>
                                     </div>
                                 </div>
                                            
-
-                                <div class="form-row">
-                                    <div class="form-group col-md-6" id="vendor_bank_details">
-
+                                <div class="form-row" ng-if="selectedBank">
+                                    <div class="form-group col-md-6"
+                                        ng-if="vp.payment_bank!=='' && (vp.payment_mode=='Bank Transfer' || vp.payment_mode=='Cheque')">
+                                        <p>Bank Details</p>
+                                        <p><b>{{selectedBank.bankname}}</b><br />
+                                            {{selectedBank.acctname}}<br />
+                                            {{selectedBank.acctno}}<br />
+                                            {{selectedBank.acctype}}<br />
+                                            {{selectedBank.branch}}<br />
+                                            {{selectedBank.ifsc}}<br />
+                                        </p>
                                     </div>
                                 </div>
 
@@ -244,7 +249,6 @@
                                                 <input type="text" class="form-control form-control-sm" 
                                                 name="payment_ref_no" id="payment_ref_no" 
                                                 ng-model="vp.payment_ref_no"
-                                                ng-change="printBankDetails()"
                                                 placeholder=" Reference Number(optional)"  class="form-control" autocomplete="off" />
                                             </div>
                                         </div>
@@ -279,7 +283,7 @@
 
                                         <div class="form-row">
                                             <div class="col-md-12 col-md-offset-12">
-                                                <input type="checkbox" ng-model="vp.paymentemail"  id="paymentemail" name="paymentemail" value="payment_email">
+                                                <input type="checkbox" ng-model="vp.payment_notify"  id="payment_notify" name="paymentemail" value="payment_email">
                                                 <label for="subscribeNews">Send a Payment Made email notification to Vendor</label>									
                                             </div>
                                         </div><br/>
@@ -378,17 +382,37 @@
             }
             
 
-        var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
-        var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
-        var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
-        var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
-        var page_payment_id = "<?php if(isset($_GET['payment_id'])){ echo $_GET['payment_id']; } ?>";
+    //     var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
+    //     var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
+    //     var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
+    //     var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
+    //     var page_payment_id = "<?php if(isset($_GET['payment_id'])){ echo $_GET['payment_id']; } ?>";
+    //    var page_payment_v_credits_id  = "<?php if(isset($_GET['v_credits_id '])){ echo $_GET['v_credits_id ']; } ?>";
 
-
+ 
         var error = false;
         var app = angular.module('paymentPages', []);
-        app.controller('formCtrl', function ($scope, $http) {
+
+
+        app.config( [ '$locationProvider', function( $locationProvider ) {
+        // In order to get the query string from the
+        // $location object, it must be in HTML5 mode.
+        $locationProvider.html5Mode({
+                enabled: true,
+                requireBase: false
+            })
+        }]);
+
+        app.controller('formCtrl', function ($scope, $http,$location) {
+
+   
             $scope.formInit = () =>{
+                $scope.v_credits_id = $location.search()['v_credits_id'];
+
+                if($scope.v_credits_id && $scope.v_credits_id!==""){                    
+                    $scope.showCreditInput = true;
+                }
+
                 if (page_action == "edit") {
                     var credits_data = Page.get_edit_vals(page_payment_id, "payments", "payment_id");                    
                     $scope.vp = credits_data;
@@ -402,6 +426,8 @@
                     $scope.onCreditChange();
                     $scope.editMode = true;
                 }
+
+            
             }
             $scope.test = "test";
             $scope.invoices =[];
@@ -409,15 +435,15 @@
                 payment_vendor: "",
                 payment_invoice_no: "",
                 payment_amount: "",
-                payment_amount_credit: "",
+                payment_credits_used: "",
                 payment_date: new Date(),
                 payment_mode: "",
-                payment_cheque_status: "Uncleared",
-                payment_bank: 0,
-                payment_ref_no: 0,
+                payment_cheque_status: "",
+                payment_bank: "",
+                payment_ref_no: "",
                 payment_user: "<?php echo $session_user; ?>",
                 payment_notes: "",
-                paymentemail: false
+                payment_notify: false
             };
 
             $scope.creditAmtValidation = true;
@@ -458,7 +484,6 @@
             }
 
             $scope.onInvoiceChange = () =>{
-                console.log($scope.vp);
                 let grn_values = Page.get_edit_vals($scope.vp.payment_invoice_no,'grn_notes','grn_invoice_no');
                 $scope.grn_values = grn_values;
             }
@@ -477,6 +502,13 @@
                 error = !$scope.creditAmtValidation;
             }
 
+            $scope.reqTransform = (obj) =>{
+                var str = [];
+                for(var p in obj)
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            }
+
             $scope.convertToPettyCash = () =>{
                 
                 let obj = {
@@ -493,10 +525,7 @@
                         url: "workers/setters/save_conversion.php",
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         transformRequest: function(obj) {
-                            var str = [];
-                            for(var p in obj)
-                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                            return str.join("&");
+                           return $scope.reqTransform(obj);
                         },
                         data: obj
                     }) .then(function(response) {
@@ -508,6 +537,58 @@
                     }
                 });
 
+            }
+
+            $scope.makePayment = () =>{
+
+                $scope.table = "payments";
+                $scope.vp.payment_grn_id = $('#text_grn_id').text();
+                $scope.vp.payment_po_code = $('#text_po_code').text();
+
+                var decision = confirm("confirm Payment");
+                
+                if (decision===false) {
+                    return false;
+                } 
+
+                var total_amt = 0;
+                if($scope.v_credits_id!==""){
+                    total_amt = +$scope.vp.payment_amount + +    $scope.vp.payment_credits_used;
+                }
+                
+                if(+$scope.grn_values.grn_balance < +total_amt){
+                    alert('Total Payment cannot be greater than Payable Amount ');
+                    return false;
+                }
+
+                let obj = {
+                        array : JSON.stringify({...$scope.vp,payment_mode:total_amt}),
+                        payment_id:"",
+                        payment_grn_id:$scope.vp.payment_grn_id,
+                        payment_amount:$scope.vp.payment_amount,
+                        action:"add",table:"payments",
+                        page_payment_v_credits_id:$scope.v_credits_id,
+                        compId:`<?php echo $session_org?$session_org:'';?>`,
+                        handler:`<?php echo $session_user?$session_user:'';?>`
+                }
+
+                $http({
+                        method: 'POST',
+                        url: "workers/setters/save_payments.php",
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        transformRequest: function(obj) {
+                           return $scope.reqTransform(obj);
+                        },
+                        data: obj
+                    }) .then(function(response) {
+                    if(response.data.status){
+                        location.href="listGoodsReceiptNote.php";
+                    }else{
+                        alert(response.data.message);
+                    }
+                    
+                });
+   
             }
         });
 
@@ -667,76 +748,76 @@
                 location.href="listPaymentsMade.php";
             });
 
-            $("form#add_payment_form").submit(function(e){
-                e.preventDefault();
+            // $("form#add_payment_form").submit(function(e){
+            //     e.preventDefault();
 
-                var $form = $(this);
-                var data = getFormData($form);
+            //     var $form = $(this);
+            //     var data = getFormData($form);
 
-                var payable_amount = eval($('#text_balance').text());
+            //     var payable_amount = eval($('#text_balance').text());
 
-                if(page_payment_v_credits_id!=''){
-                    var amount = $('#payment_amount').val()?$('#payment_amount').val():0;
-                    var credit = $('#payment_amount_credit').val()?$('#payment_amount_credit').val():0;
-                    var curr_total_amt = eval(credit)+eval(amount);
-                    $('#total_amount').text(curr_total_amt);
-                    data.payment_credits_used = credit;
-                    data.payment_amount = curr_total_amt;
+            //     if(page_payment_v_credits_id!=''){
+            //         var amount = $('#payment_amount').val()?$('#payment_amount').val():0;
+            //         var credit = $('#payment_amount_credit').val()?$('#payment_amount_credit').val():0;
+            //         var curr_total_amt = eval(credit)+eval(amount);
+            //         $('#total_amount').text(curr_total_amt);
+            //         data.payment_credits_used = credit;
+            //         data.payment_amount = curr_total_amt;
 
-                    var availabe_credit = eval($('#credit_balance').text());
-                    if(eval(data.payment_amount)>payable_amount){
-                        alert('Total Payment cannot be greater than Payable Amount ');
-                        $('#submit-form').show();
-                        $('#cancel-form').show();
+            //         var availabe_credit = eval($('#credit_balance').text());
+            //         if(eval(data.payment_amount)>payable_amount){
+            //             alert('Total Payment cannot be greater than Payable Amount ');
+            //             $('#submit-form').show();
+            //             $('#cancel-form').show();
 
-                        return false;
-                    }
+            //             return false;
+            //         }
 
-                    if(credit>availabe_credit){
-                        alert('You are above your credit balance ');
-                        $('#submit-form').show();
-                        $('#cancel-form').show();
+            //         if(credit>availabe_credit){
+            //             alert('You are above your credit balance ');
+            //             $('#submit-form').show();
+            //             $('#cancel-form').show();
 
-                        return false;
-                    }
-                }
+            //             return false;
+            //         }
+            //     }
 
-                if(eval(data.payment_amount)>payable_amount){
-                    alert('Total Payment cannot be greater than Payable Amount ');
-                    $('#submit-form').show();
-                    $('#cancel-form').show();
+            //     if(eval(data.payment_amount)>payable_amount){
+            //         alert('Total Payment cannot be greater than Payable Amount ');
+            //         $('#submit-form').show();
+            //         $('#cancel-form').show();
 
-                    return false;
-                }
+            //         return false;
+            //     }
 
-                data.table = "payments";
-                data.payment_grn_id = $('#text_grn_id').text();
-                data.payment_po_code = $('#text_po_code').text();
+            //     data.table = "payments";
+            //     data.payment_grn_id = $('#text_grn_id').text();
+            //     data.payment_po_code = $('#text_po_code').text();
 
-                $.ajax ({
-                    url: 'workers/setters/save_payments.php',
-                    type: 'post',
-                    data: {
-                        array : JSON.stringify(data),
-                        payment_id:"",
-                        payment_grn_id:data.payment_grn_id,
-                        payment_amount:data.payment_amount,
-                        action:"add",table:"payments",
-                        page_payment_v_credits_id:page_payment_v_credits_id,
-                        compId:`<?php echo $session_org?$session_org:'';?>`,
-                        handler:`<?php echo $session_user?$session_user:'';?>`
-                    },
-                    dataType: 'json',
-                    success:function(response){
-                        if(response.status){
-                           // location.href="listGoodsReceiptNote.php";
-                        }
-                    }
+            //     $.ajax ({
+            //         url: 'workers/setters/save_payments.php',
+            //         type: 'post',
+            //         data: {
+            //             array : JSON.stringify(data),
+            //             payment_id:"",
+            //             payment_grn_id:data.payment_grn_id,
+            //             payment_amount:data.payment_amount,
+            //             action:"add",table:"payments",
+            //             page_payment_v_credits_id:page_payment_v_credits_id,
+            //             compId:`<?php echo $session_org?$session_org:'';?>`,
+            //             handler:`<?php echo $session_user?$session_user:'';?>`
+            //         },
+            //         dataType: 'json',
+            //         success:function(response){
+            //             if(response.status){
+            //                // location.href="listGoodsReceiptNote.php";
+            //             }
+            //         }
 
 
-                });
+            //     });
 
-            });
+            // });
         </script>
 
         <?php include('footer.php');?>
