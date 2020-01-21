@@ -124,17 +124,16 @@ function print_duedate($payterm, $payterm_desc, $inv_date){
             <tbody>
                 <tr>
                     <td width="50%" style="border:1px solid #000;padding:10px;">
-                        <b>Customer Name & Address</b><br/>
+                    <b>Company Name & Address</b><br/>
 
-                        <?php echo $row2['custname']; ?>,<br/>
+<?php echo $row1['orgname']; ?>,<br/>
+<?php echo $row1['address']; ?>,<br/>
+<?php echo $row1['city']; ?>-<?php echo $row1['zip']; ?>&nbsp;
+<?php echo $row1['country']; ?>,<?php echo $row1['state']; ?><br/>
+<b>Mob#:&nbsp;</b><?php echo $row1['mobile'];?><br/>
+<b>GSTIN</b> - <?php echo $row1['gstin']; ?>
 
-                        <!-- Code updated by jayaprakash - 09042019 -->
-                        <?php echo $row['inv_shipping_street']; ?>,<br/>
-                        <?php echo $row['inv_shipping_city']; ?>-<?php echo $row['inv_shipping_zip']; ?>&nbsp;<?php echo $row['inv_shipping_country']; ?>,<?php echo $row['inv_shipping_state']; ?><br/>
-                        <b>Mob#</b>:&nbsp;<?php echo $row2['mobile']; ?> <br/>
                         
-                        <!--?php echo $row2['city']; ?--> <!--?php echo $row2['zip']; ?-->                        
-                        <b>GSTIN</b> - <?php echo $row['inv_shipping_gstin']; ?>
                     </td>
                     <td width="50%" style="border:1px solid #000;padding:0px;">
                         <table width="100%">
@@ -166,14 +165,17 @@ function print_duedate($payterm, $payterm_desc, $inv_date){
                 </tr>
                 <tr>
                     <td width="50%" style="border:1px solid #000;padding:10px;">
-                        <b>Company Name & Address</b><br/>
+                    <b>Customer Name & Address</b><br/>
 
-                        <?php echo $row1['orgname']; ?>,<br/>
-                        <?php echo $row1['address']; ?>,<br/>
-                        <?php echo $row1['city']; ?>-<?php echo $row1['zip']; ?>&nbsp;
-                        <?php echo $row1['country']; ?>,<?php echo $row1['state']; ?><br/>
-                        <b>Mob#:&nbsp;</b><?php echo $row1['mobile'];?><br/>
-                        <b>GSTIN</b> - <?php echo $row1['gstin']; ?>
+<?php echo $row2['custname']; ?>,<br/>
+
+<!-- Code updated by jayaprakash - 09042019 -->
+<?php echo $row['inv_shipping_street']; ?>,<br/>
+<?php echo $row['inv_shipping_city']; ?>-<?php echo $row['inv_shipping_zip']; ?>&nbsp;<?php echo $row['inv_shipping_country']; ?>,<?php echo $row['inv_shipping_state']; ?><br/>
+<b>Mob#</b>:&nbsp;<?php echo $row2['mobile']; ?> <br/>
+
+<!--?php echo $row2['city']; ?--> <!--?php echo $row2['zip']; ?-->                        
+<b>GSTIN</b> - <?php echo $row['inv_shipping_gstin']; ?>
                     </td>
                     <!-- Code added by Saravanakumar -->
                     <td width="50%" style="border:1px solid #000;padding:0px;">
