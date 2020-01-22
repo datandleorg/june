@@ -567,7 +567,7 @@
                         payment_grn_id:$scope.vp.payment_grn_id,
                         payment_amount:$scope.vp.payment_amount,
                         action:"add",table:"payments",
-                        page_payment_v_credits_id:$scope.v_credits_id,
+                        page_payment_v_credits_id:$scope.v_credits_id!==undefined?$scope.v_credits_id:"",
                         compId:`<?php echo $session_org?$session_org:'';?>`,
                         handler:`<?php echo $session_user?$session_user:'';?>`
                 }
