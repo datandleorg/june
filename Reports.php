@@ -65,6 +65,11 @@
 									 data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when  amount is deposited into company's bank 
 									 Report is generated."></i><br><br>
 									 
+									  <a href="listPettyCashConv.php"> <i class="fa fa-angle-right bigfonts" aria-hidden="true"></i> &nbsp;
+									 Petty Cash Conversion Report</a> &nbsp;<i class="fa fa-question-circle-o bigfonts" aria-hidden="true" 
+									 data-toggle="popover" data-trigger="focus" data-placement="top" title="As and when  amount is deposited into company's bank 
+									 Report is generated."></i><br><br>
+									 
 									 
 									</td>
 									

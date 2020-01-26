@@ -42,12 +42,12 @@
                                     <thead>
                                         <tr>
                                             <th style="display:none;">Id#</th>												
-                                            <th style="width:50px">Conversion Id#</th>												
-                                            <th style="width:3000px">Amount</th>												
+                                            <th style="width:100px">Conversion Id#</th>												
+                                            <th style="width:100px">Amount</th>												
                                             <th style="width:200px">Remarks</th>
-                                            <th style="width:200px">User</th>
-                                            <th style="width:200px">Date#</th>
-                                            <th style="width:200px">Actions</th>
+                                            <th style="width:100px">User</th>
+                                            <th style="width:100px">Date#</th>
+                                            <th style="width:100px">Actions</th>
                                         </tr>
                                     </thead>										
                                     <tbody>
