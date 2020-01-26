@@ -404,9 +404,9 @@
             data.table = "customercredits";
             data.customer_credits_email_notification =$('#customer_credits_email_notification').is(":checked")?"yes":"no";
 
-            if(page_action!="edit"){
+           // if(page_action!="edit"){
                 data.customer_credits_availcredits = $('#customer_credits_amount').val();
-            }
+          //  }
 
             data.customer_credits_compId = `<?php echo $session_org?$session_org:'';?>`;
 

@@ -620,7 +620,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
     $compData = getTotalClosingBal($dbcon,$compId);
     $compBank = $data['trans_bank']!=="" ? findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0] : "";
     $res = array();
-    //echo $entity;
+   // echo $entity;
     if($entity==="bankdeposit"){
 
            if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
@@ -664,6 +664,12 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
             // check balanace
             if($compBank['closing_bal']>=$data['amount']){
                    $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['bankname'],$trans_dir==="normal"?"debit":"credit");
+                   if($res['status']){
+                    $res = modifyCompValues($dbcon,"cash_on_hand",$data['amount'],$compId,"credit");
+                }else{
+                      $res['status'] = false;
+                      $res['message'] = "Insuffucient Funds";
+                  }
             }else{
                 $res['status'] = false;
                 $res['message'] = "Insuffucient Funds";
@@ -714,7 +720,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
             }
 
     }else if($entity==="payments"){
-            
+
         if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
 
             // check balanace
@@ -726,8 +732,8 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
             }
 
         }else{
-            $compBank = findbyand($dbcon,$data['bankname'],'compbank','id')['values'][0];
-            $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['bankname'],$compId,$trans_dir==="normal"?"debit":"credit");
+            $compBank = findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0];
+            $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['trans_bank'],$compId,$trans_dir==="normal"?"debit":"credit");
                 
         }
 
@@ -788,11 +794,14 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
             $res = modifyCompValues($dbcon,"cash_on_hand",$data['amount'],$compId,$trans_dir==="normal"?"credit":"debit");
         }else{
-            $compBank = findbyand($dbcon,$data['bankname'],'compbank','id')['values'][0];
-            $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['bankname'],$compId,$trans_dir==="normal"?"credit":"debit");
+            $compBank = findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0];
+            $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['trans_bank'],$compId,$trans_dir==="normal"?"credit":"debit");
         }
 
         if($res['status']){
+            $compBank = $data['payment_mode']!=="Cash" ? findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0] : "";
+            $compData = getTotalClosingBal($dbcon,$compId);
+
             $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"credit":"debit");
         }else{
             $res['status'] = false;

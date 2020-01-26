@@ -2,6 +2,9 @@
 include('header.php');
 include('workers/getters/functions.php');
 
+
+$comprofile = findbyand($dbcon,$session_org,"comprofile","orgid")['values'][0];
+
 function getpaymentstotal(){
     global $dbcon;
     $sql_q = "SELECT SUM(cust_payment_amount) as cust_payments from customer_payments ";
@@ -254,7 +257,7 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
 							
 							<h6 class="m-b-20 text-white counter">Users:&nbsp;&nbsp;</a><?php  print_r(get_users_count());?></p>
 							<h6 class="m-b-20 text-white counter"><a href="listCustomerCredits.php">Customer Credits:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
-							 <h6 class="m-b-20 text-white counter">Petty Cash:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
+							 <h6 class="m-b-20 text-white counter">Petty Cash:&nbsp;&nbsp;</a><?php echo $comprofile['petty_cash_bal'];?></h6>
 							
                     </div>
                 </div>
@@ -264,7 +267,7 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                     <h6 class="m-b-20 text-white counter">Income:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
                             <h6 class="m-b-20 text-white counter">Expenses:&nbsp;<?php echo getExpensestotal();?></h6>
                             <h6 class="m-b-20 text-white counter">Bank Deposit:&nbsp;<?php echo getDepositstotal();?></h6>
-                            <h6 class="text-white">Undeposited Funds:&nbsp;<?php echo getCashOnHand();?></h6>
+                            <h6 class="text-white">Undeposited Funds:&nbsp;<?php echo $comprofile['cash_on_hand'];?></h6>
 				    </div>
 				</div>
                 
