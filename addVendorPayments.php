@@ -562,7 +562,7 @@
                 }
 
                 let obj = {
-                        array : JSON.stringify({...$scope.vp,payment_mode:total_amt}),
+                        array : JSON.stringify({...$scope.vp,payment_amount:total_amt}),
                         payment_id:"",
                         payment_grn_id:$scope.vp.payment_grn_id,
                         payment_amount:$scope.vp.payment_amount,
