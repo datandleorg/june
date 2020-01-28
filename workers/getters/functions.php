@@ -764,8 +764,10 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         }
         
         if($res['status']){
+            $compBank = $data['payment_mode']!=="Cash" ? findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0] : "";
+            $compData = getTotalClosingBal($dbcon,$compId);
             $res = createTransaction($dbcon,$compId,"",$rowId,$data,$compData,$compBank,$handler,$trans_dir,$entity,$trans_dir==="normal"?"debit":"credit");
-        }else{
+             }else{
             $res['status'] = false;
         }
 

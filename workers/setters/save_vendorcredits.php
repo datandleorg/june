@@ -60,7 +60,6 @@ if (isset($_POST['array'])) {
 
         if ($return['status']){
 
-            $entryData = json_decode($array,true);
 
             $entryDataNew = json_decode($array,true);
             $entryData = json_decode($array,true);
