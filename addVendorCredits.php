@@ -2,6 +2,7 @@
 
 <div class="content-page" ng-app="paymentPages" ng-controller="formCtrl" ng-init="formInit()">
 
+<?php include('addPettyCashConv.php');?> 
     <div class="content">
 
         <div class="container-fluid">
@@ -91,7 +92,7 @@
                                             <option value="Bank Transfer">Bank Transfer</option>
                                         </select>
                                         <p ng-if="vc.v_credits_paymentmode=='Cash'" class="small p-1"
-                                            id="petty_cash_bal">Petty Cash balance : {{comprofile.petty_cash_bal}}</p>
+                                            id="petty_cash_bal">Petty Cash balance : {{comprofile.petty_cash_bal}} &nbsp;<span class="fa fa-exchange mr-2 text-primary" data-toggle="modal" data-target="#pettyCashConvModal" title="Convert To petty cash" ng-click="onConv()"></span></p>
                                     </div>
                                 </div>
 
@@ -319,6 +320,13 @@
                 $scope.comprofile = comprofile;
             }
 
+            
+            $scope.getCompanyDetails = () => {
+                let comprofile = Page.get_edit_vals('<?php echo $session_org;?>', "comprofile", "orgid");
+                $scope.comprofile = comprofile;
+            }
+
+
             $scope.onBankChange = () => {
                 let selectedBank = Page.get_edit_vals($scope.vc.v_credits_bank, "compbank", "id");
                 $scope.selectedBank = selectedBank;
@@ -342,6 +350,46 @@
                 }
 
                 error = !$scope.creditAmtValidation;
+            }
+
+            $scope.reqTransform = (obj) =>{
+                var str = [];
+                for(var p in obj)
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            }
+
+            $scope.convertToPettyCash = () =>{
+                
+                let obj = {
+                    conv_amt:$scope.conv_amt,
+                    handler:"<?php echo $session_user;?>",
+                    compId: "<?php echo $session_org;?>",
+                    conv_remarks:$scope.conv_remarks ? $scope.conv_remarks : "",
+                    action:"add",
+                    table:"petty_cas_conv"
+                };
+                
+
+                $http({
+                        method: 'POST',
+                        url: "workers/setters/save_conversion.php",
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        transformRequest: function(obj) {
+                           return $scope.reqTransform(obj);
+                        },
+                        data: obj
+                    }) .then(function(response) {
+                    if(response.data.status){
+                        $scope.conv_amt="";
+                        $scope.conv_remarks = "";
+                        $scope.getCompanyDetails();
+                        //console.log($("#pettyCashConvModal"));
+                        
+                        $("#pettyCashConvModal").modal('hide');
+                    }
+                });
+
             }
         });
 

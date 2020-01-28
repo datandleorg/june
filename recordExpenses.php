@@ -4,7 +4,9 @@ include('header.php');
 ?>
 <?php ?>
 <div class="content-page" ng-app="paymentPages" ng-controller="formCtrl" ng-init="formInit()">
-	
+
+<?php include('addPettyCashConv.php');?> 
+
 		<!-- Start content -->
         <div class="content">
             
@@ -63,11 +65,11 @@ include('header.php');
                                      ng-change="onPaymentModeChange()"
 									  class="form-control form-control-sm"  name="paymentype" >
 										<option value="">--Select Paid Through--</option>
-										<option value="Petty Cash">Petty Cash</option>
+										<option value="Cash">Petty Cash</option>
 										<option value="Bank Transfer">Bank Transfer</option>
 										<option value="Cheque">Cheque</option>
                                     </select>
-                                    <p ng-if="re.expense_paid_thru === 'Petty Cash'" class="small text-muted">{{'Petty Cash Available: '+comprofile.petty_cash_bal }}</p>
+                                    <p ng-if="re.expense_paid_thru === 'Cash'" class="small text-muted">{{'Petty Cash Available: '+comprofile.petty_cash_bal }}  &nbsp;<span class="fa fa-exchange mr-2 text-primary" data-toggle="modal" data-target="#pettyCashConvModal" title="Convert To petty cash" ng-click="onConv()"></span></p>
 									</div>
 									</div>	
                                      
@@ -450,6 +452,49 @@ include('header.php');
                 let comprofile = Page.get_edit_vals('<?php echo $session_org;?>', "comprofile", "orgid");
                 $scope.comprofile = comprofile;
             }
+
+            $scope.getCompanyDetails = () => {
+                let comprofile = Page.get_edit_vals('<?php echo $session_org;?>', "comprofile", "orgid");
+                $scope.comprofile = comprofile;
+            }
+
+            $scope.reqTransform = (obj) =>{
+                var str = [];
+                for(var p in obj)
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                return str.join("&");
+            }
+
+            $scope.convertToPettyCash = () =>{
+                
+                let obj = {
+                    conv_amt:$scope.conv_amt,
+                    handler:"<?php echo $session_user;?>",
+                    compId: "<?php echo $session_org;?>",
+                    conv_remarks:$scope.conv_remarks ? $scope.conv_remarks : "",
+                    action:"add",
+                    table:"petty_cas_conv"
+                };
+
+                $http({
+                        method: 'POST',
+                        url: "workers/setters/save_conversion.php",
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        transformRequest: function(obj) {
+                           return $scope.reqTransform(obj);
+                        },
+                        data: obj
+                    }) .then(function(response) {
+                    if(response.data.status){
+                        $scope.conv_amt="";
+                        $scope.conv_remarks = "";
+                        $scope.getCompanyDetails();
+                        $("#pettyCashConvModal").modal('hide');
+                    }
+                });
+
+            }
+
         });
 
 
@@ -611,7 +656,11 @@ $(function(){
         }
 
         data.expense_items = JSON.stringify(expense_items);
-
+  
+        if(data.expense_paid_thru==="Cash"){
+            data.expense_bank = "";
+            data.expense_cheque_status="";
+        }
         var formData = new FormData();
 
         Object.keys(data).map((k)=>{
@@ -624,7 +673,8 @@ $(function(){
 	    formData.append("table","expenses");
 	    formData.append("expense_total_amount",expense_total_amount);
 	    formData.append("expense_compId",'<?php echo $session_org?$session_org:'';?>');
-        
+	    formData.append("expense_handler",'<?php echo $session_user?$session_user:'';?>');
+      
         
 		
         $.ajax ({

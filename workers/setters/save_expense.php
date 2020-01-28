@@ -4,6 +4,11 @@ include('../../database/db_conection.php');
 
 include('../getters/functions.php');
 
+
+try{
+
+    $dbcon->begin_transaction();
+
 function uploadBill($file,$expense_no){
     $file_return=array();
     $dir = "C:/xampp/htdocs/git/june/";
@@ -89,7 +94,7 @@ if (isset($_POST['expense_items'])) {
 
     
     if ($expense_no=="") {
-        $expense_no = get_id($dbcon,$table,"0");
+        $expense_no = get_id($dbcon,$table,"EXP0");
     }
     
 
@@ -112,147 +117,36 @@ if (isset($_POST['expense_items'])) {
 
 
             if($return['status']){
-                print_r($array);
-                $entryData = $array;
-                if($entryData['expense_paid_thru']  === "Petty Cash"){
-
-                      $comprofile = findbyand($dbcon,$entryData['expense_compId'],'comprofile','orgid')['values'][0];
-                      if($comprofile['petty_cash_bal']>$entryData['expense_total_amount']){
-                           // move to transaction
-
-                           $entry['data'] = $entryData;
-                           $entry['rowId'] = $expense_no;
-                           $entry['colName'] = "expense_no";
-                           $entry['entity'] = "expenses";
-
-                           $transData = array();
-                           $transData['trans_row_id'] = $expense_no;
-                           $transData['trans_type'] = "debit";
-                           $transData['trans_entry_type'] = "normal";
-                           $transData['trans_entry_ref'] = "";
-                           $transData['trans_amt'] = $entry['data']['expense_total_amount'];
-                           $transData['trans_bank'] = $entry['data']['expense_paid_thru']!=="Cash" ? $entry['data']['expense_bank'] : "";
-                           $transData['trans_entry'] = json_encode($entry);
-                           $transData['trans_status'] = $entry['data']['expense_paid_thru']!=="Cheque" ? "Completed" : $entry['data']['expense_cheque_status'];
-                           $transData['trans_handler'] = $entry['data']['expense_handler'];
-                           $transData['trans_mode'] = $entry['data']['expense_paid_thru'] === "Petty Cash" ? "Cash" : $entry['data']['expense_paid_thru'];
-                           
-                           if($transData['trans_status']==="Completed" || $transData['trans_status']==="Cleared"){
-                               $transData['trans_status']="Completed";
-                               $return = handleTransaction($dbcon,$compId,$entry,'',$transData,'normal');
-                           }
 
 
-                      }else{
-                      // convert undeposited amount to petty cash 
-                      $conv = array();
+                $entryData = json_decode($new_array,true);
+               // print_r($entryData);
+                $entryData['payment_mode'] = $entryData['expense_paid_thru'];
+                $entryData['amount'] = $entryData['expense_total_amount'];
+                $entryData['trans_bank'] = $entryData['expense_paid_thru']!=="Cash" ? $entryData['expense_bank'] : "";
+                $entryData['payment_status'] = $entryData['expense_paid_thru']==="Cheque"?$entryData['expense_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+                $rowId = $expense_no;
+                $entity = $table;
+                $handler = $entryData['expense_handler'];
+                if($entryData['payment_status']==="Completed"){
+                    $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
 
-                      $conv['conv_amt'] = $entryData['expense_total_amount'] - $comprofile['petty_cash_bal'];
-                      $conv['conv_row'] = $expense_no;
-                      $conv['conv_handler'] = $entryData['expense_handler'];
-
-                      $conv_no = get_id($dbcon,'petty_cash_conversion',"CONV0");
-                    
-                      $sql22 = "INSERT INTO petty_cash_conversion (conv_no) VALUES ('$conv_no')";
-
-                      if (mysqli_query($dbcon,$sql22)) {
-                        $return = update_query($dbcon,json_encode($conv),$conv_no,'petty_cash_conversion',"conv_no");
-
-                        if($return['status']){
-                            $comp['cash_on_hand'] = $comprofile['cash_on_hand'] - $conv['conv_amt'];
-                            $comp['petty_cash_bal'] = $comprofile['petty_cash_bal'] + $conv['conv_amt'];
-                            $return = update_query($dbcon,json_encode($comp),$comprofile['orgid'],'comprofile',"orgid");
-
-                                if($return['status']){
-                                    // conversion transaction
-                                    $entry['data'] = $conv;
-                                    $entry['rowId'] = $conv_no;
-                                    $entry['colName'] = "conv_no";
-                                    $entry['entity'] = "petty_cash_conversion";
-              
-                                    $transData = array();
-                                    $transData['trans_row_id'] = $conv_no;
-                                    $transData['trans_type'] = "convert";
-                                    $transData['trans_entry_type'] = "normal";
-                                    $transData['trans_entry_ref'] = "";
-                                    $transData['trans_amt'] = $conv['conv_amt'];
-                                    $transData['trans_bank'] = "";
-                                    $transData['trans_entry'] = json_encode($conv);
-                                    $transData['trans_status'] = "";
-                                    $transData['trans_handler'] = $conv['conv_handler'];
-                                    $transData['trans_mode'] = "";
-                                    $transData['total_cash_on_hand'] = $comp['cash_on_hand'];
-                                    $transData['total_petty_cash'] = $comp['petty_cash_bal'];
-                                    
-                                        $transData['trans_status']="Completed";
-                                        $return = handleTransaction($dbcon,$compId,$entry,'',$transData,'normal');
-                                        print_r($return);
-                                        // final expense transaction
-
-                                        if($return['status']){
-                                            // $entry['data'] = $entryData;
-                                            // $entry['rowId'] = $expense_no;
-                                            // $entry['colName'] = "expense_no";
-                                            // $entry['entity'] = "expenses";
-                      
-                                            // $transData = array();
-                                            // $transData['trans_row_id'] = $expense_no;
-                                            // $transData['trans_type'] = "debit";
-                                            // $transData['trans_entry_type'] = "normal";
-                                            // $transData['trans_entry_ref'] = "";
-                                            // $transData['trans_amt'] = $entry['data']['expense_total_amount'];
-                                            // $transData['trans_bank'] = $entry['data']['expense_paid_thru']!=="Cash" ? $entry['data']['expense_bank'] : "";
-                                            // $transData['trans_entry'] = json_encode($entry);
-                                            // $transData['trans_status'] = $entry['data']['expense_paid_thru']!=="Cheque" ? "Completed" : $entry['data']['expense_cheque_status'];
-                                            // $transData['trans_handler'] = $entry['data']['expense_handler'];
-                                            // $transData['trans_mode'] = $entry['data']['expense_paid_thru'] === "Petty Cash" ? "Cash" : $entry['data']['expense_paid_thru'];
-                                            
-                                            // if($transData['trans_status']==="Completed" || $transData['trans_status']==="Cleared"){
-                                            //     $transData['trans_status']="Completed";
-                                            //     $return = handleTransaction($dbcon,$compId,$entry,'',$transData,'normal');
-                                            // }
-                                        }
-                                    
-                                }
-                        
-
-
-                        }
-                      }
-
-                  
+                    if(!$return['status']){
+                        throw new Exception();
                     }
-                }else{
-                    $entry['data'] = $entryData;
-                    $entry['rowId'] = $expense_no;
-                    $entry['colName'] = "expense_no";
-                    $entry['entity'] = "expenses";
-
-                    $transData = array();
-                    $transData['trans_row_id'] = $expense_no;
-                    $transData['trans_type'] = "debit";
-                    $transData['trans_entry_type'] = "normal";
-                    $transData['trans_entry_ref'] = "";
-                    $transData['trans_amt'] = $entry['data']['expense_total_amount'];
-                    $transData['trans_bank'] = $entry['data']['expense_paid_thru']!=="Cash" ? $entry['data']['expense_bank'] : "";
-                    $transData['trans_entry'] = json_encode($entry);
-                    $transData['trans_status'] = $entry['data']['expense_paid_thru']!=="Cheque" ? "Completed" : $entry['data']['expense_cheque_status'];
-                    $transData['trans_handler'] = $entry['data']['expense_handler'];
-                    $transData['trans_mode'] = $entry['data']['expense_paid_thru'] === "Petty Cash" ? "Cash" : $entry['data']['expense_paid_thru'];
-                    
-                    if($transData['trans_status']==="Completed" || $transData['trans_status']==="Cleared"){
-                        $transData['trans_status']="Completed";
-                        $return = handleTransaction($dbcon,$compId,$entry,'',$transData,'normal');
-                    }
-
                 }
+
+          
             }else{
                 $return['status']=false;
                 $return['error']=mysqli_error($dbcon);
+                throw new Exception();
+
             }
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);
+            throw new Exception();
         }
     }else{
 
@@ -267,10 +161,71 @@ if (isset($_POST['expense_items'])) {
 
         $return = update_query($dbcon,$new_array,$expense_no,$table,"expense_no");
         $return["code"] = $expense_no;
+
+        if($return['status']){
+
+
+            $entryDataNew = json_decode($new_array,true);
+            $entryData = json_decode($new_array,true);
+            $entryData['payment_mode'] = $entryData['expense_paid_thru'];
+            $entryData['amount'] = $entryData['expense_total_amount'];
+            $entryData['trans_bank'] = $entryData['expense_paid_thru']!=="Cash" ?  $entryData['expense_bank']:"";
+            $entryData['payment_status'] = $entryData['expense_paid_thru']==="Cheque"?$entryData['expense_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+            $rowId = $expense_no;
+            $entity = $table;
+            $handler = $entryData['expense_handler'];
+
+            if($entryData['payment_mode'] === "Cheque" && $entryData['payment_status']==="Completed"){
+                $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+           
+            }else if($entryData['payment_status']==="Completed"){
+                $pastTran = findLastTrans($dbcon,$expense_no,'transactions','trans_row_id');
+                $pastData = $pastTran['values'][0];
+                $entryData['amount'] = $pastData['trans_amt'];
+                $entryData['trans_bank'] = $entryData['expense_paid_thru']!=="Cash" ? $entryData['expense_bank']:"";
+                $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"reverse");
+                if($return['status']){
+                    $entryData['amount'] = $entryDataNew['expense_total_amount'];
+                    $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+
+                    if(!$return['status']){
+                        throw new Exception();
+                    }
+                }else{
+                    throw new Exception();
+
+                }
+            
+            }else{
+                $return['status']=false;
+                $return['error']=mysqli_error($dbcon);
+                throw new Exception();
+            }
+          
+
+
+        }else{
+            $return['status']=false;
+            throw new Exception();
+        }
     }
 
 }
-echo json_encode($return);
+
+
+// Commit transaction
+$dbcon->commit();
+
+
+}catch(Exception $e){
+// Rollback transaction
+ $dbcon->rollback();
+
+}finally{
+// Close connection
+ $dbcon->close();
+ echo json_encode($return);
+}
 
 
 ?>

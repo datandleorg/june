@@ -126,22 +126,18 @@
 
     <a class="dropdown-item" onclick="ToPrint(this);" data-template="expenses_print"
      data-code="'.$row['expense_no'].'" data-img="assets/images/logo.png"  data-id="po_print">
-     <i class="fa fa-print" aria-hidden="true"></i>&nbsp; Print</a>';
+     <i class="fa fa-print" aria-hidden="true"></i>&nbsp; Print</a>
+
+     <a class="dropdown-item" onclick="deleteRecord_8(this);" 
+     data-code="'.$row['expense_no'].'" >
+     <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete</a>';
 
                                                 echo ' </td>';
                                                 echo "</tr>";
                                             }
                                         }
                                         ?>						
-                                        <script>
-                                            function deleteRecord_8(x)
-                                            {
-                                                var RecordId = $(x).attr('data-id');
-                                                if (confirm('Confirm delete')) {
-                                                    window.location.href = 'deleteInvoices.php?inv_code='+RecordId;
-                                                }
-                                            }
-                                        </script>
+                            
 
                                     </tbody>
                                 </table>
@@ -175,5 +171,12 @@
                         $('body').html(restorepage);
                     }
 
+                    function deleteRecord_8(x)
+                    {
+                        var RecordId = $(x).attr('data-code');
+                        if (confirm('Confirm delete')) {
+                            window.location.href = 'deleteExpenses.php?id='+RecordId;
+                        }
+                    }
                 </script>
                 <?php include('footer.php'); ?>
