@@ -446,6 +446,30 @@ include('header.php');
                 expense_cheque_status:"Uncleared",
                 expense_bank:""
             };
+
+
+            $scope.formInit = () =>{
+                if (page_action == "edit") {
+                    var expense_data = Page.get_edit_vals(page_expense_no, "expenses", "expense_no");                    
+                    // $scope.vc = credits_data;
+                    // $scope.vc.v_credits_paymentdate = new Date($scope.vc.v_credits_paymentdate);
+                    // $scope.onVendorChange();
+                    // $scope.onPaymentModeChange();
+                    // if($scope.vc.v_credits_paymentmode==="Cash"){
+                    // }else{
+                    //     $scope.onBankChange();
+                    // }
+                    // $scope.onCreditChange();
+                    // $scope.editMode = true;
+                    $scope.re = {...$scope.re,
+                                    expense_paid_thru: expense_data.expense_paid_thru,
+                                    expense_cheque_status:expense_data.expense_cheque_status,
+                                    expense_bank:expense_data.expense_bank
+                    };
+                }
+            }
+
+
             $scope.creditAmtValidation = true;
 
             $scope.onPaymentModeChange = () => {
@@ -685,7 +709,7 @@ $(function(){
             type: 'POST',
             success:function(response){
                 if(JSON.parse(response).status){
-                  // location.href="listRecordExpenses.php";
+                   location.href="listRecordExpenses.php";
                  }
 			}
         });
