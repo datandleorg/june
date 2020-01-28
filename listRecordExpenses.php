@@ -44,6 +44,7 @@
 											<th>Date</th>
 											<th>Payee</th>
                                             <th>Bill#</th>
+											<th>Payment Mode</th>
 											<th>Amount</th>
                                             <th>Recorded By</th>
                                             <th>Actions</th>
@@ -104,6 +105,13 @@
                                                 echo '<td>'.$row['expense_date'].' </td>';
                                                 echo '<td>'.$row['expense_payee'].' </td>';
                                                 echo '<td>'.$row['expense_invoice_no'].' </td>';
+                                                if($row['expense_paid_thru']==="Cheque"){
+                                                    echo '<td>'.$row['expense_paid_thru'].' ['.$row['expense_cheque_status'].'] </td>';
+
+                                                }else{
+                                                    echo '<td>'.$row['expense_paid_thru'].' </td>';
+
+                                                }
                                                 echo '<td>'.$row['expense_total_amount'].' </td>';
                                                  echo '<td>'.$row['expense_handler'].' </td>';
                                         ?>
