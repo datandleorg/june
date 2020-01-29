@@ -207,20 +207,27 @@
         var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
         var page_transid = "<?php if(isset($_GET['transid'])){ echo $_GET['transid']; } ?>";
 
+        $('#v_credits_cheque_status_row').hide();
+        $('#v_credits_cheque_status').prop('required',false);
+        $("#cashbaldiv").hide();
 
         if(page_action=="edit"){
             var edit_data = Page.get_edit_vals(page_transid,page_table,"transid");
             set_form_data(edit_data);
             onbankname(edit_data.bankname);
+            togglePaymentDetailsOptions(edit_data.paymethod);
+            
+         
         }
 
-        $('#v_credits_cheque_status_row').hide();
-        $('#v_credits_cheque_status').prop('required',false);
-        $("#cashbaldiv").hide();
+
         
         function togglePaymentDetailsOptions(paymentMode) {
 
+              
             if (paymentMode == "Cheque") {
+                //console.log($('#v_credits_cheque_status_row'));
+                
                 $('#v_credits_cheque_status_row').show();
                 $('#v_credits_cheque_status').val('Uncleared');
                 $('#v_credits_cheque_status').prop('required',true);

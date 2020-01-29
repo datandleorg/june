@@ -55,9 +55,8 @@ include('header.php');
 									</div>
 									</div>
 									
-									
 									<div class="form-row">
-									<div class="form-group col-md-6">
+									<div class="form-group col-md-6" ng-show="!editMode">
 									  <label >Paid Through</label>
                                      <select required id="expense_paid_thru" 
                                      ng-model="re.expense_paid_thru"
@@ -70,10 +69,11 @@ include('header.php');
 										<option value="Cheque">Cheque</option>
                                     </select>
                                     <p ng-if="re.expense_paid_thru === 'Cash'" class="small text-muted">{{'Petty Cash Available: '+comprofile.petty_cash_bal }}  &nbsp;<span class="fa fa-exchange mr-2 text-primary" data-toggle="modal" data-target="#pettyCashConvModal" title="Convert To petty cash" ng-click="onConv()"></span></p>
-									</div>
+                                    </div>
+                                    <p ng-if="editMode"><b>Payment Mode </b>: {{re.expense_paid_thru}}</p>
 									</div>	
                                      
-                                    <div class="form-row" ng-if="re.expense_paid_thru==='Cheque'">
+                                    <div class="form-row" ng-show="re.expense_paid_thru==='Cheque'">
                                     <div class="form-group col-md-6">
                                         <label>Cheque Status<span class="text-danger">*</span></label>
                                         <select required name="expense_cheque_status"
@@ -86,13 +86,13 @@ include('header.php');
                                     </div>
                                 </div>
 
-                                <div class="form-row" id="expense_bank_row" ng-if="re.expense_paid_thru==='Bank Transfer' || re.expense_paid_thru==='Cheque'">
+                                <div class="form-row" id="expense_bank_row" ng-show="(re.expense_paid_thru==='Bank Transfer' || re.expense_paid_thru==='Cheque') && !editMode">
                                     <div class="form-group col-sm-6">
                                         <label> Bank<span class="text-danger">*</span></label>
 
                                         <select id="expense_bank" 
                                         ng-model="re.expense_bank"
-                                        class="form-control form-control-sm" onchange="printBankDetails(this.value)" name="expense_bank">
+                                        class="form-control form-control-sm" ng-change="onBankChange()" name="expense_bank">
                                             <option selected value="">--Select Bank--</option> ';
                                             <?php
                                             $sql = "SELECT * FROM compbank where orgid='COMP001' ";
@@ -105,15 +105,26 @@ include('header.php');
                                             ?>
                                         </select>
                                     </div>
+
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="form-group col-md-6" id="vendor_bank_details" ng-if="re.expense_paid_thru==='Bank Transfer' || re.expense_paid_thru==='Cheque'">
-
+                                    <div class="form-group col-md-6" id="vendor_bank_details" ng-show="(re.expense_paid_thru==='Bank Transfer' || re.expense_paid_thru==='Cheque') ">
+                                    <div ng-if="re.expense_bank!==''">
+                                    <h6>Bank Details</h6>
+                                        <p><b>{{selectedBank.bankname}}</b><br />
+                                            {{selectedBank.acctname}}<br />
+                                            {{selectedBank.acctno}}<br />
+                                            {{selectedBank.acctype}}<br />
+                                            {{selectedBank.branch}}<br />
+                                            {{selectedBank.ifsc}}<br />
+                                        </p>
+                                    </div>
+                                 
                                     </div>
                                 </div>
 
-                                <div class="form-row" id="expense_ref_row"  ng-if="re.expense_paid_thru!=='Petty Cash'">
+                                <div class="form-row" id="expense_ref_row"  ng-show="re.expense_paid_thru!=='Petty Cash'">
                                     <div class="form-group col-md-6">
                                         <label>Reference #</label>
                                         <input type="text" class="form-control form-control-sm" 
@@ -180,7 +191,7 @@ include('header.php');
 									<div class="form-row">
 									<div class="form-group col-md-6">
                                         <textarea rows="3" class="form-control" name="expense_notes"  
-                                        id="expense_notes" required placeholder="Add Expense  Notes"></textarea>
+                                        id="expense_notes" placeholder="Add Expense  Notes"></textarea>
                                     </div>
 									</div>
 									
@@ -448,7 +459,11 @@ include('header.php');
             };
 
 
+
             $scope.formInit = () =>{
+
+                $scope.editMode = false;
+
                 if (page_action == "edit") {
                     var expense_data = Page.get_edit_vals(page_expense_no, "expenses", "expense_no");                    
                     // $scope.vc = credits_data;
@@ -460,12 +475,14 @@ include('header.php');
                     //     $scope.onBankChange();
                     // }
                     // $scope.onCreditChange();
-                    // $scope.editMode = true;
+                     $scope.editMode = true;
                     $scope.re = {...$scope.re,
                                     expense_paid_thru: expense_data.expense_paid_thru,
                                     expense_cheque_status:expense_data.expense_cheque_status,
                                     expense_bank:expense_data.expense_bank
                     };
+
+                    $scope.onBankChange();
                 }
             }
 
@@ -480,6 +497,11 @@ include('header.php');
             $scope.getCompanyDetails = () => {
                 let comprofile = Page.get_edit_vals('<?php echo $session_org;?>', "comprofile", "orgid");
                 $scope.comprofile = comprofile;
+            }
+
+            $scope.onBankChange = () => {
+                let selectedBank = Page.get_edit_vals($scope.re.expense_bank, "compbank", "id");
+                $scope.selectedBank = selectedBank;
             }
 
             $scope.reqTransform = (obj) =>{
@@ -539,6 +561,7 @@ include('header.php');
                 bank_div += bank_data.branch + '<br/>';
                 bank_div += bank_data.ifsc + '<br/>';
                 bank_div += '</p>';
+
                 $('#vendor_bank_details').html(bank_div);
             } else {
                 $('#vendor_bank_details').html('');
@@ -687,6 +710,7 @@ $(function(){
         }
         var formData = new FormData();
 
+
         Object.keys(data).map((k)=>{
             formData.append(k,data[k])
         })
@@ -709,7 +733,9 @@ $(function(){
             type: 'POST',
             success:function(response){
                 if(JSON.parse(response).status){
-                   location.href="listRecordExpenses.php";
+                      location.href="listRecordExpenses.php";
+                 }else{
+                     alert(JSON.parse(response).message);
                  }
 			}
         });

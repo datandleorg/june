@@ -105,6 +105,7 @@ if (isset($_POST['expense_items'])) {
 
             if($bill!=""){
                $file_status = uploadBill($bill,$expense_no);
+              
                if($file_status['status']){
                   $new_array = json_decode($new_array);
                   $new_array->expense_file_src = $file_status['src'];
@@ -151,12 +152,21 @@ if (isset($_POST['expense_items'])) {
     }else{
 
         if($bill!=""){
-            $file_status = uploadBill($bill,$expense_no);
-            if($file_status['status']){
-               $new_array = json_decode($new_array);
-               $new_array->expense_file_src = $file_status['src'];
-               $new_array = json_encode($new_array);
+            $file = findbyand($dbcon,$expense_no,"expenses","expense_no")['values'][0]['expense_file_src'];
+            if($file!==""){
+                if (!unlink("../../".$file)) {
+                    echo ("Error deleting $file");
+                  } else {
+                    $file_status = uploadBill($bill,$expense_no);
+                    if($file_status['status']){
+                        $new_array = json_decode($new_array);
+                        $new_array->expense_file_src = $file_status['src'];
+                        $new_array = json_encode($new_array);
+                    }
+                  }
             }
+  
+           
          }
 
         $return = update_query($dbcon,$new_array,$expense_no,$table,"expense_no");

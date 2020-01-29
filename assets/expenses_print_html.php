@@ -93,7 +93,7 @@ function getTotal($arr){
                         <th style=" width:10%;padding:10px;border:1px solid #000;">Item No.</th>
                         <th style="width:50%;padding:10px;border:1px solid #000;">Category</th>
                         <th style="width:15%;padding:10px;border:1px solid #000;">Description </th>
-                        <th style="width:15%;padding:10px;border:1px solid #000;">Qty </th>
+                        <th style="width:15%;padding:10px;border:1px solid #000;">Amount </th>
                     </thead>
                     <tbody>
                         <?php
