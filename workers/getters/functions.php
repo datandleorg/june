@@ -707,7 +707,12 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
 
             }else{
                 $compBank = findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0];
-                $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['trans_bank'],$trans_dir==="normal"?"debit":"credit");
+                if($compBank['closing_bal']>=$data['amount']){
+                    $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['trans_bank'],$trans_dir==="normal"?"debit":"credit");
+                }else{
+                    $res['status'] = false;
+                    $res['message'] = "Insuffucient Funds";
+                }
                     
             }
 
@@ -733,7 +738,12 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
 
         }else{
             $compBank = findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0];
-            $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['trans_bank'],$trans_dir==="normal"?"debit":"credit");
+            if($compBank['closing_bal']>=$data['amount']){
+                $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['trans_bank'],$trans_dir==="normal"?"debit":"credit");
+            }else{
+                $res['status'] = false;
+                $res['message'] = "Insuffucient Funds";
+            }
                 
         }
 
@@ -759,8 +769,13 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
             }
 
         }else{
-            $compBank = findbyand($dbcon,$data['bankname'],'compbank','id')['values'][0];
-            $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['bankname'],$trans_dir==="normal"?"debit":"credit");
+            $compBank = findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0];
+            if($compBank['closing_bal']>=$data['amount']){
+                $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['trans_bank'],$trans_dir==="normal"?"debit":"credit");
+            }else{
+                $res['status'] = false;
+                $res['message'] = "Insuffucient Funds";
+            }
         }
         
         if($res['status']){

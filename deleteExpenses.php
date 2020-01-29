@@ -34,17 +34,36 @@ try{
     $entryData['amount'] = $pastData['trans_amt'];
     $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$session_org,$session_user,"reverse");
 
-
     if(!$return['status']){
         throw new Exception();
     }else{
-            $sql = "DELETE FROM recordexpense WHERE id='".$_GET['id']."' ";
 
+        echo $entryData['expense_file_src']."--";
+        if($entryData['expense_file_src']!=""){
+            if (!unlink($entryData['expense_file_src'])) {
+       
+                $sql = "DELETE FROM recordexpense WHERE id='".$_GET['id']."' ";
+    
+                if ($dbcon->query($sql) === TRUE) {
+                header("Location: listExpenses.php");
+                } else {
+                    echo "Error deleting record: " . $dbcon->error;
+                }
+            }else{
+                throw new Exception();
+
+            }
+        }else{
+            $sql = "DELETE FROM recordexpense WHERE id='".$_GET['id']."' ";
+    
             if ($dbcon->query($sql) === TRUE) {
             header("Location: listExpenses.php");
             } else {
                 echo "Error deleting record: " . $dbcon->error;
             }
+        }
+ 
+           
     }
 
 

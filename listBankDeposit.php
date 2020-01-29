@@ -57,7 +57,7 @@
 										<tbody>
 											<?php
 													include("database/db_conection.php");//make connection here
-													$sql = "SELECT b.*,c.bankname as bankname, c.acctno as acctno, b.closing_bal as closing_bal FROM bankdeposit b, compbank c where c.id=b.bankname ";
+													 $sql = "SELECT b.*,c.bankname as bankname, c.acctno as acctno, c.closing_bal as closing_bal FROM bankdeposit b, compbank c where c.id=b.bankname ";
 													$result = mysqli_query($dbcon,$sql);
 													
 													if ($result->num_rows > 0){

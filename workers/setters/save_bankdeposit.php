@@ -59,8 +59,7 @@ if (isset($_POST['array'])) {
         if ($return['status']){
 
             $entryData = json_decode($array,true);
-            $pastTran = findLastTrans($dbcon,$transid,'transactions','trans_row_id');
-            $pastData = $pastTran['values'][0];
+
 
 
             $entryDataNew = json_decode($array,true);
@@ -75,6 +74,8 @@ if (isset($_POST['array'])) {
                 $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
            
             }else if($entryData['payment_status']==="Completed"){
+                $pastTran = findLastTrans($dbcon,$transid,'transactions','trans_row_id');
+                $pastData = $pastTran['values'][0];
                 $entryData['amount'] = $pastData['trans_amt'];
                 $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"reverse");
                 if($return['status']){
