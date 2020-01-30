@@ -73,7 +73,7 @@ include('header.php');
                                     <p ng-if="editMode"><b>Payment Mode </b>: {{re.expense_paid_thru}}</p>
 									</div>	
                                      
-                                    <div class="form-row" ng-show="re.expense_paid_thru==='Cheque'">
+                                    <div class="form-row" ng-if="re.expense_paid_thru==='Cheque'">
                                     <div class="form-group col-md-6">
                                         <label>Cheque Status<span class="text-danger">*</span></label>
                                         <select required name="expense_cheque_status"
@@ -113,6 +113,7 @@ include('header.php');
                                     <div ng-if="re.expense_bank!==''">
                                     <h6>Bank Details</h6>
                                         <p><b>{{selectedBank.bankname}}</b><br />
+                                        <b>Closing Bal:</b> {{selectedBank.closing_bal}}<br/>
                                             {{selectedBank.acctname}}<br />
                                             {{selectedBank.acctno}}<br />
                                             {{selectedBank.acctype}}<br />
