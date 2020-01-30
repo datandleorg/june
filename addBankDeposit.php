@@ -112,18 +112,26 @@
                                             </div>
                                             </div></br>										
 
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12">
-                                            <label >Payment Method</label>
-                                            <select required id="paymethod" data-parsley-trigger="change"  onchange="togglePaymentDetailsOptions(this.value)" class="form-control form-control-sm"  name="paymethod" >
-                                                <option value="">Open Payment Method</option>
-                                                <option value="Cash">Cash</option>
-                                                <option value="Cheque">Cheque</option>
-                                                <option value="Bank Transfer">Bank Transfer</option>
-                                            </select>
-                                            <small id="cashbaldiv">Cash Balance: <span id="cashbal"></span></small>
-                                        </div>
-                                    </div>
+                                <?php 
+                                 if(!isset($_GET['action'])){
+                                     echo ' <div class="form-row">
+                                     <div class="form-group col-md-12">
+                                         <label >Payment Method</label>
+                                         <select required id="paymethod" data-parsley-trigger="change"  onchange="togglePaymentDetailsOptions(this.value)" class="form-control form-control-sm"  name="paymethod" >
+                                             <option value="">Open Payment Method</option>
+                                             <option value="Cash">Cash</option>
+                                             <option value="Cheque">Cheque</option>
+                                             <option value="Bank Transfer">Bank Transfer</option>
+                                         </select>
+                                         <small id="cashbaldiv">Cash Balance: <span id="cashbal"></span></small>
+                                     </div>
+                                 </div>';
+                                 }else{
+                                    echo '<p><b>Payment Mode: </b><span id="paymentMode"></span></p>';
+                                    echo '<p id="cashbaldiv"><b>Balance: </b><span id="cashbal"></span></p>';
+                                }
+                                ?>
+                                   
 
 
                                     <div class="form-row" id="v_credits_cheque_status_row">
@@ -231,6 +239,8 @@
                 $('#v_credits_cheque_status_row').show();
                 $('#v_credits_cheque_status').val('Uncleared');
                 $('#v_credits_cheque_status').prop('required',true);
+                $("#cashbaldiv").hide();
+
             } else {
                 $('#v_credits_cheque_status_row').hide();
                 $('#v_credits_cheque_status').prop('required',false);
@@ -240,6 +250,8 @@
                     $("#cashbal").html(cedit_data.cash_on_hand);
                 }
             }
+
+            $("#paymentMode").html(paymentMode);
 
         }
 
@@ -269,8 +281,6 @@
             e.preventDefault();
             var $form = $(this);
             var data = getFormData($form);
-
-            console.log(data);
             
 
             function getFormData($form){
