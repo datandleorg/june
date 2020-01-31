@@ -341,12 +341,12 @@
             }
             
 
-    //     var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
+     var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
     //     var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
-    //     var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
-    //     var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
+         var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
+         var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
     //     var page_payment_id = "<?php if(isset($_GET['payment_id'])){ echo $_GET['payment_id']; } ?>";
-    //    var page_payment_v_credits_id  = "<?php if(isset($_GET['v_credits_id '])){ echo $_GET['v_credits_id ']; } ?>";
+        var page_payment_v_credits_id  = "<?php if(isset($_GET['v_credits_id '])){ echo $_GET['v_credits_id ']; } ?>";
 
  
         var error = false;
@@ -366,11 +366,26 @@
 
    
             $scope.formInit = () =>{
-                $scope.v_credits_id = $location.search()['v_credits_id'];
+         
+         
+                $scope.invoices =[];
+                $scope.vp = {
+                    payment_vendor: "",
+                    payment_invoice_no: "",
+                    payment_amount: "",
+                    payment_credits_used: "",
+                    payment_date: new Date(),
+                    payment_mode: "",
+                    payment_cheque_status: "",
+                    payment_bank: "",
+                    payment_ref_no: "",
+                    payment_user: "<?php echo $session_user; ?>",
+                    payment_notes: "",
+                    payment_notify: false
+                };
 
-                if($scope.v_credits_id && $scope.v_credits_id!==""){                    
-                    $scope.showCreditInput = true;
-                }
+            $scope.creditAmtValidation = true;
+
 
                 if (page_action == "edit") {
                     var credits_data = Page.get_edit_vals(page_payment_id, "payments", "payment_id");                    
@@ -386,26 +401,30 @@
                     $scope.editMode = true;
                 }
 
+
+                $scope.v_credits_id = $location.search()['v_credits_id'];
+
+                if($scope.v_credits_id && $scope.v_credits_id!==""){ 
+                    $scope.page_action = $location.search()['action'];
+                    $scope.page_vendor = $location.search()['vendorid'];
+                    $scope.page_payment_invoice_no = $location.search()['invoice_no'];
+
+                    if($scope.page_action==="add"){
+                        $scope.showCreditInput = true;
+                        console.log($scope.page_vendor,$scope.page_payment_invoice_no,$scope.page_action);
+                        
+                        $scope.vp.payment_vendor = $scope.page_vendor;
+                        $scope.vp.payment_invoice_no = $scope.page_payment_invoice_no;
+
+                       
+                        $scope.onVendorChange();
+                        $scope.onInvoiceChange();
+                    }
+                }
+
             
             }
-            $scope.test = "test";
-            $scope.invoices =[];
-            $scope.vp = {
-                payment_vendor: "",
-                payment_invoice_no: "",
-                payment_amount: "",
-                payment_credits_used: "",
-                payment_date: new Date(),
-                payment_mode: "",
-                payment_cheque_status: "",
-                payment_bank: "",
-                payment_ref_no: "",
-                payment_user: "<?php echo $session_user; ?>",
-                payment_notes: "",
-                payment_notify: false
-            };
 
-            $scope.creditAmtValidation = true;
 
 
             $scope.onPaymentModeChange = () => {
