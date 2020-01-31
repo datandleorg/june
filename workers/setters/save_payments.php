@@ -86,7 +86,7 @@ if (isset($_POST['array'])) {
 
                         if($return['status']){
                             $entryData = json_decode($array,true);
-                            $entryData['amount'] = $entryData['payment_amount'];
+                            $entryData['amount'] = $page_payment_v_credits_id!="" ? $entryData['payment_amount']-$entryData['payment_credits_used'] :$entryData['payment_amount'];
                             $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ? $entryData['payment_bank'] : "";
                             $entryData['payment_status'] = $entryData['payment_mode']==="Cheque"?$entryData['payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
                             $rowId = $payment_id;

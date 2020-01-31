@@ -54,6 +54,7 @@ if (isset($_POST['array'])) {
                 $return = updatebyand($dbcon,"UnPaid","invoices","inv_payment_status","inv_code",$cust_payment_inv_id);
             }
 
+            
             if($page_cust_payment_v_credits_id!=""){
                 $now = findbyand($dbcon,$cust_payment_id,"customer_payments","cust_payment_id");
                 $now_refund_amount = $now['values'][0]['cust_payment_credits_used'];
@@ -71,7 +72,8 @@ if (isset($_POST['array'])) {
             // correct verson
             if($return['status']){
                 $entryData = json_decode($array,true);
-                $entryData['amount'] = $entryData['cust_payment_amount'];
+               // $entryData['amount'] = $entryData['cust_payment_amount'];
+                $entryData['amount'] = $page_cust_payment_v_credits_id!="" ? ($entryData['cust_payment_amount'] - $entryData['cust_payment_credits_used'] ) : $entryData['cust_payment_amount'];
                 $entryData['payment_mode'] = $entryData['cust_payment_mode'];
                 $entryData['trans_bank'] = $entryData['cust_payment_mode']!=="Cash" ? $entryData['cust_payment_bank'] : "";
                 $entryData['payment_status'] = $entryData['cust_payment_mode']==="Cheque"?$entryData['cust_payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
