@@ -307,13 +307,13 @@
                                             <p id="text_balance">{{grn_values.grn_balance}}</p>
                                         </div>
                                     </div>
-                                    <div class="row" id="credit_balance_div" style="display:none;">
+                                    <div class="row" id="credit_balance_div" ng-if="showCreditInput">
                                         <div class="col-md-7">
                                             <p><b>Available Credits :</b></p>
                                         </div>
                                         <div class="col-md-5">
                                             <p id="credit_balance">
-                                            {{grn_values.grn_id}}
+                                            {{creditData.v_credits_availcredits}}
                                             </p>
                                         </div>
                                     </div>
@@ -404,19 +404,20 @@
 
                 $scope.v_credits_id = $location.search()['v_credits_id'];
 
+
                 if($scope.v_credits_id && $scope.v_credits_id!==""){ 
                     $scope.page_action = $location.search()['action'];
                     $scope.page_vendor = $location.search()['vendorid'];
                     $scope.page_payment_invoice_no = $location.search()['invoice_no'];
 
                     if($scope.page_action==="add"){
-                        $scope.showCreditInput = true;
-                        console.log($scope.page_vendor,$scope.page_payment_invoice_no,$scope.page_action);
-                        
+                        $scope.showCreditInput = true;                        
                         $scope.vp.payment_vendor = $scope.page_vendor;
                         $scope.vp.payment_invoice_no = $scope.page_payment_invoice_no;
 
-                       
+
+                        $scope.creditData = Page.get_edit_vals($scope.v_credits_id, "vendorcredits", "v_credits_id");
+                        $scope.vp.payment_credits_used = $scope.creditData.v_credits_availcredits;
                         $scope.onVendorChange();
                         $scope.onInvoiceChange();
                     }

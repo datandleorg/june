@@ -282,7 +282,7 @@
                 customer_credits_bank: "",
                 customer_credits_ref_no: "",
                 customer_credits_paymentdate: new Date(),
-                customer_credits_amount: 0,
+                customer_credits_amount: "",
                 customer_credits_handler: "<?php echo $session_user; ?>",
                 customer_credits_notes: "",
                 customer_credits_email_notification: false
@@ -409,6 +409,11 @@
           //  }
 
             data.customer_credits_compId = `<?php echo $session_org?$session_org:'';?>`;
+
+            if(data.customer_credits_amount<=0){
+                alert("pls enter a valid credit amount");
+                return false;
+            }
 
 
             if (!error) {
