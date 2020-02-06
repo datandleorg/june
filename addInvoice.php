@@ -60,7 +60,7 @@ include('header.php');
                                          {
                                             echo  $_GET['action']=="edit" ? 'readonly class="form-control form-control-sm" ' : 'class="form-control form-control-sm select2';
                                          }else{
-                                             echo ' class="form-control form-control-sm select2"  ';
+                                             echo ' class="form-control form-control-sm"  ';
                                          }
                                         ?>  
                                          name="inv_comp_code">
