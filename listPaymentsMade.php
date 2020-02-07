@@ -76,10 +76,22 @@
                                                 echo '<td>'.$row['payment_mode'].' </td>';
                                                 echo '<td>'.$row['payment_amount'].' </td>';
                                                 echo '<td>'.$row['payment_cheque_status'].' </td>';
-                                                echo '<td><a class="btn btn-light btn-sm hidden-md" 
+                                                echo '<td>
+                                                        
+                                                        <div class="dropdown">
+          <button type="button" class="btn btn-light btn-xs dropdown-toggle" data-toggle="dropdown">
+        
+          </button>
+          <div class="dropdown-menu">
+          <a class="dropdown-item"
                                                      onclick="ToPrint(this);" data-img="assets/images/logo.png"
                                                       data-code="'.$row['payment_id'].'"  data-id="po_print">
-														<i class="fa fa-print" aria-hidden="true"></i></a></td>
+                                                        <i class="fa fa-print" aria-hidden="true"></i> Print</a>
+                                                        <a class="dropdown-item"
+                                                        href="addVendorPayments.php?payment_id=' . $row['payment_id'] . '&action=edit&type=payments">
+                                                           <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+          </div></div>
+                                                        </td>
                                                       ';
                                                 echo "</tr>";
                                             }

@@ -296,7 +296,7 @@
                                             <p><b>Amount Paid :</b></p>
                                         </div>
                                         <div class="col-md-5">
-                                            <p id="text_amount_paid">{{eval(grn_values.grn_po_value)-eval(grn_values.grn_balance)}}</p>
+                                            <p id="text_amount_paid">{{+grn_values.grn_po_value - +grn_values.grn_balance}} </p>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -342,10 +342,10 @@
             
 
      var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
-    //     var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
+        var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
          var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
          var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
-    //     var page_payment_id = "<?php if(isset($_GET['payment_id'])){ echo $_GET['payment_id']; } ?>";
+         var page_payment_id = "<?php if(isset($_GET['payment_id'])){ echo $_GET['payment_id']; } ?>";
         var page_payment_v_credits_id  = "<?php if(isset($_GET['v_credits_id '])){ echo $_GET['v_credits_id ']; } ?>";
 
  
@@ -388,17 +388,25 @@
 
 
                 if (page_action == "edit") {
-                    var credits_data = Page.get_edit_vals(page_payment_id, "payments", "payment_id");                    
-                    $scope.vp = credits_data;
+                    alert(page_payment_id);
+                    var payment_data = Page.get_edit_vals(page_payment_id, "payments", "payment_id");                    
+                    $scope.vp = payment_data;
                     $scope.vp.payment_date = new Date($scope.vp.payment_date);
                     $scope.onVendorChange();
-                    $scope.onPaymentModeChange();
-                    if($scope.vp.payment_mode==="Cash"){
-                    }else{
-                        $scope.onBankChange();
+                    $scope.onInvoiceChange();
+
+                    if(payment_data.payment_credits_used!==""){
+                        $scope.showCreditInput = true;                        
+                        $scope.vp.payment_credits_used = payment_data.payment_credits_used;
+
                     }
-                    $scope.onCreditChange();
-                    $scope.editMode = true;
+                    // $scope.onPaymentModeChange();
+                    // if($scope.vp.payment_mode==="Cash"){
+                    // }else{
+                    //     $scope.onBankChange();
+                    // }
+                    // $scope.onCreditChange();
+                    // $scope.editMode = true;
                 }
 
 
