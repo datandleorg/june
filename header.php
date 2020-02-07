@@ -143,7 +143,7 @@ if(isset($_SESSION['login_email'])){
 							<a href="listVendorCredits.php"><class="col">Vendor Credits</a><br><br><br>
 							<a href="addVendorPayments.php"><class="col">Make Vendor Payments</a><br><br><br>
 							<a href="listDebitNotes.php"><class="col">Debit Note</a><br><br><br>
-							<a href="listPaymentsMade.php"><class="col">Payments Made</a><br><br><br>
+							<a href="listPaymentsMade.php"><class="col">Vendor Payments Made</a><br><br><br>
 						</div>
 						
 						<div class="fa fa-shopping-cart col">Sales<br><br><br>
@@ -153,7 +153,7 @@ if(isset($_SESSION['login_email'])){
 							<a href="listCustomerCredits.php"><class="col">Customer Credits</a><br><br><br>										
 							<a href="addCustomerReceipts.php"><class="col">Receive Payments</a><br><br><br>
 							<a href="addCashMemo.php"><class="col">Cash Memo</a><br><br><br>
-							<!--a href="PaymentsRecievedReports.php"><class="col">Payments Received</a><br><br><br-->
+							<a href="listCustomerPayments.php"><class="col">Customer Payments Received</a><br><br><br>
 						</div>
 						<div class="fa fa-shopping-basket col">Inventory<br><br><br>
 							<a href="listPurchaseItemMaster.php"><class="col-md5">Item Master(Purchase)</a><br><br><br>
@@ -728,7 +728,7 @@ View All
 </ul>
 </li-->	
                     <?php 
-                    if($_SESSION['groupname']=="Admin"){
+                    if($_SESSION['groupname']=="Admin"||$_SESSION['groupname']=="Manager"){
                         echo '<li class="submenu"><a href="Reports.php"><i class="fa fa-bar-chart-o"></i><span>Reports</span></a></li>';
                     }
                     ?>

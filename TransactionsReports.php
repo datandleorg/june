@@ -94,7 +94,7 @@ include('workers/getters/functions.php');
                                             <th>Payment Mode</th>
                                             <th>Bank</th>
                                             <th>Closing Bal</th>
-                                            <th>Cash On Hand</th>
+                                            <th>UD Funds</th>
                                             <th>Petty Cash</th>
                                             <th>Status</th>
                                             </tr>
@@ -126,7 +126,7 @@ include('workers/getters/functions.php');
                                                 }
 
                                             }else{
-                                                $sql = "SELECT t.*,DATE_FORMAT(t.trans_date,'%d-%m-%Y') as trans_date,(select bankname from compbank where t.trans_bank!='' and id=t.trans_bank ) as bankname from transactions t  order by t.trans_id asc ;";    
+                                                $sql = "SELECT t.*,DATE_FORMAT(t.trans_date,'%d-%m-%Y') as trans_date,(select bankname from compbank where t.trans_bank!='' and id=t.trans_bank ) as bankname from transactions t  order by t.id desc ;";    
                                             }
 
 

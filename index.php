@@ -15,23 +15,55 @@ function getpaymentstotal(){
 
 }
 
+//Expenses 
 function getExpensestotal(){
     global $dbcon;
-    $sql_q = "SELECT SUM(expense_total_amount) as totalexpense from expenses  ";
+    $sql_q = "SELECT SUM(expense_total_amount) as totalexpense from expenses where expense_date = curdate()  ";
     $exc_q = mysqli_query($dbcon,$sql_q)or die("Error");
 
     $row=mysqli_fetch_assoc($exc_q);
     return $row['totalexpense']?$row['totalexpense']:0;
 
 }
-
+//SELECT SUM(amount) as total_bankdeposits from bankdeposit
 function getDepositstotal(){
     global $dbcon;
-    $sql_q = "SELECT SUM(amount) as total_bankdeposits from bankdeposit ";
+    $sql_q = "SELECT SUM(amount) as total_bankdeposits from bankdeposit where depositdate = curdate() ";
     $exc_q = mysqli_query($dbcon,$sql_q)or die("Error");
 
     $row=mysqli_fetch_assoc($exc_q);
     return $row['total_bankdeposits']?$row['total_bankdeposits']:0;
+
+}
+//Bank Accounts
+function getBankName(){
+    global $dbcon;
+    $sql_q = "select concat(bankname,':  ',closing_bal) as bankname from compbank where bankcode='BNK-1' ";
+    $exc_q = mysqli_query($dbcon,$sql_q)or die("Error");
+
+    $row=mysqli_fetch_assoc($exc_q);
+    return $row['bankname']?$row['bankname']:0;
+
+}
+function getBankName2(){
+    global $dbcon;
+    $sql_q = "select concat(bankname,':  ',closing_bal) as bankname2 from compbank where bankcode='BNK-2' ";
+    $exc_q = mysqli_query($dbcon,$sql_q)or die("Error");
+
+    $row=mysqli_fetch_assoc($exc_q);
+    return $row['bankname2']?$row['bankname2']:0;
+
+}
+
+
+//Bank Withdrawels
+function getWithdrawelsTotal(){
+    global $dbcon;
+    $sql_q = "SELECT SUM(amount) as total_withdrawels from bankwithdrawels where withdraweldate = curdate() ";
+    $exc_q = mysqli_query($dbcon,$sql_q)or die("Error");
+
+    $row=mysqli_fetch_assoc($exc_q);
+    return $row['total_withdrawels']?$row['total_withdrawels']:0;
 
 }
 
@@ -247,7 +279,8 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                         </div>
 
                     </div>
-                </div>
+                </div> 
+			
 
                 <div class="col-md-3">
                     <div class="card-box noradius noborder bg-danger">
@@ -255,28 +288,48 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                             <br/>
                             <p class="m-b-20 text-white counter text-center text-white"><?php  print_r(get_users_count());?></p-->
 							
-							<h6 class="m-b-20 text-white counter">Users:&nbsp;&nbsp;</a><?php  print_r(get_users_count());?></p>
-							<h6 class="m-b-20 text-white counter"><a href="listCustomerCredits.php">Customer Credits:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
-							 <h6 class="m-b-20 text-white counter">Petty Cash:&nbsp;&nbsp;</a><?php echo $comprofile['petty_cash_bal'];?></h6>
+							<h6 class="m-b-20 text-white counter">Total Users:&nbsp;&nbsp;<?php  print_r(get_users_count());?></p>
+							<!--h6 class="m-b-20 text-white counter"><a href="listCustomerCredits.php">Customer Credits:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6-->
+							 <h6 class="m-b-20 text-white counter">PETTY CASH:&nbsp;&nbsp;<h5 class="fa fa-rupee text-white counter">&nbsp;<b><?php echo $comprofile['petty_cash_bal'];?></h6>
+							  <h6 class="m-b-20 text-white counter"><b>UNDEPOSITED FUNDS:&nbsp;&nbsp;</h6><h6 class="fa fa-rupee text-white counter">&nbsp;<b><b><?php echo $comprofile['cash_on_hand'];?></h6>
 							
                     </div>
                 </div>
                 
-                <div class="col-xs-12 col-md-6 col-lg-6 col-xl-3">
+                <div class="col-xs-12 col-md-6 col-lg-6 col-xl-12">
 				    <div class="card-box noradius noborder bg-warning">
-                    <h6 class="m-b-20 text-white counter">Income:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6>
+                    <h6 class="m-b-20 text-white counter"><b>Sales:&nbsp;&nbsp;</b><?php echo getpaymentstotal();?></h6>
                             <h6 class="m-b-20 text-white counter">Expenses:&nbsp;<?php echo getExpensestotal();?></h6>
-                            <h6 class="m-b-20 text-white counter">Bank Deposit:&nbsp;<?php echo getDepositstotal();?></h6>
-                            <h6 class="text-white">Undeposited Funds:&nbsp;<?php echo $comprofile['cash_on_hand'];?></h6>
+                            <h6 class="m-b-20 text-white counter">Bank Deposits:&nbsp;<?php echo getDepositstotal();?></h6>
+							 <h6 class="m-b-20 text-white counter">Bank Withdrawels:&nbsp;<?php echo getWithdrawelsTotal();?></h6>
+                           
 				    </div>
 				</div>
-                
             </div>
-
+			 
+                   <hr>
+			<div class="container">
+            <br/>
+			<div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                      <div class="card-box noradius noborder bg-purple">
+                            <h5 class="card-title lead text-center text-white">BANK ACCOUNTS</h5>
+							<h6 class="card-title lead text-left text-warning"><b>Bank Balances</h6>
+                            <p class="card-title lead text-left text-white  ">
+                              <?php echo getBankName();?>
+                            </p>     
+<p class="card-title lead text-left text-white  ">
+                               <?php echo getBankName2();?>
+                            </p>       							
+                        </div>
+                    </div>
+                </div>
         </div>
+				
 
     </div>
-
+			
         
         
 

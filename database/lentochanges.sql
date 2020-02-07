@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 25, 2019 at 07:02 AM
--- Server version: 10.1.38-MariaDB
--- PHP Version: 5.6.40
+-- Generation Time: Jan 30, 2020 at 07:37 AM
+-- Server version: 10.1.36-MariaDB
+-- PHP Version: 5.6.38
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -46,14 +46,6 @@ CREATE TABLE `bankdeposit` (
   `createdon` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `bankdeposit`
---
-
-INSERT INTO `bankdeposit` (`id`, `transid`, `depositdate`, `compcode`, `bankname`, `acctno`, `amount`, `closing_bal`, `paymethod`, `pay_status`, `paytype`, `referenceno`, `notes`, `createdby`, `createdon`) VALUES
-(180, 'TRANSC-01', '2019-12-25', 'COMP001', '004', '1213123421341234', '11.00', '1146.00', 'Cash', '', 'Sales', 'asd', 'ASDasd', 'Lento', '2019-12-25 10:19:49'),
-(181, 'TRANSC-0181', '2019-12-25', 'COMP001', '004', '1213123421341234', '112.00', '1258.00', 'Bank Transfer', '', 'Payments', 'asd', 'ASDasdasd', 'Lento', '2019-12-25 10:20:16');
-
 -- --------------------------------------------------------
 
 --
@@ -77,15 +69,6 @@ CREATE TABLE `bankwithdrawels` (
   `createdby` varchar(100) NOT NULL,
   `createdon` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `bankwithdrawels`
---
-
-INSERT INTO `bankwithdrawels` (`id`, `transid`, `withdraweldate`, `compcode`, `bankcode`, `bankname`, `acctno`, `amount`, `closing_bal`, `paymethod`, `paytype`, `referenceno`, `notes`, `createdby`, `createdon`) VALUES
-(2, 'TRANSC-01', '2019-12-25', 'COMP001', '', '004', '1213123421341234', '11.00', '1247.00', 'Cash', 'Payments', 'aSD', 'asd', 'Lento', '2019-12-25 10:22:25'),
-(3, 'TRANSC-03', '2019-12-25', 'COMP001', '', '004', '1213123421341234', '11.00', '1236.00', 'Cash', 'Payments', 'aSD', 'asd', 'Lento', '2019-12-25 10:22:32'),
-(4, 'TRANSC-04', '2019-12-25', 'COMP001', '', '004', '1213123421341234', '11.00', '1225.00', 'Cash', 'Payments', 'aSD', 'asd', 'Lento', '2019-12-25 10:23:22');
 
 -- --------------------------------------------------------
 
@@ -140,8 +123,7 @@ CREATE TABLE `compbank` (
 --
 
 INSERT INTO `compbank` (`id`, `orgid`, `bankcode`, `name`, `ctype`, `location`, `bankname`, `acctno`, `closing_bal`, `asofdate`, `acctname`, `acctype`, `branch`, `ifsc`) VALUES
-(004, 'COMP001', 'BNK-1', NULL, NULL, NULL, 'HDFC', '1213123421341234', '1225.00', '2019-12-23', 'HDFC', 'Savings', 'ASDas', 'ASDasd'),
-(005, 'COMP001', 'BNK-5', NULL, NULL, NULL, 'ICICI', '4523452345', '1963.00', '2019-12-23', 'icici', 'Savings', 'ASD', 'asd');
+(001, 'COMP001', 'BNK-1', NULL, NULL, NULL, 'INDIAN BANK', '1234567890', '5000.00', '2020-01-21', 'Lento Foods', 'Current', 'Potchampalli', 'IDIB000011');
 
 -- --------------------------------------------------------
 
@@ -190,7 +172,7 @@ CREATE TABLE `comprofile` (
 --
 
 INSERT INTO `comprofile` (`id`, `orgid`, `prefix`, `title`, `orgname`, `shortname`, `orgtype`, `blocation`, `industry`, `address`, `city`, `country`, `state`, `zip`, `workphone`, `mobile`, `email`, `web`, `gstin`, `gstregdate`, `panno`, `openbalance`, `closing_bal`, `cash_on_hand`, `petty_cash_bal`, `balasofdate`, `primaryflag`, `image`, `tandc`, `createdon`, `createdby`, `updatedon`, `updatedby`) VALUES
-(001, 'COMP001', 'DAPL', '', 'Lento Foods India Pvt Ltd', 'Lento', '1', '', '1', 'POTCHAMPALLI', 'potchampalli', 'IN', 'TN', '635108', '', '9677573737', 'lentofoods@gmail.com', '', '34433433434', '2019-01-31', '56656556', '4000.00', '1176.00', '1951.00', '97.00', '2019-10-13', 1, 'upload/lento-logo.png', NULL, '2019-10-13 07:32:44', '2019-10-13 07:32:44', '2019-10-13 07:32:44', '2019-10-13 07:32:44');
+(001, 'COMP001', 'DAPL', '', 'Lento Foods India Pvt Ltd', 'Lento', '1', '', '1', 'POTCHAMPALLI', 'potchampalli', 'IN', 'TN', '635108', '', '9677573737', 'lentofoods@gmail.com', '', '34433433434', '2019-01-31', '56656556', '5000.00', '0.00', '0.00', '0.00', '2019-10-13', 1, 'upload/lento-logo.png', NULL, '2019-10-13 07:32:44', '2019-10-13 07:32:44', '2019-10-13 07:32:44', '2019-10-13 07:32:44');
 
 -- --------------------------------------------------------
 
@@ -9368,16 +9350,6 @@ CREATE TABLE `customercredits` (
   `customer_credits_email_notification` varchar(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `customercredits`
---
-
-INSERT INTO `customercredits` (`id`, `customer_credits_id`, `customer_credits_suptype`, `customer_credits_custid`, `customer_credits_compId`, `customer_credits_paymentmode`, `customer_credits_bank`, `customer_credits_cheque_status`, `customer_credits_ref_no`, `customer_credits_paymentdate`, `customer_credits_amount`, `customer_credits_availcredits`, `customer_credits_handler`, `customer_credits_notes`, `customer_credits_image`, `customer_credits_date`, `customer_credits_email_notification`) VALUES
-(8, 'CUSTCR001', NULL, 'CUST001', 'COMP001', 'Cash', '', '', NULL, '2019-12-25', '12.00', '12.00', 'Lento', 'sasd', NULL, '2019-12-25 10:03:20', 'no'),
-(9, 'CUSTCR009', NULL, 'CUST001', 'COMP001', 'Cash', '', '', NULL, '2019-12-25', '33.00', '33.00', 'Lento', 'ASD', NULL, '2019-12-25 10:03:57', 'no'),
-(10, 'CUSTCR0010', NULL, 'CUST001', 'COMP001', 'Cheque', '005', 'Cleared', 'Ssa', '2019-12-25', '33.00', '33.00', 'Lento', 'ASDdd', NULL, '2019-12-25 10:04:47', 'no'),
-(11, 'CUSTCR0011', NULL, 'CUST001', 'COMP001', 'Bank Transfer', '004', '', '', '2019-12-25', '33.00', '33.00', 'Lento', 'ASD', NULL, '2019-12-25 10:04:55', 'no');
-
 -- --------------------------------------------------------
 
 --
@@ -9425,7 +9397,7 @@ CREATE TABLE `customerprofile` (
 --
 
 INSERT INTO `customerprofile` (`id`, `custid`, `cust_opening_bal`, `prefix`, `postfix`, `title`, `custname`, `portal`, `custype`, `blocation`, `industry`, `address`, `city`, `country`, `state`, `zip`, `workphone`, `mobile`, `email`, `web`, `gstin`, `gstregdate`, `primaryflag`, `openbalance`, `obasofdate`, `image`, `createdon`, `createdby`, `updatedon`, `updatedby`, `status`, `handler`, `notes`) VALUES
-(001, 'CUST001', '946', 'DAPL', '/', 'M/S.', 'MAAVIN FOODS', NULL, 'Partner', 'Tamil Nadu', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'IN', 'TN', '600080', '', '9677573737', 'maavin@gmail.com', '', '8898998898998', NULL, 0, '0.00', '2019-10-13 07:35:32', NULL, '2019-10-13 07:35:32', NULL, '2019-10-13 07:35:32', NULL, '1', NULL, NULL),
+(001, 'CUST001', '1300', 'DAPL', '/', 'M/S.', 'MAAVIN FOODS', NULL, 'Partner', 'Tamil Nadu', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'IN', 'TN', '600080', '', '9677573737', 'maavin@gmail.com', '', '8898998898998', NULL, 0, '0.00', '2019-10-13 07:35:32', NULL, '2019-10-13 07:35:32', NULL, '2019-10-13 07:35:32', NULL, '1', NULL, NULL),
 (002, 'CUST002', NULL, 'DAPL', '/', 'Mr.', 'Saravanakumar', NULL, 'Retailer', 'Tamil Nadu', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'IN', 'TN', '600080', '9791129332', '9791129332', 'asaravanan248@gmail.com', '', '57346356346224234', NULL, 0, '0.00', '2019-10-13 07:37:13', NULL, '2019-10-13 07:37:13', NULL, '2019-10-13 07:37:13', NULL, '1', NULL, NULL),
 (003, 'CUST003', '-82', 'DAPL', '/', 'M/S.', 'JUICY JUICY', NULL, 'Partner', 'Tamil Nadu', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'IN', 'TN', '600080', '9791129332', '9791129332', 'asaravanan248@gmail.com', 'jknnll', '876868768', NULL, 0, '0.00', '2019-10-13 07:38:17', NULL, '2019-10-13 07:38:17', NULL, '2019-10-13 07:38:17', NULL, '1', NULL, NULL),
 (004, 'CUST004', NULL, 'DAPL', '/', 'Mr.', 'scrap', NULL, 'Wholesaler', 'Tamil Nadu', NULL, 'adAD', 'daad', 'IN', 'MN', '600080', '', '977777', '', '', '', NULL, 0, '0.00', '2019-10-19 08:20:10', NULL, '2019-10-19 08:20:10', NULL, '2019-10-19 08:20:10', NULL, '1', NULL, NULL),
@@ -9457,24 +9429,6 @@ CREATE TABLE `customer_payments` (
   `cust_payment_notify` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `customer_payments`
---
-
-INSERT INTO `customer_payments` (`id`, `cust_payment_id`, `cust_payment_customer`, `cust_payment_invoice_no`, `cust_payment_amount`, `cust_payment_credits_used`, `cust_payment_date`, `cust_payment_mode`, `cust_payment_cheque_status`, `cust_payment_bank`, `cust_payment_ref_no`, `cust_payment_so_code`, `cust_payment_inv_id`, `cust_payment_user`, `cust_payment_notes`, `cust_payment_file`, `cust_payment_notify`) VALUES
-(1, 'CUSTPAY-00001', 'CUST001', 'INV-00001-10/2019', '260', NULL, '2019-10-19', 'Cheque', '', '', '', 'so98799', 'INV-00001-10/2019', 'Lento', 'aadaSD', NULL, NULL),
-(2, 'CUSTPAY-00002', 'CUST003', 'INV-00004-10/2019', '21.8', '21.8', '2019-10-21', 'Cash', '', '', 'INV-00004-10/2019', 'so23434', 'INV-00004-10/2019', 'Lento', 'intejhjbh', NULL, NULL),
-(3, 'CUSTPAY-00003', 'CUST003', 'INV-00005-10/2019', '50', '50.00', '2019-10-21', 'Cash', '', '', 'INV-00005-10/2019', 'DLALD', 'INV-00005-10/2019', 'Lento', 'asdas', NULL, NULL),
-(4, 'CUSTPAY-00004', 'CUST003', 'INV-00005-10/2019', '50', '50.00', '2019-10-21', 'Cash', '', '', 'INV-00005-10/2019', 'DLALD', 'INV-00005-10/2019', 'Lento', 'asdas', NULL, NULL),
-(5, 'CUSTPAY-00005', 'CUST003', 'INV-00005-10/2019', '50', '50.00', '2019-10-21', 'Cash', '', '', 'INV-00005-10/2019', 'DLALD', 'INV-00005-10/2019', 'Lento', 'asdas', NULL, NULL),
-(6, 'CUSTPAY-00006', 'CUST003', 'INV-00005-10/2019', '50', '50.00', '2019-10-21', 'Cash', '', '', 'INV-00005-10/2019', 'DLALD', 'INV-00005-10/2019', 'Lento', 'asdas', NULL, NULL),
-(7, 'CUSTPAY-00007', 'CUST001', 'INV-00002-10/2019', '0', NULL, '2019-11-17', 'Cheque', 'Uncleared', '--Select B', 'QSLDKDAKSD', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'SS', NULL, NULL),
-(8, 'CUSTPAY-00008', 'CUST001', 'INV-00002-10/2019', '100', NULL, '2019-11-17', 'Bank Transfer', '', '001', 'INV-00002-10/2019', 's0hbbj', 'INV-00002-10/2019', 'Lento', '', NULL, NULL),
-(9, 'CUSTPAY-00009', 'CUST001', 'INV-00002-10/2019', '1', NULL, '2019-12-07', 'Cash', '', '--Select B', 'asd', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'asd', NULL, NULL),
-(10, 'CUSTPAY-000010', 'CUST001', 'INV-00002-10/2019', '1', NULL, '2019-12-07', 'Cash', '', '--Select B', 'asd', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'asdasd', NULL, NULL),
-(11, 'CUSTPAY-000011', 'CUST001', 'INV-00002-10/2019', '1', NULL, '2019-12-07', 'Bank Transfer', '', '001', 'asd', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'asdasd', NULL, NULL),
-(12, 'CUSTPAY-000012', 'CUST001', 'INV-00002-10/2019', '1', NULL, '2019-12-07', 'Bank Transfer', '', '001', 'asd', 's0hbbj', 'INV-00002-10/2019', 'Lento', 'asdasd', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -9500,6 +9454,13 @@ CREATE TABLE `customer_paymentsacc` (
   `cust_payment_file` varchar(255) DEFAULT NULL,
   `cust_payment_notify` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `customer_paymentsacc`
+--
+
+INSERT INTO `customer_paymentsacc` (`id`, `cust_payment_id`, `cust_payment_customer`, `cust_payment_invoice_no`, `cust_payment_amount`, `cust_payment_credits_used`, `cust_payment_date`, `cust_payment_mode`, `cust_payment_cheque_status`, `cust_payment_bank`, `cust_payment_ref_no`, `cust_payment_so_code`, `cust_payment_inv_id`, `cust_payment_user`, `cust_payment_notes`, `cust_payment_file`, `cust_payment_notify`) VALUES
+(1, 'CUSTPAYACC-00001', 'CUST006', 'INVAC-00003-1019', '20', NULL, '2020-01-17', 'Cash', '', '', 'INVAC-00003-1019', '', 'INVAC-00003-1019', 'Lento', 'aaa', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -9695,24 +9656,6 @@ CREATE TABLE `expenses` (
   `expense_file_src` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `expenses`
---
-
-INSERT INTO `expenses` (`id`, `expense_no`, `expense_date`, `expense_total_amount`, `expense_paid_thru`, `expense_bank`, `expense_cheque_status`, `expense_ref_no`, `expense_payee_type`, `expense_payee`, `expense_invoice_no`, `expense_handler`, `expense_notes`, `expense_items`, `expense_updated_on`, `expense_status`, `expense_file_src`) VALUES
-(8, '01', '2019-12-16', '122.00', 'Bank Transfer', '001', '', 'ASDAD', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 21:29:42', 'Created', 'upload/01.png'),
-(9, '09', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:21:17', 'Created', 'upload/09.png'),
-(10, '010', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:21:43', 'Created', 'upload/010.png'),
-(11, '011', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:22:40', 'Created', 'upload/011.png'),
-(12, '012', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:22:49', 'Created', 'upload/012.png'),
-(13, '013', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:23:09', 'Created', 'upload/013.png'),
-(14, '014', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:24:22', 'Created', 'upload/014.png'),
-(15, '015', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:25:16', 'Created', 'upload/015.png'),
-(16, '016', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:26:09', 'Created', 'upload/016.png'),
-(17, '017', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:26:38', 'Created', 'upload/017.png'),
-(18, '018', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:26:59', 'Created', 'upload/018.png'),
-(19, '019', '2019-12-16', '122.00', 'Petty Cash', '', '', '', 'Vendor', 'SD', 'ASD', 'Lento', 'ASD', '[{\"expense_category\":\"Advertising & Marketting\",\"expense_desc\":\"asd\",\"expense_amount\":122}]', '2019-12-16 22:31:32', 'Created', 'upload/019.png');
-
 -- --------------------------------------------------------
 
 --
@@ -9744,13 +9687,6 @@ CREATE TABLE `grn_notes` (
   `grn_notes` varchar(255) DEFAULT NULL,
   `grn_po_items` longtext
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `grn_notes`
---
-
-INSERT INTO `grn_notes` (`id`, `grn_id`, `grn_comp_code`, `grn_owner`, `grn_po_code`, `grn_po_value`, `grn_po_vendor`, `grn_payterm`, `grn_po_payterm`, `grn_po_date`, `grn_po_deliveryat`, `grn_po_shippingvia`, `grn_balance`, `grn_date`, `grn_due_date`, `grn_payment_status`, `grn_invoice_no`, `grn_invoice_date`, `grn_delivery_on`, `grn_freight`, `grn_status`, `grn_notes`, `grn_po_items`) VALUES
-(1, 'GRN-000001', 'COMP001', 'Lento', '', '2000.00', '00001', NULL, '1', '', 'ssfasdf', 'amsdmaldf', '1779', '2019-10-13', NULL, 'Partially Paid', 'invoice13123', '2019-12-04', '2019-10-13', NULL, 'Approved', 'note', '[{\"itemdetails\":\"[LEN-01] Inward Self Item one \",\"itemcode\":\"1\",\"rwqty\":\"20\",\"tax_val\":\"28.00\",\"tax_id\":\"6\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"100.00\",\"rwprice_org\":\"100.00\",\"rwamt\":\"2000\",\"podiscount\":\"0\",\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"KGS\"}]');
 
 -- --------------------------------------------------------
 
@@ -9839,17 +9775,6 @@ CREATE TABLE `invoices` (
   `inv_driver_name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `invoices`
---
-
-INSERT INTO `invoices` (`id`, `inv_code`, `inv_type`, `inv_owner`, `inv_customer`, `inv_comp_code`, `inv_vendor`, `inv_so_code`, `inv_description`, `inv_date`, `inv_duedate`, `inv_cust_ref_phno`, `inv_paymentmode`, `inv_receipt_no`, `inv_payterm`, `inv_payterm_desc`, `inv_shippingvia`, `inv_deliveryat`, `inv_deliverydate`, `inv_status`, `inv_freight`, `inv_shipping_street`, `inv_shipping_city`, `inv_shipping_state`, `inv_shipping_country`, `inv_shipping_zip`, `inv_shipping_phone`, `inv_shipping_gstin`, `inv_billing_street`, `inv_billing_city`, `inv_billing_state`, `inv_billing_country`, `inv_billing_zip`, `inv_billing_phone`, `inv_billing_gstin`, `inv_value`, `inv_balance_amt`, `inv_payment_status`, `inv_tc`, `inv_notes`, `inv_items`, `inv_truck_no`, `inv_driver_name`) VALUES
-(1, 'INV-00001-10/2019', 'Credit Invoice', 'Lento', 'CUST001', 'COMP001', NULL, 'so98799', NULL, '2019-10-13', '2019-10-13', NULL, NULL, NULL, '1', NULL, NULL, 'PB', NULL, 'Closed', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9677573737', '8898998898998', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9677573737', '8898998898998', '260.00', '0', 'Paid', NULL, 'otes', '[{\"itemdetails\":\"[1] outward self item 1\",\"itemcode\":\"1\",\"hsncode\":\"hsn383309\",\"rwqty\":\"1\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"120\",\"rwprice_org\":\"120\",\"rwamt\":\"120\",\"podiscount\":\"0\",\"poadjustmentval\":\"20\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"},{\"itemdetails\":\"[1] outward self item 1\",\"itemcode\":\"1\",\"hsncode\":\"hsn383309\",\"rwqty\":\"1\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"120\",\"rwprice_org\":\"120\",\"rwamt\":\"120\",\"podiscount\":\"0\",\"poadjustmentval\":\"20\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '90', 'kjnk'),
-(2, 'INV-00002-10/2019', 'Credit Invoice', 'Lento', 'CUST001', 'COMP001', NULL, 's0hbbj', NULL, '2019-10-13', '2019-10-13', NULL, NULL, NULL, '1', NULL, NULL, 'AP', NULL, 'Approved', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9677573737', '8898998898998', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9677573737', '8898998898998', '1050.00', '946', 'Partially Paid', NULL, 'ojo', '[{\"itemdetails\":\"[4] outward outsourced maavin item\",\"itemcode\":\"4\",\"hsncode\":\"jsksk\",\"rwqty\":\"10\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"0\",\"rwprice\":\"100\",\"rwprice_org\":\"100\",\"rwamt\":\"1000\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', 'y989', 'fjvj'),
-(3, 'INV-00003-10/2019', 'Credit Invoice', 'Lento', 'CUST002', 'COMP001', NULL, 'so9879879', NULL, '2019-10-13', '2019-10-13', NULL, NULL, NULL, '1', NULL, NULL, 'AP', NULL, 'Created', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '57346356346224234', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '57346356346224234', '240.00', '240.00', 'Unpaid', NULL, 'asdasd', '[{\"itemdetails\":\"[1] outward self item 1\",\"itemcode\":\"1\",\"hsncode\":\"hsn383309\",\"rwqty\":\"2\",\"tax_val\":\"5.00\",\"tax_id\":\"3\",\"tax_type\":\"split\",\"tax_method\":\"1\",\"rwprice\":\"120\",\"rwprice_org\":\"120\",\"rwamt\":\"240\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '6373', '3737'),
-(4, 'INV-00004-10/2019', 'Credit Invoice', 'Lento', 'CUST003', 'COMP001', NULL, 'so23434', NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '2', NULL, NULL, 'AR', NULL, 'Closed', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '876868768', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '876868768', '21.80', '0', 'Paid', NULL, 'jgjb', '[{\"itemdetails\":\"[3] outward outsourced item juicy\",\"itemcode\":\"3\",\"hsncode\":\"hsn6368382\",\"rwqty\":\"1\",\"tax_val\":\"18.00\",\"tax_id\":\"5\",\"tax_type\":\"single\",\"tax_method\":\"0\",\"rwprice\":\"10\",\"rwprice_org\":\"10\",\"rwamt\":\"10\",\"podiscount\":0,\"poadjustmentval\":\"10\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '11313', '3113'),
-(5, 'INV-00005-10/2019', 'Credit Invoice', 'Lento', 'CUST003', 'COMP001', NULL, 'DLALD', NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '2', NULL, NULL, 'AP', NULL, 'Approved', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '876868768', 'no 910, alliance orchid springs , north korattur', 'chennai', 'TN', 'IN', '600080', '9791129332', '876868768', '118.00', '-82', 'Partially Paid', NULL, 'ad', '[{\"itemdetails\":\"[3] outward outsourced item juicy\",\"itemcode\":\"3\",\"hsncode\":\"hsn6368382\",\"rwqty\":\"10\",\"tax_val\":\"18.00\",\"tax_id\":\"5\",\"tax_type\":\"single\",\"tax_method\":\"0\",\"rwprice\":\"10\",\"rwprice_org\":\"10\",\"rwamt\":\"100\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"BAG\"}]', '22', '2232');
-
 -- --------------------------------------------------------
 
 --
@@ -9901,15 +9826,6 @@ CREATE TABLE `invoicesacc` (
   `inv_truck_no` varchar(255) DEFAULT NULL,
   `inv_driver_name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `invoicesacc`
---
-
-INSERT INTO `invoicesacc` (`id`, `inv_code`, `inv_type`, `inv_owner`, `inv_customer`, `inv_comp_code`, `inv_vendor`, `inv_so_code`, `inv_description`, `inv_date`, `inv_duedate`, `inv_cust_ref_phno`, `inv_paymentmode`, `inv_receipt_no`, `inv_payterm`, `inv_payterm_desc`, `inv_shippingvia`, `inv_deliveryat`, `inv_deliverydate`, `inv_status`, `inv_freight`, `inv_shipping_street`, `inv_shipping_city`, `inv_shipping_state`, `inv_shipping_country`, `inv_shipping_zip`, `inv_shipping_phone`, `inv_shipping_gstin`, `inv_billing_street`, `inv_billing_city`, `inv_billing_state`, `inv_billing_country`, `inv_billing_zip`, `inv_billing_phone`, `inv_billing_gstin`, `inv_value`, `inv_balance_amt`, `inv_payment_status`, `inv_tc`, `inv_notes`, `inv_items`, `inv_truck_no`, `inv_driver_name`) VALUES
-(1, 'INVAC-00001-1019', 'Credit Invoice', 'Lento', 'CUST006', 'COMP001', NULL, NULL, NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '1', NULL, NULL, 'ML', NULL, 'Created', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, '1200.00', '1200.00', 'Unpaid', NULL, 'ADAD', '[{\"itemdetails\":\"[LENSCRAP-0019] Sugar bags\",\"itemcode\":\"LENSCRAP-0019\",\"rwqty\":\"12\",\"tax_val\":\"\",\"tax_type\":\"\",\"tax_method\":1,\"rwprice\":\"100\",\"rwamt\":\"1200\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"KIT\"}]', '12213', '13123'),
-(2, 'INVAC-00002-1019', 'Credit Invoice', 'Lento', 'CUST006', 'COMP001', NULL, NULL, NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '1', NULL, NULL, 'ML', NULL, 'Created', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, '1200.00', '1200.00', 'Unpaid', NULL, 'ADAD', '[{\"itemdetails\":\"[LENSCRAP-0019] Sugar bags\",\"itemcode\":\"LENSCRAP-0019\",\"rwqty\":\"12\",\"tax_val\":\"\",\"tax_type\":\"\",\"tax_method\":1,\"rwprice\":\"100\",\"rwamt\":\"1200\",\"podiscount\":0,\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"KIT\"}]', '12213', '13123'),
-(3, 'INVAC-00003-1019', 'Credit Invoice', 'Lento', 'CUST006', 'COMP001', NULL, NULL, NULL, '2019-10-21', '2019-10-21', NULL, NULL, NULL, '1', NULL, NULL, 'AS', NULL, 'Created', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, 'no 910, alliance orchid springs , north korattur', 'chennai', 'AR', 'AL', '600080', '8608902347', NULL, '20.00', '20.00', 'Unpaid', NULL, 'AASD', '[{\"itemdetails\":\"[LENSCRAP-0019] Sugar bags\",\"itemcode\":\"LENSCRAP-0019\",\"rwqty\":\"2\",\"tax_val\":\"\",\"tax_type\":\"\",\"tax_method\":1,\"rwprice\":\"10\",\"rwprice_org\":\"10\",\"rwamt\":\"20\",\"podiscount\":\"0\",\"poadjustmentval\":\"\",\"podiscount_method\":\"flat\",\"uom\":\"CVR\"}]', '12312', 'sfsdf');
 
 -- --------------------------------------------------------
 
@@ -9973,7 +9889,7 @@ CREATE TABLE `partnerentries` (
 --
 
 INSERT INTO `partnerentries` (`id`, `pe_code`, `pe_orgid`, `entrytype`, `pe_items`, `pe_status`, `pe_updatedon`, `pe_handler`) VALUES
-(7, 'MAAPE-001', 'CUST001', 'outsourced', '[{\"item\":\"MAA-02\",\"itemname\":\"MAA-02-inward outsourced item one maavin\",\"uom\":\"BND\",\"qty\":\"244\"}]', 'Approved', '2019-10-19 07:56:19', 'Lento');
+(1, 'MAAPE-001', 'CUST001', 'outsourced', '[{\"item\":\"MAA-02\",\"itemname\":\"MAA-02-inward outsourced item one maavin\",\"uom\":\"BND\",\"qty\":\"100\"}]', 'Approved', '2020-01-21 19:00:29', 'Lento');
 
 -- --------------------------------------------------------
 
@@ -10006,19 +9922,9 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`id`, `payment_id`, `payment_vendor`, `payment_invoice_no`, `payment_amount`, `payment_credits_used`, `payment_date`, `payment_mode`, `payment_cheque_status`, `payment_ref_no`, `payment_bank`, `payment_po_code`, `payment_grn_id`, `payment_user`, `payment_notes`, `payment_file`, `payment_notify`) VALUES
-(1, '000001', '00001', 'invoice13123', '200', '100.00', '2019-10-19', 'Cash', '', 'hbhbj', 'hgjbkk', '', 'GRN-000001', 'Lento', 'kkjk', NULL, NULL),
-(2, '000002', '00001', 'invoice13123', '10', NULL, '2019-11-17', 'Bank Transfer', 'Uncleared', 'sdfasdf', '001', '', 'GRN-000001', 'Lento', 'sas', NULL, NULL),
-(3, '000003', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(4, '000004', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(5, '000005', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(6, '000006', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(7, '000007', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Cash', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(8, '000008', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Credit Card', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(9, '000009', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Credit Card', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(10, '0000010', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Credit Card', '', 'SAD', '--Select Bank--', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(11, '0000011', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Bank Transfer', '', 'SAD', '001', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(12, '0000012', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Bank Transfer', '', 'SAD', '001', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL),
-(13, '0000013', '00001', 'invoice13123', '1', NULL, '2019-12-07', 'Bank Transfer', '', 'SAD', '001', '', 'GRN-000001', 'Lento', 'asdd', NULL, NULL);
+(1, 'VP001', '00001', '100', '100', '', '2020-01-26T09:06:45.052Z', 'Cash', '', '11', '', '-', 'GRN-000001', 'Lento', '', NULL, 0),
+(2, 'VP002', '00001', '100', '50', '', '2020-01-26T09:31:49.496Z', 'Cheque', 'Uncleared', '9000', '001', '-', 'GRN-000001', 'Lento', '', NULL, 0),
+(3, 'VP003', '00001', '100', '50', '', '2020-01-26T10:07:02.227Z', 'Cheque', 'Cleared', '8989', '001', '-', 'GRN-000001', 'Lento', '', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -10062,16 +9968,21 @@ CREATE TABLE `petty_cash_conversion` (
   `conv_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `petty_cash_conversion`
+-- Table structure for table `petty_cas_conv`
 --
 
-INSERT INTO `petty_cash_conversion` (`id`, `conv_no`, `conv_amt`, `conv_row`, `conv_handler`, `conv_trans_id`, `conv_date`) VALUES
-(1, 'CONV01', '0.00', '', '', '', '2019-12-16 22:25:16'),
-(2, 'CONV02', '64.00', '016', 'Lento', '', '2019-12-16 22:26:09'),
-(3, 'CONV03', '58.00', '017', 'Lento', '', '2019-12-16 22:26:38'),
-(4, 'CONV04', '0.00', '018', 'Lento', '', '2019-12-16 22:26:59'),
-(5, 'CONV05', '0.00', '019', 'Lento', '', '2019-12-16 22:31:33');
+CREATE TABLE `petty_cas_conv` (
+  `id` int(10) NOT NULL,
+  `conv_id` varchar(20) NOT NULL,
+  `conv_amt` decimal(10,2) NOT NULL,
+  `handler` varchar(100) NOT NULL,
+  `conv_remarks` text NOT NULL,
+  `conv_orgid` varchar(20) NOT NULL,
+  `conv_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -10096,20 +10007,6 @@ CREATE TABLE `productionlist` (
   `prod_edit` int(1) DEFAULT NULL,
   `prod_created_date` varchar(12) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `productionlist`
---
-
-INSERT INTO `productionlist` (`id`, `entrytype`, `orgid`, `prod_code`, `prod_handler`, `prod_company`, `prod_item`, `prod_qty`, `prod_uom`, `prod_date`, `prod_status`, `prod_raw_items`, `prod_notes`, `prod_edit`, `prod_created_date`) VALUES
-(1, 'self', 'COMP001', 'LENPRD-01', 'Lento', 'COMP001', 'LEN-01', 12, 'BKT', '2019-10-13', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"BAG\",\"qty\":\"10\"}]', 'nr', NULL, '2019-10-13'),
-(2, 'outsourced', 'CUST001', 'MAAPRD-02', 'Lento', 'CUST001', 'MAA-04', 10, 'BKT', '2019-10-13', 'Completed', '[{\"item\":\"MAA-02\",\"uom\":\"BND\",\"qty\":\"22\"}]', 'maavin', NULL, '2019-10-13'),
-(3, 'self', 'COMP001', 'LENPRD-03', 'Lento', 'COMP001', 'LEN-01', 8, 'BAG', '2019-10-15', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"BAG\",\"qty\":\"5.92\"}]', 'jjj', NULL, '2019-10-15'),
-(4, 'self', 'COMP001', 'LENPRD-04', 'Lento', 'COMP001', 'LEN-01', 10, 'BAG', '2019-10-18', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"BAG\",\"qty\":\"7.4\"}]', 'aSDasd', NULL, '2019-10-18'),
-(5, 'outsourced', 'CUST001', 'MAAPRD-05', 'Lento', 'CUST001', 'MAA-04', 11, 'BAG', '2019-10-18', 'Completed', '[{\"item\":\"MAA-02\",\"uom\":\"BND\",\"qty\":\"242\"}]', 'sdasd', NULL, '2019-10-18'),
-(6, 'self', 'COMP001', 'LENPRD-06', 'Lento', 'COMP001', 'LEN-01', 1, 'BAG', '2019-10-18', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"KGS\",\"qty\":\"11\"},{\"item\":\"LEN-04\",\"uom\":\"CVR\",\"qty\":\"10\"}]', 'SDAd', NULL, '2019-10-18'),
-(7, 'self', 'COMP001', 'LENPRD-07', 'Lento', 'COMP001', 'LEN-01', 1, 'BAG', '2019-10-18', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"KGS\",\"qty\":\"11\"},{\"item\":\"LEN-04\",\"uom\":\"CVR\",\"qty\":\"10\"}]', 'asasd', NULL, '2019-10-18'),
-(8, 'self', 'COMP001', 'LENPRD-08', 'Lento', 'COMP001', 'LEN-01', 1, 'BAG', '2019-10-19', 'Completed', '[{\"item\":\"LEN-01\",\"uom\":\"KGS\",\"qty\":\"11\"},{\"item\":\"LEN-04\",\"uom\":\"CVR\",\"qty\":\"10\"}]', 'hchch', NULL, '2019-10-19');
 
 -- --------------------------------------------------------
 
@@ -10156,8 +10053,8 @@ CREATE TABLE `purchaseitemaster` (
 --
 
 INSERT INTO `purchaseitemaster` (`id`, `entrytype`, `orgid`, `itemcode`, `itemname`, `category`, `description`, `vendor`, `hsncode`, `status`, `priceperqty`, `salespriceperqty`, `uom`, `taxmethod`, `taxname`, `taxrate`, `taxtype`, `taxid`, `taxamount`, `itemcost`, `taxableprice`, `pricedatefrom`, `stockinqty`, `stockinuom`, `lowstockalert`, `stockasofdate`, `usageunit`, `handler`, `notes`, `updatedon`, `image`) VALUES
-(1, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', 'CAT001', NULL, '00001', 'hsn34444sss', '1', '100.00', NULL, 'KGS', '1', '1000', '0.00', 'split', '6', '0.00', '72.00', '100.00', '2019-10-13', '-75.32', 'KGS', '5', '2019-10-13', NULL, 'Lento', 'notes', '2019-10-13 02:14:39', NULL),
-(2, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', 'CAT001', NULL, '00001', 'hsn399939393', '1', '0.00', NULL, 'BAG', 'Select Tax Method', '', '0.00', '', '0', '0.00', '0.00', '0.00', '2019-10-13', '100.00', 'BND', '5', '2019-10-13', NULL, 'Lento', 'nonond', '2019-10-13 02:19:43', NULL),
+(1, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', 'CAT001', NULL, '00001', 'hsn34444sss', '1', '100.00', NULL, 'KGS', '1', '1000', '0.00', 'split', '6', '0.00', '72.00', '100.00', '2019-10-13', '-65.32', 'KGS', '5', '2019-10-13', NULL, 'Lento', 'notes', '2019-10-13 02:14:39', NULL),
+(2, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', 'CAT001', NULL, '00001', 'hsn399939393', '1', '0.00', NULL, 'BAG', 'Select Tax Method', '', '0.00', '', '0', '0.00', '0.00', '0.00', '2019-10-13', '200.00', 'BND', '5', '2019-10-13', NULL, 'Lento', 'nonond', '2019-10-13 02:19:43', NULL),
 (3, 'outsourced', 'CUST003', 'JUI-03', 'inward outsourced item two juicy', 'CAT001', NULL, '00001', 'hsn38339', '1', '0.00', NULL, '0', 'Select Tax Method', '', '0.00', '', '0', '0.00', '0.00', '0.00', '2019-10-13', '110.00', '0', '5', '2019-10-13', NULL, 'Lento', 'ASDasdqD', '2019-10-13 02:22:04', NULL),
 (4, 'self', 'COMP001', 'LEN-04', 'Inward one ', 'CAT001', NULL, '00001', 'hsn2222', '1', '10.00', NULL, 'BAG', '0', '18%(IGST)', '0.00', 'single', '5', '0.00', '10.00', '11.80', '2019-10-15', '-50.00', 'CVR', '10', '2019-10-15', NULL, 'Lento', 'notes', '2019-10-15 15:06:41', NULL);
 
@@ -10187,35 +10084,7 @@ CREATE TABLE `purchaseitemlog` (
 --
 
 INSERT INTO `purchaseitemlog` (`id`, `entrytype`, `orgid`, `itemcode`, `itemname`, `qtyonhand`, `newqty`, `qtyadjusted`, `uom`, `adjustedon`, `handler`, `notes`) VALUES
-(0001, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '0.00', '20.00', '20.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'notes'),
-(0002, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '0.00', '20.00', '20.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'notes'),
-(0003, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', '100.00', '100.00', '0.00', 'BND', '2019-10-13 00:00:00', 'Lento', 'nonond'),
-(0004, 'outsourced', 'CUST003', 'JUI-03', 'inward outsourced item two juicy', '0.00', '0.00', '0.00', '0', '2019-10-13 00:00:00', 'Lento', 'ASDasdqD'),
-(0005, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '30.00', NULL, '10.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'GRN-000001'),
-(0006, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '40.00', NULL, '10.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'GRN-000001'),
-(0007, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '40.00', NULL, '10.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'GRN-000001'),
-(0008, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '40.00', NULL, '10.00', 'KGS', '2019-10-13 00:00:00', 'Lento', 'GRN-000001'),
-(0009, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '40.00', '30.00', '10.00', 'KGS', '2019-10-13 08:23:19', 'Lento', NULL),
-(0010, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', '120.00', '98.00', '22.00', 'BND', '2019-10-13 08:26:34', 'Lento', NULL),
-(0011, 'self', 'COMP001', 'LEN-04', 'Inward one ', '0.00', '0.00', '0.00', 'CVR', '2019-10-15 00:00:00', 'Lento', 'notes'),
-(0012, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '30.00', '24.08', '5.92', 'KGS', '2019-10-15 21:54:30', 'Lento', NULL),
-(0013, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '24.08', '16.68', '7.40', 'KGS', '2019-10-18 20:31:46', 'Lento', NULL),
-(0014, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '16.68', '9.28', '7.40', 'KGS', '2019-10-18 20:32:23', 'Lento', NULL),
-(0015, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '9.28', '1.88', '7.40', 'KGS', '2019-10-18 20:33:18', 'Lento', NULL),
-(0016, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '1.88', '-5.52', '7.40', 'KGS', '2019-10-18 20:35:10', 'Lento', NULL),
-(0017, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-5.52', '-12.92', '7.40', 'KGS', '2019-10-18 20:54:38', 'Lento', NULL),
-(0018, 'outsourced', 'CUST001', 'MAA-02', 'inward outsourced item one maavin', '98.00', '-144.00', '242.00', 'BND', '2019-10-18 20:59:52', 'Lento', NULL),
-(0019, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-12.92', '-20.32', '7.40', 'KGS', '2019-10-18 21:05:39', 'Lento', NULL),
-(0020, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-20.32', '-31.32', '11.00', 'KGS', '2019-10-18 21:11:55', 'Lento', NULL),
-(0021, 'self', 'COMP001', 'LEN-04', 'Inward one ', '0.00', '-10.00', '10.00', 'CVR', '2019-10-18 21:11:55', 'Lento', NULL),
-(0022, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-31.32', '-42.32', '11.00', 'KGS', '2019-10-18 21:12:14', 'Lento', NULL),
-(0023, 'self', 'COMP001', 'LEN-04', 'Inward one ', '-10.00', '-20.00', '10.00', 'CVR', '2019-10-18 21:12:14', 'Lento', NULL),
-(0024, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-42.32', '-53.32', '11.00', 'KGS', '2019-10-18 21:12:35', 'Lento', NULL),
-(0025, 'self', 'COMP001', 'LEN-04', 'Inward one ', '-20.00', '-30.00', '10.00', 'CVR', '2019-10-18 21:12:35', 'Lento', NULL),
-(0026, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-53.32', '-64.32', '11.00', 'KGS', '2019-10-18 21:12:50', 'Lento', NULL),
-(0027, 'self', 'COMP001', 'LEN-04', 'Inward one ', '-30.00', '-40.00', '10.00', 'CVR', '2019-10-18 21:12:50', 'Lento', NULL),
-(0028, 'self', 'COMP001', 'LEN-01', 'Inward Self Item one ', '-64.32', '-75.32', '11.00', 'KGS', '2019-10-19 08:08:49', 'Lento', NULL),
-(0029, 'self', 'COMP001', 'LEN-04', 'Inward one ', '-40.00', '-50.00', '10.00', 'CVR', '2019-10-19 08:08:50', 'Lento', NULL);
+(0001, NULL, NULL, 'DAPL001', ' Inward Self Item one ', '-65.32', NULL, '10.00', 'KGS', '2020-01-21 00:00:00', 'Lento', 'GRN-000001');
 
 -- --------------------------------------------------------
 
@@ -10394,7 +10263,7 @@ CREATE TABLE `salesitemaster2` (
 INSERT INTO `salesitemaster2` (`id`, `entrytype`, `itemcode`, `orgid`, `itemname`, `category`, `description`, `sales_vendorid`, `hsncode`, `sales_priceperqty`, `priceperqty`, `sales_uom`, `uom`, `sales_taxmethod`, `taxmethod`, `sales_taxname`, `taxname`, `sales_taxrate`, `taxrate`, `sales_taxtype`, `taxtype`, `sales_taxamount`, `taxamount`, `sales_taxid`, `taxid`, `itemcost`, `taxableprice`, `sales_pricedatefrom`, `pricedatefrom`, `stockinqty`, `stockinqty_date`, `stockinuom`, `lowstockalert`, `stockasofdate`, `usageunit`, `handler`, `notes`, `updatedon`, `image`) VALUES
 (1, 'self', 'LEN-01', 'COMP001', 'outward self item 1', 'CAT001', NULL, '00001', 'hsn383309', '120', '', 'BAG', '0', '1', '', '5%GST', '', '5.00', '0', 'split', '', '6.00', '0.00', '3', '0', '114', NULL, '2019-10-13', '2019-10-13', '81.00', '2019-10-13', NULL, '5', NULL, NULL, 'Lento', 'notes', '2019-10-13 02:40:02', NULL),
 (3, 'outsourced', 'JUI-03', 'CUST003', 'outward outsourced item juicy', 'CAT001', NULL, '00001', 'hsn6368382', '10', '', 'BAG', '0', '0', '', '18%(IGST)', '', '18.00', '0', 'single', '', '1.80', '0.00', '5', '0', '10', NULL, '2019-10-13', '2019-10-13', '90.00', '2019-10-13', NULL, '5', NULL, NULL, 'Lento', 'notes', '2019-10-13 02:41:38', NULL),
-(4, 'outsourced', 'MAA-04', 'CUST001', 'outward outsourced maavin item', 'CAT001', NULL, '00001', 'jsksk', '100', '', 'BAG', '0', '0', '', '5%GST', '', '5.00', '0', 'split', '', '5.00', '0.00', '3', '0', '100', NULL, '2019-10-13', '2019-10-13', '111.00', '2019-10-13', NULL, '5', NULL, NULL, 'Lento', 'otes', '2019-10-13 02:46:58', NULL);
+(4, 'outsourced', 'MAA-04', 'CUST001', 'outward outsourced maavin item', 'CAT001', NULL, '00001', 'jsksk', '100', '', 'BAG', '0', '0', '', '5%GST', '', '5.00', '0', 'split', '', '5.00', '0.00', '3', '0', '100', NULL, '2019-10-13', '2019-10-13', '101.00', '2019-10-13', NULL, '5', NULL, NULL, 'Lento', 'otes', '2019-10-13 02:46:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -10463,35 +10332,8 @@ CREATE TABLE `salesitemlognew` (
 --
 
 INSERT INTO `salesitemlognew` (`id`, `entrytype`, `orgid`, `itemcode`, `itemname`, `qtyonhand`, `newqty`, `qtyadjusted`, `uom`, `adjustedon`, `handler`, `notes`) VALUES
-(1, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '0.00', '0.00', '0.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'notes'),
-(2, 'outsourced', 'CUST001', 'MAA-02', 'outward outsourced item 1 ', '0.00', '0.00', '0.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'notes'),
-(3, 'outsourced', 'CUST003', 'JUI-03', 'outward outsourced item juicy', '0.00', '0.00', '0.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'notes'),
-(4, 'outsourced', 'COMP001', 'MAA-02', 'outward outsourced item 1 ', '0.00', '10.00', '10.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'notes'),
-(5, 'outsourced', 'CUST001', 'MAA-04', 'outward outsourced maavin item', '100.00', '100.00', '0.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'otes'),
-(6, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '0.00', '12.00', '12.00', 'BAG', '2019-10-13 08:23:19', 'Lento', NULL),
-(7, 'outsourced', 'CUST001', 'MAA-04', 'outward outsourced maavin item', '100.00', '110.00', '10.00', 'BAG', '2019-10-13 08:26:35', 'Lento', NULL),
-(8, NULL, NULL, '000004', ' outward outsourced maavin item', '109.00', NULL, '-1.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00001-10/2019'),
-(9, NULL, NULL, '00000', ' outward self item 1', '0.00', NULL, '-1.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00001-10/2019'),
-(10, NULL, NULL, '000001', ' outward self item 1', '11.00', NULL, '-1.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00001-10/2019'),
-(11, NULL, NULL, '000004', ' outward outsourced maavin item', '100.00', NULL, '-10.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00002-10/2019'),
-(12, NULL, NULL, '000001', ' outward self item 1', '8.00', NULL, '-2.00', 'BAG', '2019-10-13 00:00:00', 'Lento', 'INV-00003-10/2019'),
-(13, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '8.00', '16.00', '8.00', 'BAG', '2019-10-15 21:54:31', 'Lento', NULL),
-(14, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '16.00', '26.00', '10.00', 'BAG', '2019-10-18 20:31:46', 'Lento', NULL),
-(15, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '26.00', '36.00', '10.00', 'BAG', '2019-10-18 20:32:24', 'Lento', NULL),
-(16, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '36.00', '46.00', '10.00', 'BAG', '2019-10-18 20:33:18', 'Lento', NULL),
-(17, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '46.00', '56.00', '10.00', 'BAG', '2019-10-18 20:35:10', 'Lento', NULL),
-(18, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '56.00', '66.00', '10.00', 'BAG', '2019-10-18 20:54:38', 'Lento', NULL),
-(19, 'outsourced', 'CUST001', 'MAA-04', 'outward outsourced maavin item', '100.00', '111.00', '11.00', 'BAG', '2019-10-18 20:59:52', 'Lento', NULL),
-(20, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '66.00', '76.00', '10.00', 'BAG', '2019-10-18 21:05:39', 'Lento', NULL),
-(21, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '76.00', '77.00', '1.00', 'BAG', '2019-10-18 21:11:55', 'Lento', NULL),
-(22, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '77.00', '78.00', '1.00', 'BAG', '2019-10-18 21:12:14', 'Lento', NULL),
-(23, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '78.00', '79.00', '1.00', 'BAG', '2019-10-18 21:12:35', 'Lento', NULL),
-(24, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '79.00', '80.00', '1.00', 'BAG', '2019-10-18 21:12:50', 'Lento', NULL),
-(25, 'self', 'COMP001', 'LEN-01', 'outward self item 1', '80.00', '81.00', '1.00', 'BAG', '2019-10-19 08:08:50', 'Lento', NULL),
-(26, NULL, NULL, '00000LENSCRAP-0019', ' Sugar bags', '-12.00', NULL, '-12.00', 'KIT', '2019-10-21 00:00:00', 'Lento', 'INVAC-00001-1019'),
-(27, NULL, NULL, '00000LENSCRAP-0019', ' Sugar bags', '-12.00', NULL, '-12.00', 'KIT', '2019-10-21 00:00:00', 'Lento', 'INVAC-00002-1019'),
-(28, NULL, NULL, '000003', ' outward outsourced item juicy', '-1.00', NULL, '-1.00', 'BAG', '2019-10-21 00:00:00', 'Lento', 'INV-00004-10/2019'),
-(29, NULL, NULL, '000003', ' outward outsourced item juicy', '90.00', NULL, '-10.00', 'BAG', '2019-10-21 00:00:00', 'Lento', 'INV-00005-10/2019');
+(1, NULL, NULL, '000004', ' outward outsourced maavin item', '101.00', NULL, '-10.00', 'BAG', '2020-01-21 00:00:00', 'Lento', 'INV-00001-01/2020'),
+(2, NULL, NULL, '000004', ' outward outsourced maavin item', '101.00', NULL, '-10.00', 'BAG', '2020-01-26 00:00:00', 'Lento', 'INV-00002-01/2020');
 
 -- --------------------------------------------------------
 
@@ -10559,14 +10401,6 @@ CREATE TABLE `scrapinventory` (
   `scrap_updated_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `handler` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `scrapinventory`
---
-
-INSERT INTO `scrapinventory` (`id`, `entrytype`, `scrap_itemcode`, `scrap_itemname`, `scrap_qty`, `scrap_uom`, `scrap_orgid`, `scrap_from_itemcode`, `scrap_from_itemname`, `scrap_from_qty`, `scrap_from_uom`, `scrap_inventory_qty`, `scrap_inventory_uom`, `scrap_updated_on`, `handler`) VALUES
-(18, 'self', 'LENSCRAP-001', 'scrap one', '1.00', 'GROSS', 'COMP001', 'LEN-04', 'Inward one ', '10.00', 'CVR', '10.00', 'GROSS', '2019-10-19 08:01:43', 'Lento'),
-(19, 'self', 'LENSCRAP-0019', 'Sugar bags', '1.00', 'BAG', 'COMP001', 'LEN-04', 'Inward one ', '50.00', 'CVR', '8.00', 'BAG', '2019-10-19 08:03:34', 'Lento');
 
 -- --------------------------------------------------------
 
@@ -11189,33 +11023,6 @@ CREATE TABLE `transactions` (
   `trans_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `transactions`
---
-
-INSERT INTO `transactions` (`id`, `trans_id`, `trans_entry_type`, `trans_entry_ref`, `trans_row_id`, `trans_type`, `trans_entity`, `trans_amt`, `trans_mode`, `trans_bank`, `total_closing_bal`, `total_cash_on_hand`, `total_petty_cash`, `trans_entry`, `trans_status`, `trans_handler`, `trans_date`) VALUES
-(244, 'TRN-001', 'normal', '', 'CUSTCR001', 'credit', 'Bank Deposit', '12.00', 'Cash', '', '0.00', '1937.00', '133.00', '{\"customer_credits_custid\":\"CUST001\",\"customer_credits_paymentmode\":\"Cash\",\"customer_credits_paymentdate\":\"2019-12-25\",\"customer_credits_amount\":\"12\",\"customer_credits_handler\":\"Lento\",\"customer_credits_notes\":\"sasd\",\"table\":\"customercredits\",\"customer_credits_email_notification\":\"no\",\"customer_credits_availcredits\":\"12\",\"customer_credits_compId\":\"COMP001\",\"payment_mode\":\"Cash\",\"amount\":\"12\",\"trans_bank\":\"\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:03:20'),
-(245, 'TRN-00245', 'normal', '', 'CUSTCR009', 'credit', 'Bank Deposit', '33.00', 'Cash', '', '0.00', '1970.00', '133.00', '{\"customer_credits_custid\":\"CUST001\",\"customer_credits_paymentmode\":\"Cash\",\"customer_credits_paymentdate\":\"2019-12-25\",\"customer_credits_amount\":\"33\",\"customer_credits_handler\":\"Lento\",\"customer_credits_notes\":\"ASD\",\"table\":\"customercredits\",\"customer_credits_email_notification\":\"no\",\"customer_credits_availcredits\":\"33\",\"customer_credits_compId\":\"COMP001\",\"payment_mode\":\"Cash\",\"amount\":\"33\",\"trans_bank\":\"\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:03:57'),
-(246, 'TRN-00246', 'normal', '', 'CUSTCR0011', 'credit', 'Bank Deposit', '33.00', 'Bank Transfer', '004', '1079.00', '1970.00', '133.00', '{\"customer_credits_custid\":\"CUST001\",\"customer_credits_paymentmode\":\"Bank Transfer\",\"customer_credits_bank\":\"004\",\"customer_credits_ref_no\":\"\",\"customer_credits_paymentdate\":\"2019-12-25\",\"customer_credits_amount\":\"33\",\"customer_credits_handler\":\"Lento\",\"customer_credits_notes\":\"ASD\",\"table\":\"customercredits\",\"customer_credits_email_notification\":\"no\",\"customer_credits_availcredits\":\"33\",\"customer_credits_compId\":\"COMP001\",\"payment_mode\":\"Bank Transfer\",\"amount\":\"33\",\"trans_bank\":\"004\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:04:55'),
-(247, 'TRN-00247', 'normal', '', 'CUSTCR0010', 'credit', 'Bank Deposit', '33.00', 'Cheque', '005', '1952.00', '1970.00', '133.00', '{\"customer_credits_custid\":\"CUST001\",\"customer_credits_paymentmode\":\"Cheque\",\"customer_credits_cheque_status\":\"Cleared\",\"customer_credits_bank\":\"005\",\"customer_credits_ref_no\":\"Ssa\",\"customer_credits_paymentdate\":\"2019-12-25\",\"customer_credits_amount\":\"33.00\",\"customer_credits_handler\":\"Lento\",\"customer_credits_notes\":\"ASDdd\",\"table\":\"customercredits\",\"customer_credits_email_notification\":\"no\",\"customer_credits_compId\":\"COMP001\",\"payment_mode\":\"Cheque\",\"amount\":\"33.00\",\"trans_bank\":\"005\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:07:32'),
-(248, 'TRN-00248', 'normal', '', 'TRANSC-0174', 'credit', 'Bank Deposit', '10.00', 'Cash', '', '1089.00', '1960.00', '133.00', '{\"depositdate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"10\",\"paymethod\":\"Cash\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"aSD\",\"notes\":\"ASD\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:09:50'),
-(249, 'TRN-00249', 'normal', '', 'TRANSC-0175', 'credit', 'Bank Deposit', '10.00', 'Cash', '', '1099.00', '1950.00', '133.00', '{\"depositdate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"10\",\"paymethod\":\"Cash\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"aSD\",\"notes\":\"ASD\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:09:59'),
-(250, 'TRN-00250', 'normal', '', 'TRANSC-0176', 'credit', 'Bank Deposit', '10.00', 'Cash', '004', '1109.00', '1940.00', '133.00', '{\"depositdate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"10\",\"paymethod\":\"Cash\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"aSD\",\"notes\":\"ASD\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\",\"trans_bank\":\"004\"}', 'Completed', 'Lento', '2019-12-25 10:11:03'),
-(251, 'TRN-00251', 'normal', '', 'TRANSC-01', 'credit', 'Bank Deposit', '11.00', 'Cash', '004', '1120.00', '1929.00', '133.00', '{\"depositdate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"11\",\"paymethod\":\"Cash\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"s\",\"notes\":\"asdasd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\",\"trans_bank\":\"004\"}', 'Completed', 'Lento', '2019-12-25 10:12:01'),
-(252, 'TRN-00252', 'normal', '', 'TRANSC-0178', 'credit', 'Bank Deposit', '15.00', 'Bank Transfer', '004', '1135.00', '1929.00', '133.00', '{\"depositdate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"15.00\",\"paymethod\":\"Bank Transfer\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"asd\",\"notes\":\"ASD\",\"createdby\":\"Lento\",\"payment_mode\":\"Bank Transfer\",\"payment_status\":\"Completed\",\"trans_bank\":\"004\"}', 'Completed', 'Lento', '2019-12-25 10:12:23'),
-(253, 'TRN-00253', 'normal', '', 'TRANSC-0179', 'credit', 'Bank Deposit', '11.00', 'Cheque', '005', '1963.00', '1929.00', '133.00', '{\"depositdate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"005\",\"acctno\":\"4523452345\",\"amount\":\"11\",\"paymethod\":\"Cheque\",\"pay_status\":\"Cleared\",\"paytype\":\"Sales\",\"referenceno\":\"asd\",\"notes\":\"asdd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cheque\",\"payment_status\":\"Completed\",\"trans_bank\":\"005\"}', 'Completed', 'Lento', '2019-12-25 10:12:53'),
-(254, 'TRN-00254', 'normal', '', 'TRANSC-01', 'credit', 'Bank Deposit', '11.00', 'Cash', '004', '1146.00', '1918.00', '133.00', '{\"depositdate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"11\",\"paymethod\":\"Cash\",\"pay_status\":\"\",\"paytype\":\"Sales\",\"referenceno\":\"asd\",\"notes\":\"ASDasd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\",\"trans_bank\":\"004\"}', 'Completed', 'Lento', '2019-12-25 10:19:49'),
-(255, 'TRN-00255', 'normal', '', 'TRANSC-0181', 'credit', 'Bank Deposit', '112.00', 'Bank Transfer', '004', '1258.00', '1918.00', '133.00', '{\"depositdate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"112\",\"paymethod\":\"Bank Transfer\",\"pay_status\":\"\",\"paytype\":\"Payments\",\"referenceno\":\"asd\",\"notes\":\"ASDasdasd\",\"createdby\":\"Lento\",\"payment_mode\":\"Bank Transfer\",\"payment_status\":\"Completed\",\"trans_bank\":\"004\"}', 'Completed', 'Lento', '2019-12-25 10:20:17'),
-(256, 'TRN-00256', 'normal', '', 'TRANSC-01', 'credit', 'Bank Deposit', '11.00', 'Cash', '', '1247.00', '1929.00', '133.00', '{\"withdraweldate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"11\",\"paymethod\":\"Cash\",\"paytype\":\"Payments\",\"referenceno\":\"aSD\",\"notes\":\"asd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:22:25'),
-(257, 'TRN-00257', 'normal', '', 'TRANSC-01', 'credit', 'Bank Deposit', '11.00', 'Cash', '', '1247.00', '1929.00', '133.00', '{\"withdraweldate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"11\",\"paymethod\":\"Cash\",\"paytype\":\"Payments\",\"referenceno\":\"aSD\",\"notes\":\"asd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:22:25'),
-(258, 'TRN-00258', 'normal', '', 'TRANSC-03', 'credit', 'Bank Deposit', '11.00', 'Cash', '', '1236.00', '1940.00', '133.00', '{\"withdraweldate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"11\",\"paymethod\":\"Cash\",\"paytype\":\"Payments\",\"referenceno\":\"aSD\",\"notes\":\"asd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:22:32'),
-(259, 'TRN-00259', 'normal', '', 'TRANSC-03', 'credit', 'Bank Deposit', '11.00', 'Cash', '', '1236.00', '1940.00', '133.00', '{\"withdraweldate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"11\",\"paymethod\":\"Cash\",\"paytype\":\"Payments\",\"referenceno\":\"aSD\",\"notes\":\"asd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:22:32'),
-(260, 'TRN-00260', 'normal', '', 'TRANSC-04', 'credit', 'Bank Deposit', '11.00', 'Cash', '004', '1225.00', '1951.00', '133.00', '{\"withdraweldate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"11\",\"paymethod\":\"Cash\",\"paytype\":\"Payments\",\"referenceno\":\"aSD\",\"notes\":\"asd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\",\"trans_bank\":\"004\"}', 'Completed', 'Lento', '2019-12-25 10:23:22'),
-(261, 'TRN-00261', 'normal', '', 'TRANSC-04', 'credit', 'Bank Deposit', '11.00', 'Cash', '004', '1225.00', '1951.00', '133.00', '{\"withdraweldate\":\"2019-12-25\",\"compcode\":\"COMP001\",\"bankname\":\"004\",\"acctno\":\"1213123421341234\",\"amount\":\"11\",\"paymethod\":\"Cash\",\"paytype\":\"Payments\",\"referenceno\":\"aSD\",\"notes\":\"asd\",\"createdby\":\"Lento\",\"payment_mode\":\"Cash\",\"payment_status\":\"Completed\",\"trans_bank\":\"004\"}', 'Completed', 'Lento', '2019-12-25 10:23:22'),
-(262, 'TRN-00262', 'normal', '', 'CN001', 'credit', 'Bank Deposit', '12.00', 'Cash', '', '0.00', '1951.00', '121.00', '{\"v_credits_vendorid\":\"00001\",\"v_credits_paymentmode\":\"Cash\",\"v_credits_paymentdate\":\"2019-12-25\",\"v_credits_amount\":\"12\",\"v_credits_handler\":\"Lento\",\"v_credits_notes\":\"asdASD\",\"table\":\"vendorcredits\",\"v_credits_email_notification\":\"no\",\"v_credits_availcredits\":\"12\",\"v_credits_cheque_status\":\"\",\"v_credits_compId\":\"COMP001\",\"payment_mode\":\"Cash\",\"amount\":\"12\",\"trans_bank\":null,\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:24:58'),
-(263, 'TRN-00263', 'normal', '', 'CN0052', 'credit', 'Bank Deposit', '12.00', 'Cash', '', '0.00', '1951.00', '109.00', '{\"v_credits_vendorid\":\"00001\",\"v_credits_paymentmode\":\"Cash\",\"v_credits_paymentdate\":\"2019-12-25\",\"v_credits_amount\":\"12\",\"v_credits_handler\":\"Lento\",\"v_credits_notes\":\"asdASD\",\"table\":\"vendorcredits\",\"v_credits_email_notification\":\"no\",\"v_credits_availcredits\":\"12\",\"v_credits_cheque_status\":\"\",\"v_credits_compId\":\"COMP001\",\"payment_mode\":\"Cash\",\"amount\":\"12\",\"trans_bank\":null,\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:25:08'),
-(264, 'TRN-00264', 'normal', '', 'CN0053', 'credit', 'Bank Deposit', '12.00', 'Cash', '', '0.00', '1951.00', '97.00', '{\"v_credits_vendorid\":\"00001\",\"v_credits_paymentmode\":\"Cash\",\"v_credits_paymentdate\":\"2019-12-25\",\"v_credits_amount\":\"12\",\"v_credits_handler\":\"Lento\",\"v_credits_notes\":\"asdASD\",\"table\":\"vendorcredits\",\"v_credits_email_notification\":\"no\",\"v_credits_availcredits\":\"12\",\"v_credits_cheque_status\":\"\",\"v_credits_compId\":\"COMP001\",\"payment_mode\":\"Cash\",\"amount\":\"12\",\"trans_bank\":\"\",\"payment_status\":\"Completed\"}', 'Completed', 'Lento', '2019-12-25 10:25:58');
-
 -- --------------------------------------------------------
 
 --
@@ -11486,15 +11293,6 @@ CREATE TABLE `vendorcredits` (
   `v_credits_email_notification` varchar(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `vendorcredits`
---
-
-INSERT INTO `vendorcredits` (`id`, `v_credits_id`, `v_credits_suptype`, `v_credits_compId`, `v_credits_vendorid`, `v_credits_paymentmode`, `v_credits_ref_no`, `v_credits_bank`, `v_credits_cheque_status`, `v_credits_refno`, `v_credits_paymentdate`, `v_credits_amount`, `v_credits_availcredits`, `v_credits_handler`, `v_credits_notes`, `v_credits_image`, `v_credits_date`, `v_credits_email_notification`) VALUES
-(51, 'CN001', NULL, 'COMP001', '00001', 'Cash', NULL, '', '', NULL, '2019-12-25', '12.00', '12.00', 'Lento', 'asdASD', NULL, '2019-12-25 10:24:58', 'no'),
-(52, 'CN0052', NULL, 'COMP001', '00001', 'Cash', NULL, '', '', NULL, '2019-12-25', '12.00', '12.00', 'Lento', 'asdASD', NULL, '2019-12-25 10:25:08', 'no'),
-(53, 'CN0053', NULL, 'COMP001', '00001', 'Cash', NULL, '', '', NULL, '2019-12-25', '12.00', '12.00', 'Lento', 'asdASD', NULL, '2019-12-25 10:25:58', 'no');
-
 -- --------------------------------------------------------
 
 --
@@ -11558,7 +11356,7 @@ CREATE TABLE `vendorprofile` (
 --
 
 INSERT INTO `vendorprofile` (`id`, `vendorid`, `vendor_opening_bal`, `prefix`, `postfix`, `title`, `supname`, `portal`, `suptype`, `blocation`, `industry`, `address`, `city`, `country`, `state`, `zip`, `workphone`, `mobile`, `email`, `web`, `gstin`, `gstregdate`, `openbalance`, `obasofdate`, `createdon`, `createdby`, `updatedon`, `updatedby`, `status`, `handler`, `notes`) VALUES
-(001, '00001', '1779', 'DAPL', '/', 'MS.', 'PARLE AGRO PVT LTD', NULL, 'Material Supplier', 'Dadra and Nagar Haveli', NULL, 'PLOT NO.258/, VILLAGE SAYLI', 'SILVASSA ', 'IN', 'DH', '396230', '', '0260-6631101', '', 'info@parleagro.com', '26AAACP8416G1ZH', NULL, '0.00', '2019-02-05', '2019-02-05 05:16:06', NULL, '2019-02-05 05:16:06', NULL, '1', 'Administrator', ''),
+(001, '00001', '1000', 'DAPL', '/', 'MS.', 'PARLE AGRO PVT LTD', NULL, 'Material Supplier', 'Dadra and Nagar Haveli', NULL, 'PLOT NO.258/, VILLAGE SAYLI', 'SILVASSA ', 'IN', 'DH', '396230', '', '0260-6631101', '', 'info@parleagro.com', '26AAACP8416G1ZH', NULL, '0.00', '2019-02-05', '2019-02-05 05:16:06', NULL, '2019-02-05 05:16:06', NULL, '1', 'Administrator', ''),
 (002, '00002', '177000', 'DAPL', '/', 'M/S.', 'PADMAVATHI CORRUGATED CONTAINERS', NULL, 'Material Supplier', 'Andhra Pradesh', NULL, 'NARSINGAPURAM', 'CHANDRAGIRI MANDAL , TIRUPATHI', 'IN', 'AP', '517102', '', '0877-2276396', 'padmavathicc@gmail.com', '', '37AAGFP6789B1ZW', NULL, '0.00', NULL, '2019-02-05 05:18:29', NULL, '2019-02-05 05:18:29', NULL, '1', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -11775,6 +11573,12 @@ ALTER TABLE `petty_cash_conversion`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `petty_cas_conv`
+--
+ALTER TABLE `petty_cas_conv`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `productionlist`
 --
 ALTER TABLE `productionlist`
@@ -11964,13 +11768,13 @@ ALTER TABLE `warehouse`
 -- AUTO_INCREMENT for table `bankdeposit`
 --
 ALTER TABLE `bankdeposit`
-  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bankwithdrawels`
 --
 ALTER TABLE `bankwithdrawels`
-  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cashmemos`
@@ -11982,7 +11786,7 @@ ALTER TABLE `cashmemos`
 -- AUTO_INCREMENT for table `compbank`
 --
 ALTER TABLE `compbank`
-  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `comprofile`
@@ -12000,7 +11804,7 @@ ALTER TABLE `creditnotes`
 -- AUTO_INCREMENT for table `customercredits`
 --
 ALTER TABLE `customercredits`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `customerprofile`
@@ -12012,13 +11816,13 @@ ALTER TABLE `customerprofile`
 -- AUTO_INCREMENT for table `customer_payments`
 --
 ALTER TABLE `customer_payments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `customer_paymentsacc`
 --
 ALTER TABLE `customer_paymentsacc`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `customer_refund`
@@ -12060,13 +11864,13 @@ ALTER TABLE `expensenoteslog`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `grn_notes`
 --
 ALTER TABLE `grn_notes`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `groups`
@@ -12084,13 +11888,13 @@ ALTER TABLE `hsncode_lookups`
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoicesacc`
 --
 ALTER TABLE `invoicesacc`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `itemcategory`
@@ -12108,13 +11912,13 @@ ALTER TABLE `location`
 -- AUTO_INCREMENT for table `partnerentries`
 --
 ALTER TABLE `partnerentries`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `paymentterm`
@@ -12126,13 +11930,19 @@ ALTER TABLE `paymentterm`
 -- AUTO_INCREMENT for table `petty_cash_conversion`
 --
 ALTER TABLE `petty_cash_conversion`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `petty_cas_conv`
+--
+ALTER TABLE `petty_cas_conv`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `productionlist`
 --
 ALTER TABLE `productionlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `purchaseitemaster`
@@ -12144,7 +11954,7 @@ ALTER TABLE `purchaseitemaster`
 -- AUTO_INCREMENT for table `purchaseitemlog`
 --
 ALTER TABLE `purchaseitemlog`
-  MODIFY `id` int(4) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(4) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `purchaseorders`
@@ -12192,7 +12002,7 @@ ALTER TABLE `salesitemlog`
 -- AUTO_INCREMENT for table `salesitemlognew`
 --
 ALTER TABLE `salesitemlognew`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `salesorders`
@@ -12204,7 +12014,7 @@ ALTER TABLE `salesorders`
 -- AUTO_INCREMENT for table `scrapinventory`
 --
 ALTER TABLE `scrapinventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `stock_movement`
@@ -12234,7 +12044,7 @@ ALTER TABLE `taxmaster`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=265;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `transportmaster`
@@ -12276,7 +12086,7 @@ ALTER TABLE `user_forgot_password`
 -- AUTO_INCREMENT for table `vendorcredits`
 --
 ALTER TABLE `vendorcredits`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `vendorcredits_log`
