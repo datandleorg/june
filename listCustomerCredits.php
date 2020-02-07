@@ -57,7 +57,7 @@
 
 
                                         include("database/db_conection.php");//make connection here
-                                        $sql = "SELECT c.*,concat(cust.custid,' ',custname) as custname
+                                        $sql = "SELECT c.*,concat(cust.custid,' ',custname) as custname,cust.cust_credit_bal as credit_bal
 										FROM customercredits c,customerprofile cust
 										WHERE c.customer_credits_custid=cust.custid
                                         ORDER BY c.id DESC ";
@@ -85,7 +85,7 @@
                                                     echo '<td> - </td>';
                                                 }
 
-                                                echo '<td>'.$row['customer_credits_availcredits'].' </td>';
+                                                echo '<td>'.$row['credit_bal'].' </td>';
                                                 echo '<td>'.$row['customer_credits_handler'].' </td>';
                                         ?>
 
@@ -107,7 +107,7 @@
                                                     <a class="dropdown-item" href="#" onclick="deleteRecord_8(this);" data-id="'.$row['customer_credits_id'].'"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp; Delete</a>';
                                                     echo '<a class="dropdown-item" href="addCustomerRefund.php?customer_credits_id=' . $row['customer_credits_id'] . '&action=add&type=vendor_refunds"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Add Refund</a>';
 
-                                                    echo '<a class="dropdown-item" href="listInvoices.php?customer_credits_id=' . $row['customer_credits_id'].'&customer_credits_custid=' . $row['customer_credits_custid'].'"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Apply to bills</a>';
+                                                //    echo '<a class="dropdown-item" href="listInvoices.php?customer_credits_id=' . $row['customer_credits_id'].'&customer_credits_custid=' . $row['customer_credits_custid'].'"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Apply to bills</a>';
                                                 }
 
 
