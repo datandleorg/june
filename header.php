@@ -18,6 +18,7 @@ if(isset($_SESSION['login_email'])){
     //$count = mysqli_num_rows($result);
     $rs = mysqli_fetch_assoc($result);
     $session_user = $rs['username'];
+    $session_role = $rs['groupname'];
     $session_org = $rs['compcode'];
 
 }

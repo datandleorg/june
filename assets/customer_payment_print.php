@@ -4,7 +4,7 @@ include("../workers/getters/functions.php");//make connection here
 
 if(isset($_GET['cust_payment_id']))
 {
-    $cust_payment_id = $_GET['cust_payment_id'];
+   $cust_payment_id = $_GET['cust_payment_id'];
     $cust_type = $_GET['type'];
 }
 //and i.inv_comp_code=cr.custid

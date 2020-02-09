@@ -57,7 +57,7 @@
 
 
                                         include("database/db_conection.php");//make connection here
-                                        $sql = "SELECT v.*,b.supname
+                                        $sql = "SELECT v.*,b.supname, b.vendor_credit_bal as credit_bal
 										FROM vendorcredits v,vendorprofile b
 										WHERE v.v_credits_vendorid=b.vendorid
 										ORDER BY v.id DESC ";
@@ -83,7 +83,7 @@
                                                 }else{
                                                     echo '<td> - </td>';
                                                 }
-                                                echo '<td>'.$row['v_credits_availcredits'].' </td>';
+                                                echo '<td>'.$row['credit_bal'].' </td>';
                                                 echo '<td>'.$row['v_credits_handler'].' </td>';
                                         ?>
 
@@ -105,7 +105,7 @@
                                                     <a class="dropdown-item" href="#" onclick="deleteRecord_8(this);" data-id="'.$row['v_credits_id'].'"><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp; Delete</a>';
                                                     echo '<a class="dropdown-item" href="addVendorRefund.php?v_credits_id=' . $row['v_credits_id'] . '&action=add&type=vendor_refunds"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Add Refund</a>';
 
-                                                    echo '<a class="dropdown-item" href="listGoodsReceiptNote.php?v_credits_vendorid=' . $row['v_credits_vendorid'].'&v_credits_id=' . $row['v_credits_id'].'"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Apply to bills</a>';
+                                              //      echo '<a class="dropdown-item" href="listGoodsReceiptNote.php?v_credits_vendorid=' . $row['v_credits_vendorid'].'&v_credits_id=' . $row['v_credits_id'].'"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Apply to bills</a>';
                                                 }
 
 

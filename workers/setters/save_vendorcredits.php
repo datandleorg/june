@@ -28,21 +28,31 @@ if (isset($_POST['array'])) {
          
             
             if ($return['status']){
-
                 $entryData = json_decode($array,true);
-                $entryData['payment_mode'] = $entryData['v_credits_paymentmode'];
-                $entryData['amount'] = $entryData['v_credits_amount'];
-                $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ? $entryData['v_credits_bank'] : "";
-                $entryData['payment_status'] = $entryData['v_credits_paymentmode']==="Cheque"?$entryData['v_credits_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
-                $rowId = $v_credits_id;
-                $entity = $table;
-                if($entryData['payment_status']==="Completed"){
-                    $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+                $credAmt = $entryData['v_credits_amount'];
 
-                    if(!$return['status']){
-                        throw new Exception();
+                $return = updateNumericbyand($dbcon,"+$credAmt","vendorprofile","vendor_credit_bal","vendorid",$entryData['v_credits_vendorid']);
+
+                if ($return['status']){
+                    $entryData['payment_mode'] = $entryData['v_credits_paymentmode'];
+                    $entryData['amount'] = $entryData['v_credits_amount'];
+                    $entryData['trans_bank'] = $entryData['payment_mode']!=="Cash" ? $entryData['v_credits_bank'] : "";
+                    $entryData['payment_status'] = $entryData['v_credits_paymentmode']==="Cheque"?$entryData['v_credits_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+                    $rowId = $v_credits_id;
+                    $entity = $table;
+                    if($entryData['payment_status']==="Completed"){
+                        $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$compId,$handler,"normal");
+    
+                        if(!$return['status']){
+                            throw new Exception();
+                        }
                     }
+                }else{
+                    $return['status']=false;
+                    $return['error']=mysqli_error($dbcon);
+                    throw new Exception();
                 }
+      
               
                 
             }else{
@@ -56,10 +66,21 @@ if (isset($_POST['array'])) {
             throw new Exception();
         }
     }else{
+        $pastCredit = findbyand($dbcon,$v_credits_id,"vendorcredits","v_credits_id")['values'][0];
+
         $return = update_query($dbcon,$array,$v_credits_id,$table,"v_credits_id");
 
         if ($return['status']){
+            $entryData = json_decode($array,true);
 
+            //updating vendorprofile
+             $pastCredAmt = $pastCredit['v_credits_amount'];
+             $credAmt = $entryData['v_credits_amount'];
+            $return = updateNumericbyand($dbcon,"-$pastCredAmt","vendorprofile","vendor_credit_bal","vendorid",$pastCredit['v_credits_vendorid']);
+
+            if($return['status']){
+               $return = updateNumericbyand($dbcon,"+$credAmt","vendorprofile","vendor_credit_bal","vendorid",$pastCredit['v_credits_vendorid']);
+            if($return['status']){
 
             $entryDataNew = json_decode($array,true);
             $entryData = json_decode($array,true);
@@ -97,6 +118,18 @@ if (isset($_POST['array'])) {
                 $return['error']=mysqli_error($dbcon);
                 throw new Exception();
             }
+
+            }else{
+                $return['status']=false;
+                $return['error']=mysqli_error($dbcon);
+                throw new Exception();
+                }
+
+            }else{
+                $return['status']=false;
+                $return['error']=mysqli_error($dbcon);
+                throw new Exception();
+                }
           
             
         }else{

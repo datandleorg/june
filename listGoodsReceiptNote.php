@@ -156,7 +156,7 @@ include('header.php');
                                                 } if($row['grn_status']=="Approved"&&$row['grn_balance']!=0){
 
                                                     if(isset($_GET['v_credits_vendorid'])&&isset($_GET['v_credits_id'])){
-                                                        echo '<a class="dropdown-item" href="addVendorPayments.php?invoice_no='.$row['grn_invoice_no'].'&vendorid='.$row['grn_po_vendor'].'&action=add&v_credits_id='.$_GET['v_credits_id'].'"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Pay Bill</a>';
+                                                     //   echo '<a class="dropdown-item" href="addVendorPayments.php?invoice_no='.$row['grn_invoice_no'].'&vendorid='.$row['grn_po_vendor'].'&action=add&v_credits_id='.$_GET['v_credits_id'].'"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Pay Bill</a>';
 
                                                     }else{
                                                         echo '<a class="dropdown-item" href="addVendorPayments.php?invoice_no='.$row['grn_invoice_no'].'&vendorid='.$row['grn_po_vendor'].'&action=add"><i class="fa fa-rupee" aria-hidden="true"></i>&nbsp; Pay Bill</a>';

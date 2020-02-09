@@ -28,6 +28,12 @@ if (isset($_POST['array'])) {
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$customer_credits_id,$table,"customer_credits_id");
 
+                    if ($return['status']){
+                        $entryData = json_decode($array,true);
+                        $credAmt = $entryData['customer_credits_amount'];
+
+                        $return = updateNumericbyand($dbcon,"+$credAmt","customerprofile","cust_credit_bal","custid",$entryData['customer_credits_custid']);
+
                         // correct verson
                         if ($return['status']){
                                 $entryData = json_decode($array,true);
@@ -51,6 +57,11 @@ if (isset($_POST['array'])) {
                             throw new Exception();
                         }
 
+                    }else{
+                        $return['status']=false;
+                        $return['error']=mysqli_error($dbcon);
+                        throw new Exception();
+                    }
       
         }else{
             $return['status']=false;
@@ -58,12 +69,22 @@ if (isset($_POST['array'])) {
             throw new Exception();
         }
     }else{
+        $pastCredit = findbyand($dbcon,$customer_credits_id,"customercredits","customer_credits_id")['values'][0];
+
         $return = update_query($dbcon,$array,$customer_credits_id,$table,"customer_credits_id");
 
 
         if ($return['status']){
          
             $entryData = json_decode($array,true);
+
+            $pastCredAmt = $pastCredit['customer_credits_amount'];
+            $credAmt = $entryData['customer_credits_amount'];
+           $return = updateNumericbyand($dbcon,"-$pastCredAmt","customerprofile","cust_credit_bal","custid",$entryData['customer_credits_custid']);
+
+           if($return['status']){
+              $return = updateNumericbyand($dbcon,"+$credAmt","customerprofile","cust_credit_bal","custid",$entryData['customer_credits_custid']);
+           if($return['status']){
 
             $entryDataNew = json_decode($array,true);
             $entryData = json_decode($array,true);
@@ -101,12 +122,26 @@ if (isset($_POST['array'])) {
                 $return['error']=mysqli_error($dbcon);
                 throw new Exception();
             }
+
+        }else{
+            $return['status']=false;
+            $return['error']=mysqli_error($dbcon);
+            throw new Exception();
+        }
+    }else{
+        $return['status']=false;
+        $return['error']=mysqli_error($dbcon);
+        throw new Exception();
+    }
           
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);
             throw new Exception();
         }
+
+
+
 
     }
 

@@ -316,32 +316,26 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
            <hr>
 			<div class="container">
             <br/>
+            <?php 
+            if($session_role==="Admin"){
+            echo '
 			<div class="row">
                 <div class="col-md-6">
                     <div class="card">
                       <div class="card-box noradius noborder bg-purple">
                             <h5 class="card-title lead text-center text-white">BANK ACCOUNTS</h5>
 							<h6 class="card-title lead text-left text-warning"><b>Bank Balances</h6>
-                            <p class="card-title lead text-left text-white  ">
-                             <?php echo getBankName();?> 
+                            <p class="card-title lead text-left text-white">
+                             '. getBankName().'
                             </p>     
-							<p class="card-title lead text-left text-white  ">
-                               <?php echo getBankName2();?>
+                              <p class="card-title lead text-left text-white">
+                              '. getBankName2().'
                             </p>       							
                         </div>
                     </div>
                 </div>
-				
-		
-				 <div class="card">
-				    <div class="card-box noradius noborder bg-danger">
-					<h5 class="m-b-20 text-white text-left counter">SALES</h5><h5 class="card-title lead text-center text-white"><h5 class="fa fa-rupee text-left text-white counter">&nbsp;<b><?php echo getpaymentstotal();?><br><a href="PaymentsRecievedReports.php"><b>View more..</a></h6>
-                    <br>
-				    <h6 class="m-b-20 text-white text-left counter">BANK DEPOSITS<h5 class="fa fa-rupee text-white counter">&nbsp;<b><?php echo getDepositstotal();?></h6>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				</div>
-			</div>
-				
+            </div>'; } ?>
+	 			
 
     </div>
 			

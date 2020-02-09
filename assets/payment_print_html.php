@@ -6,7 +6,7 @@ if(isset($_GET['payment_id']))
 {
     $payment_id = $_GET['payment_id'];
 }
-echo $sql = "SELECT g.*,p.*,l.*,v.supname,v.address,v.city,v.state,v.country,v.zip,v.gstin,v.mobile,c.orgname,c.image FROM grn_notes g,purchaseorders p,vendorprofile v,comprofile c,payments l
+ $sql = "SELECT g.*,p.*,l.*,v.supname,v.address,v.city,v.state,v.country,v.zip,v.gstin,v.mobile,c.orgname,c.image FROM grn_notes g,purchaseorders p,vendorprofile v,comprofile c,payments l
 			WHERE l.payment_id='$payment_id' and l.payment_invoice_no=g.grn_invoice_no
 			ORDER BY p.id DESC";
 $result = mysqli_query($dbcon,$sql);
