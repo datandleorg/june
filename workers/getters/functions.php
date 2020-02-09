@@ -425,7 +425,7 @@ function updatebyand($dbcon,$col_val,$table,$col,$cond_col,$cond_val){
 }
 
 function updateNumericbyand($dbcon,$col_val,$table,$col,$cond_col,$cond_val){
-   $sql=" UPDATE  $table SET $col=$col$col_val "; 
+     $sql=" UPDATE  $table SET $col=$col$col_val "; 
     if($cond_col){
         $sql.=" WHERE $cond_col='$cond_val'; "; 
     }else{
