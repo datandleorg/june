@@ -407,9 +407,9 @@
                     $scope.onVendorChange();
                     $scope.onInvoiceChange();
 
-                    if(payment_data.payment_credits_used!==""){
+                    if($scope.payment_data.payment_credits_used!==""){
                         $scope.showCreditInput = true;                        
-                        $scope.vp.payment_credits_used = payment_data.payment_credits_used;
+                        $scope.vp.payment_credits_used = $scope.payment_data.payment_credits_used;
                     }
                     // $scope.onPaymentModeChange();
                     // if($scope.vp.payment_mode==="Cash"){
@@ -418,6 +418,8 @@
                     // }
                     // $scope.onCreditChange();
                      $scope.editMode = true;
+
+                     console.log($scope.editMode);
                 }else{
                     $scope.vp.payment_vendor = page_vendor!=="" ? page_vendor :"";
                     $scope.onVendorChange();

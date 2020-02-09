@@ -31,8 +31,10 @@ if (isset($_POST['array'])) {
         if (mysqli_query($dbcon,$sql2)) {
             $return = update_query($dbcon,$array,$cust_payment_id,$table,"cust_payment_id");
             $entryData = json_decode($array,true);
+             $entryData['payment_status'] = $entryData['cust_payment_mode']==="Cheque"?$entryData['cust_payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
 
             if($return['status']){
+                if($entryData['payment_status']==="Completed"){
                 $inv_val_arr = findbyand($dbcon,$cust_payment_invoice_no,"invoices","inv_code");
                 // print_r($grn_val_arr);
                 $balance = $inv_val_arr['values'][0]['inv_balance_amt']-$total_amount;
@@ -101,7 +103,10 @@ if (isset($_POST['array'])) {
                 }else{
                     throw new Exception();
                 }
-      
+                }else{
+
+                    }
+        
         }else{
             throw new Exception();
         }
@@ -117,16 +122,21 @@ if (isset($_POST['array'])) {
         $return = update_query($dbcon,$array,$cust_payment_id,$table,"cust_payment_id");
         $entryData = json_decode($array,true);
         $entryDataNew = json_decode($array,true);
+       $entryData['payment_status'] = $entryData['cust_payment_mode']==="Cheque"?$entryData['cust_payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
 
         if($return['status']){
-            $pastpayamt = $pastPayment['cust_payment_amount']+$pastPayment['cust_payment_credits_used'];
-            // deduct past payment
-            $return = updateNumericbyand($dbcon,"+$pastpayamt","invoices","inv_balance_amt","inv_code",$pastpayamt['cust_payment_invoice_no']);
-            if($return['status']){
-                $payamt = $entryData['cust_payment_amount']+$entryData['cust_payment_credits_used'];
-                // add new payment
-                $return = updateNumericbyand($dbcon,"-$payamt","invoices","inv_balance_amt","inv_balance_amt",$entryData['cust_payment_invoice_no']);
+            if($entryData['payment_status'] ==="Completed"){
+                if($entryData['payment_mode'] !== "Cheque" && $entryData['payment_status']==="Completed"){
 
+                    $pastpayamt = $pastPayment['cust_payment_amount']+$pastPayment['cust_payment_credits_used'];
+                    // deduct past payment
+                    $return = updateNumericbyand($dbcon,"+$pastpayamt","invoices","inv_balance_amt","inv_code",$pastPayment['cust_payment_invoice_no']);
+                }
+            if($return['status']){
+                    $payamt = $entryData['cust_payment_amount']+$entryData['cust_payment_credits_used'];
+                    // add new payment
+                    $return = updateNumericbyand($dbcon,"-$payamt","invoices","inv_balance_amt","inv_balance_amt",$entryData['cust_payment_invoice_no']);
+                   
                 if($return['status']){
 
                     $inv_val_arr = findbyand($dbcon,$cust_payment_invoice_no,"invoices","inv_code");
@@ -232,6 +242,9 @@ if (isset($_POST['array'])) {
                 $return['status']=false;
                 throw new Exception();
             }
+        }else{
+
+        }
         }else{
             $return['status']=false;
             $return['error']=mysqli_error($dbcon);

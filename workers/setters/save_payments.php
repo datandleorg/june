@@ -34,8 +34,10 @@ if (isset($_POST['array'])) {
             $return = update_query($dbcon,$array,$payment_id,$table,"payment_id");
 
             $entryData = json_decode($array,true);
+            $entryData['payment_status'] = $entryData['payment_mode']==="Cheque"?$entryData['payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
 
             if($return['status']){
+                if($entryData['payment_status']==="Completed"){
                 $grn_val_arr = findbyand($dbcon,$payment_grn_id,"grn_notes","grn_id");
                // $balance = $grn_val_arr['values'][0]['grn_balance']-$entryData['payment_amount'];
                 $balance = $grn_val_arr['values'][0]['grn_balance']-$total_amount;
@@ -116,9 +118,9 @@ if (isset($_POST['array'])) {
                     }else{
                         throw new Exception();
                     }
-                // }else{
-                //     throw new Exception();
-                // }
+                }else{
+                    //throw new Exception();
+                }
 
             }else{
                 throw new Exception();
@@ -140,15 +142,24 @@ if (isset($_POST['array'])) {
 
         $entryData = json_decode($array,true);
         $entryDataNew = json_decode($array,true);
+          $entryData['payment_status'] = $entryData['payment_mode']==="Cheque"?$entryData['payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
 
         if($return['status']){
-            $pastpayamt = $pastPayment['payment_amount']+$pastPayment['payment_credits_used'];
-            // deduct past payment
-            $return = updateNumericbyand($dbcon,"+$pastpayamt","grn_notes","grn_balance","grn_id",$pastpayamt['payment_grn_id']);
+ 
+            if($entryData['payment_status']==="Completed"){
+
+                if($entryData['payment_mode'] !== "Cheque" && $entryData['payment_status']==="Completed"){
+                    $pastpayamt = $pastPayment['payment_amount']+$pastPayment['payment_credits_used'];
+                    // deduct past payment
+                    $return = updateNumericbyand($dbcon,"+$pastpayamt","grn_notes","grn_balance","grn_id",$pastPayment['payment_grn_id']);
+                  //  print_r($return);
+                }
+         
             if($return['status']){
-                $payamt = $entryData['payment_amount']+$entryData['payment_credits_used'];
+                 $payamt = $entryData['payment_amount']+$entryData['payment_credits_used'];
                 // add new payment
                 $return = updateNumericbyand($dbcon,"-$payamt","grn_notes","grn_balance","grn_id",$entryData['payment_grn_id']);
+              /// print_r($return);
 
                 if($return['status']){
                     $grn_val_arr = findbyand($dbcon,$payment_grn_id,"grn_notes","grn_id");
@@ -261,7 +272,19 @@ if (isset($_POST['array'])) {
                 }
 
 
+            }else{
+                $return['status']=false;
+                throw new Exception();
+
             }
+
+        }else{
+
+            }
+        }else{
+            $return['status']=false;
+            throw new Exception();
+
         }
     }
 

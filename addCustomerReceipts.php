@@ -146,12 +146,11 @@
                                                         <option value="Bank Transfer">Bank Transfer</option>
                                                     </select>
                                                   
-                                                <div class="form-group col-md-8" ng-if="editMode" >
+                                            </div>
+                                            <div class="form-group col-md-8" ng-if="editMode" >
                                                     <p><b>Payment Mode:</b></p>
                                                     <p>{{cp.cust_payment_mode}}</p>
                                                 </div>
-
-                                            </div>
                                         </div>
                                         </div>
 
@@ -392,7 +391,7 @@
             $scope.showCreditInput = true; 
             $scope.editMode = false;
 
-                if (page_action == "edit") {
+                if (page_action === "edit") {
                    
                     $scope.payment_data = Page.get_edit_vals(page_payment_id, "customer_payments", "cust_payment_id");
                     let {id, payment_id, ...rest } =  $scope.payment_data;               
@@ -401,17 +400,13 @@
                     $scope.onCustomerChange();
                     $scope.onInvoiceChange();
 
-                    if(payment_data.cust_payment_credits_used!==""){
+                    if($scope.payment_data.cust_payment_credits_used!==""){
                         $scope.showCreditInput = true;                        
-                        $scope.cp.cust_payment_credits_used = payment_data.cust_payment_credits_used;
+                        $scope.cp.cust_payment_credits_used = $scope.payment_data.cust_payment_credits_used;
                     }
-                    // $scope.onPaymentModeChange();
-                    // if($scope.vp.payment_mode==="Cash"){
-                    // }else{
-                    //     $scope.onBankChange();
-                    // }
-                    // $scope.onCreditChange();
+ 
                      $scope.editMode = true;
+                    //console.log($scope.editMode);
                 }else{
                     $scope.cp.cust_payment_customer = page_customer!=="" ? page_customer :"";
                     $scope.onCustomerChange();
