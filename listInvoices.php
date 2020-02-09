@@ -197,18 +197,13 @@
                                                 }
 
                                                 if($row['inv_status']=="Approved" && $row['inv_balance_amt']>0){
-                                                    if(isset($_GET['customer_credits_id'])){
+                 
                                                         echo '
-                                                        <a class="dropdown-item"  href="addCustomerReceipts.php?customer_credits_id='.$_GET['customer_credits_id'].'&customer_credits_custid='.$_GET['customer_credits_custid'].'&inv_code=' . $row['inv_code'] . '&action=add&type=customer_payments" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="Recieve Payment"><i class="fa fa-exchange" aria-hidden="true"></i>&nbsp; Recieve payment</a>';
-
-                                                    }else{
-                                                        echo '
-                                                        <a class="dropdown-item"  href="addCustomerReceipts.php?inv_code=' . $row['inv_code'] . '&action=add&type=customer_payments" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="Recieve Payment"><i class="fa fa-exchange" aria-hidden="true"></i>&nbsp; Recieve payment</a>';
+                                                        <a class="dropdown-item"  href="addCustomerReceipts.php?inv_code=' . $row['inv_code'] . '&custid='. $row['inv_customer'].'&action=add&type=customer_payments" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="Recieve Payment"><i class="fa fa-exchange" aria-hidden="true"></i>&nbsp; Recieve payment</a>';
 
                                                     echo '
                                                         <a class="dropdown-item"  href="addCreditNotes.php?inv_code=' . $row['inv_code'] . '&action=add&type=creditnotes" class="btn btn-danger btn-sm" data-placement="top" data-toggle="tooltip" data-title="  Create CreditNote"><i class="fa fa-exchange" aria-hidden="true"></i>&nbsp; Create CreditNote</a>';
 
-                                                    }
 
                                                 }
 

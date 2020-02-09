@@ -349,8 +349,8 @@
 
         var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
         var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
-        var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
-        var page_payment_invoice_no = "<?php if(isset($_GET['cust_payment_invoice_no'])){ echo $_GET['cust_payment_invoice_no']; } ?>";
+        var page_customer = "<?php if(isset($_GET['custid'])){ echo $_GET['custid']; } ?>";
+        var page_payment_invoice_no = "<?php if(isset($_GET['inv_code'])){ echo $_GET['inv_code']; } ?>";
         var page_payment_id = "<?php if(isset($_GET['cust_payment_id'])){ echo $_GET['cust_payment_id']; } ?>";
 
  
@@ -412,6 +412,12 @@
                     // }
                     // $scope.onCreditChange();
                      $scope.editMode = true;
+                }else{
+                    $scope.cp.cust_payment_customer = page_customer!=="" ? page_customer :"";
+                    $scope.onCustomerChange();
+                    $scope.cp.cust_payment_invoice_no = page_payment_invoice_no!=="" ? page_payment_invoice_no :"";
+                    $scope.onInvoiceChange();
+
                 }
 
 
@@ -420,12 +426,12 @@
 
                 // if($scope.v_credits_id && $scope.v_credits_id!==""){ 
                 //     $scope.page_action = $location.search()['action'];
-                //     $scope.page_vendor = $location.search()['vendorid'];
+                //     $scope.page_customer = $location.search()['vendorid'];
                 //     $scope.page_payment_invoice_no = $location.search()['invoice_no'];
 
                 //     if($scope.page_action==="add"){
                 //         $scope.showCreditInput = true;                        
-                //         $scope.vp.payment_vendor = $scope.page_vendor;
+                //         $scope.vp.payment_vendor = $scope.page_customer;
                 //         $scope.vp.payment_invoice_no = $scope.page_payment_invoice_no;
 
 
@@ -559,8 +565,8 @@
         //     Page.load_select_options('payment_vendor',vendor_params,'vendorprofile','Vendor Code','vendorid','supname'); 
 
         //     if(page_action=="add"&&page_payment_invoice_no){
-        //         $('#payment_vendor').val(page_vendor);
-        //         onvendor_select(page_vendor);
+        //         $('#payment_vendor').val(page_customer);
+        //         onvendor_select(page_customer);
         //         $('#payment_invoice_no').val(page_payment_invoice_no);
         //         oninvoice_select(page_payment_invoice_no);
 

@@ -418,6 +418,14 @@
                     // }
                     // $scope.onCreditChange();
                      $scope.editMode = true;
+                }else{
+                    $scope.vp.payment_vendor = page_vendor!=="" ? page_vendor :"";
+                    $scope.onVendorChange();
+                    $scope.vp.payment_invoice_no = page_payment_invoice_no!=="" ? page_payment_invoice_no :"";
+                    $scope.onInvoiceChange();
+
+                    console.log(page_vendor,page_payment_invoice_no);
+
                 }
 
 
