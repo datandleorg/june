@@ -811,6 +811,7 @@ function handleTransactionNew($dbcon,$data,$entity,$rowId,$compId,$handler,$tran
         if($data['payment_mode']==="Cash"){   //deduct undeposited funds // add closing bal to bank a/c
             $res = modifyCompValues($dbcon,"cash_on_hand",$data['amount'],$compId,$trans_dir==="normal"?"credit":"debit");
         }else{
+            //print_r($data);
             $compBank = findbyand($dbcon,$data['trans_bank'],'compbank','id')['values'][0];
             $res = modifyCompValues($dbcon,"closing_bal",$data['amount'],$data['trans_bank'],$trans_dir==="normal"?"credit":"debit");
         }

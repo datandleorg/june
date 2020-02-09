@@ -55,7 +55,7 @@
                                     <form ng-submit="makePayment()" >
 
                                         <div class="form-row">
-                                            <div class="form-group col-md-8" >
+                                            <div class="form-group col-md-8" ng-if="!editMode" >
 
                                                 <label for="inputState">Vendor Name<span class="text-danger">*</span></label>
                                                 <select required id="payment_vendor" ng-model="vp.payment_vendor"
@@ -73,6 +73,10 @@
                                                     ?>
                                                 </select>
 
+                                            </div>
+                                            <div class="form-group col-md-8" ng-if="editMode" >
+                                                <p><b>Vendor:</b></p>
+                                                <p>{{vendorProfile.supname}}</p>
                                             </div>
                                         </div>
 
@@ -132,19 +136,26 @@
                                             </div>
 
                                             <div class="form-group col-md-4">
-                                                <label >Payment Mode<span class="text-danger">*</span></label>
-                                                <select 
-                                                required id="payment_mode" 
-                                                data-parsley-trigger="change"
-                                                ng-model="vp.payment_mode"
-                                                ng-change="onPaymentModeChange()"  
-                                                class="form-control form-control-sm"  name="payment_mode" >
-                                                    <option value="">-- Select Payment Mode --</option>
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="Cheque">Cheque</option>
-                                                    <option value="Bank Transfer">Bank Transfer</option>
-                                                </select>
-                                                <p ng-if="vp.payment_mode==='Cash'">Petty Cash Balance:<span id="petty_cash_bal">{{comprofile.petty_cash_bal}}</span>  &nbsp;<span class="fa fa-exchange mr-2 text-primary" data-toggle="modal" data-target="#pettyCashConvModal" title="Convert To petty cash" ng-click="onConv()"></span> </p>
+                                                <div ng-if="!editMode">
+                                                    <label >Payment Mode<span class="text-danger">*</span></label>
+                                                    <select 
+                                                    required id="payment_mode" 
+                                                    data-parsley-trigger="change"
+                                                    ng-model="vp.payment_mode"
+                                                    ng-change="onPaymentModeChange()"  
+                                                    class="form-control form-control-sm"  name="payment_mode" >
+                                                        <option value="">-- Select Payment Mode --</option>
+                                                        <option value="Cash">Cash</option>
+                                                        <option value="Cheque">Cheque</option>
+                                                        <option value="Bank Transfer">Bank Transfer</option>
+                                                    </select>
+                                                    <p ng-if="vp.payment_mode==='Cash'">Petty Cash Balance:<span id="petty_cash_bal">{{comprofile.petty_cash_bal}}</span>  &nbsp;<span class="fa fa-exchange mr-2 text-primary" data-toggle="modal" data-target="#pettyCashConvModal" title="Convert To petty cash" ng-click="onConv()"></span> </p>
+                                                    </div>
+                                                <div class="form-group col-md-8" ng-if="editMode" >
+                                                    <p><b>Payment Mode:</b></p>
+                                                    <p>{{vp.payment_mode}}</p>
+                                                </div>
+
                                             </div>
                                         </div>
                         
@@ -313,7 +324,7 @@
                                         </div>
                                         <div class="col-md-5">
                                             <p id="credit_balance">
-                                            {{creditData.v_credits_availcredits}}
+                                            {{vendorProfile.vendor_credit_bal}}
                                             </p>
                                         </div>
                                     </div>
@@ -341,11 +352,11 @@
             }
             
 
-     var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
+        var page_action = "<?php if(isset($_GET['action'])){ echo $_GET['action']; } ?>";
         var page_table = "<?php if(isset($_GET['type'])){ echo $_GET['type']; } ?>";
-         var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
-         var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
-         var page_payment_id = "<?php if(isset($_GET['payment_id'])){ echo $_GET['payment_id']; } ?>";
+        var page_vendor = "<?php if(isset($_GET['vendorid'])){ echo $_GET['vendorid']; } ?>";
+        var page_payment_invoice_no = "<?php if(isset($_GET['invoice_no'])){ echo $_GET['invoice_no']; } ?>";
+        var page_payment_id = "<?php if(isset($_GET['payment_id'])){ echo $_GET['payment_id']; } ?>";
         var page_payment_v_credits_id  = "<?php if(isset($_GET['v_credits_id '])){ echo $_GET['v_credits_id ']; } ?>";
 
  
@@ -363,7 +374,6 @@
         }]);
 
         app.controller('formCtrl', function ($scope, $http,$location) {
-
    
             $scope.formInit = () =>{
          
@@ -385,12 +395,14 @@
                 };
 
             $scope.creditAmtValidation = true;
-
+            $scope.showCreditInput = true; 
+            $scope.editMode = false;
 
                 if (page_action == "edit") {
-                    alert(page_payment_id);
-                    var payment_data = Page.get_edit_vals(page_payment_id, "payments", "payment_id");                    
-                    $scope.vp = payment_data;
+                   
+                    $scope.payment_data = Page.get_edit_vals(page_payment_id, "payments", "payment_id");
+                    let {id, payment_id, ...rest } =  $scope.payment_data;               
+                    $scope.vp = rest;
                     $scope.vp.payment_date = new Date($scope.vp.payment_date);
                     $scope.onVendorChange();
                     $scope.onInvoiceChange();
@@ -398,7 +410,6 @@
                     if(payment_data.payment_credits_used!==""){
                         $scope.showCreditInput = true;                        
                         $scope.vp.payment_credits_used = payment_data.payment_credits_used;
-
                     }
                     // $scope.onPaymentModeChange();
                     // if($scope.vp.payment_mode==="Cash"){
@@ -406,30 +417,30 @@
                     //     $scope.onBankChange();
                     // }
                     // $scope.onCreditChange();
-                    // $scope.editMode = true;
+                     $scope.editMode = true;
                 }
 
 
-                $scope.v_credits_id = $location.search()['v_credits_id'];
+               // $scope.v_credits_id = $location.search()['v_credits_id'];
 
 
-                if($scope.v_credits_id && $scope.v_credits_id!==""){ 
-                    $scope.page_action = $location.search()['action'];
-                    $scope.page_vendor = $location.search()['vendorid'];
-                    $scope.page_payment_invoice_no = $location.search()['invoice_no'];
+                // if($scope.v_credits_id && $scope.v_credits_id!==""){ 
+                //     $scope.page_action = $location.search()['action'];
+                //     $scope.page_vendor = $location.search()['vendorid'];
+                //     $scope.page_payment_invoice_no = $location.search()['invoice_no'];
 
-                    if($scope.page_action==="add"){
-                        $scope.showCreditInput = true;                        
-                        $scope.vp.payment_vendor = $scope.page_vendor;
-                        $scope.vp.payment_invoice_no = $scope.page_payment_invoice_no;
+                //     if($scope.page_action==="add"){
+                //         $scope.showCreditInput = true;                        
+                //         $scope.vp.payment_vendor = $scope.page_vendor;
+                //         $scope.vp.payment_invoice_no = $scope.page_payment_invoice_no;
 
 
-                        $scope.creditData = Page.get_edit_vals($scope.v_credits_id, "vendorcredits", "v_credits_id");
-                        $scope.vp.payment_credits_used = $scope.creditData.v_credits_availcredits;
-                        $scope.onVendorChange();
-                        $scope.onInvoiceChange();
-                    }
-                }
+                //         $scope.creditData = Page.get_edit_vals($scope.v_credits_id, "vendorcredits", "v_credits_id");
+                //         $scope.vp.payment_credits_used = $scope.creditData.v_credits_availcredits;
+                //         $scope.onVendorChange();
+                //         $scope.onInvoiceChange();
+                //     }
+                // }
 
             
             }
@@ -539,9 +550,7 @@
                 } 
 
                 var total_amt = 0;
-                if($scope.v_credits_id!==""){
                     total_amt = +$scope.vp.payment_amount + +    $scope.vp.payment_credits_used;
-                }
                 
                 if(+$scope.grn_values.grn_balance < +total_amt){
                     alert('Total Payment cannot be greater than Payable Amount ');
@@ -549,12 +558,12 @@
                 }
 
                 let obj = {
-                        array : JSON.stringify({...$scope.vp,payment_amount:total_amt}),
-                        payment_id:"",
+                        array : JSON.stringify({...$scope.vp}),
+                        payment_id:page_payment_id,
                         payment_grn_id:$scope.vp.payment_grn_id,
-                        payment_amount:$scope.vp.payment_amount,
-                        action:"add",table:"payments",
-                        page_payment_v_credits_id:$scope.v_credits_id!==undefined?$scope.v_credits_id:"",
+                        total_amount:total_amt,
+                        action:page_action!==""?page_action:"add",
+                        table:"payments",
                         compId:`<?php echo $session_org?$session_org:'';?>`,
                         handler:`<?php echo $session_user?$session_user:'';?>`
                 }

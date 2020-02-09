@@ -52,6 +52,8 @@
                                             <th style="width:100px">Invoioce#</th>												
                                             <th style="width:300px">PaymentMode</th>												
                                             <th style="width:300px">Amt Received</th>
+                                            <th style="width:300px">Credits Used</th>
+                                            <th style="width:300px">Total Amt</th>
                                             <th style="width:300px">Cheque Status</th>
                                             <th style="width:200px">Actions</th>
                                         </tr>
@@ -75,6 +77,8 @@
                                                 echo '<td>'.$row['payment_invoice_no'].' </td>';
                                                 echo '<td>'.$row['payment_mode'].' </td>';
                                                 echo '<td>'.$row['payment_amount'].' </td>';
+                                                echo '<td>'.$row['payment_credits_used'].' </td>';
+                                                echo '<td>'.($row['payment_amount']+$row['payment_credits_used']).' </td>';
                                                 echo '<td>'.$row['payment_cheque_status'].' </td>';
                                                 echo '<td>
                                                         
@@ -90,6 +94,9 @@
                                                         <a class="dropdown-item"
                                                         href="addVendorPayments.php?payment_id=' . $row['payment_id'] . '&action=edit&type=payments">
                                                            <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                                           <a class="dropdown-item"
+                                                           href="deleteVendorPayments.php?payment_id=' . $row['payment_id'] . '">
+                                                              <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
           </div></div>
                                                         </td>
                                                       ';
@@ -99,6 +106,22 @@
                                         ?>						
                                    
                                     </tbody>
+                                    <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
                                 </table>
                             </div>
 
@@ -109,6 +132,50 @@
 
 
                 <script>
+
+var table = $('#example1').DataTable( {
+            lengthChange: false,
+            "footerCallback": function ( row, data, start, end, display ) {
+                var api = this.api(), data;
+                var intVal = function ( i ) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+                };
+                var grossval = api
+                .column( 8)
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 ).toFixed(2);
+                var grossval2 = api
+                .column( 9 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 ).toFixed(2);
+
+                var grossval3 = api
+                .column( 10 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 ).toFixed(2);
+
+
+
+                $( api.column( 5 ).footer() ).html('Total');
+                $( api.column( 7 ).footer() ).html(grossval);
+                $( api.column( 8 ).footer() ).html(grossval2);
+                $( api.column( 9 ).footer() ).html(grossval3);
+                //   $( api.column( 5 ).footer() ).html(taxamt);
+                //   $( api.column( 7 ).footer() ).html(netval);
+                //  $( api.column( 8 ).footer() ).html(bal);
+
+            }
+
+        });
                    //var table = $('#pmade').DataTable();
                    //console.log(table,"sss");
                    // table.order( [ 1, 'desc' ] ).draw();

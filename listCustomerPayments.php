@@ -51,6 +51,8 @@
                                             <th>Invoioce#</th>												
                                             <th>Mode</th>												
                                             <th>Amount Received</th>
+                                            <th>Credit Used</th>
+                                            <th>Total</th>
                                             <th>Ref No Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -76,6 +78,8 @@
                                                 echo '<td>'.$row['cust_payment_invoice_no'].' </td>';
                                                 echo '<td>'.$row['cust_payment_mode'].' </td>';
                                                 echo '<td>'.$row['cust_payment_amount'].' </td>';
+                                                echo '<td>'.$row['cust_payment_credits_used'].' </td>';
+                                                echo '<td>'.($row['cust_payment_amount']+$row['cust_payment_credits_used']).' </td>';
                                                 echo '<td>'.$row['cust_payment_ref_no'].'<br/>'.$row['cust_payment_cheque_status'].'</td>';
                                          
                                         ?>
@@ -83,17 +87,26 @@
 
                                         <?php
 
+                                                echo '<td>
+                                                                                                        
+                                                <div class="dropdown">
+                                                <button type="button" class="btn btn-light btn-xs dropdown-toggle" data-toggle="dropdown">
 
-                                                echo '<td><a class="btn btn-light btn-sm hidden-md" onclick="ToPrint(this);" data-type="'.$row['type'].'"  data-code="'.$row['cust_payment_id'].'"  data-id="po_print">
-														<i class="fa fa-print" aria-hidden="true"></i></a>
-                                                      ';
-                                                //                                                <a href="addVendorPayments.php?payment_id=' . $row['payment_id'] . '&action=edit&type=payments" class="btn btn-primary btn-sm" data-target="#modal_edit_user_5">
-
-                                                /*
-														<i class="fa fa-pencil" aria-hidden="true"></i></a>
-*/
-
-                                                echo ' </td>';
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                <a class="dropdown-item"
+                                                onclick="ToPrint(this);" data-type="auto" data-img="assets/images/logo.png"
+                                                data-code="'.$row['cust_payment_id'].'"  data-id="po_print">
+                                                <i class="fa fa-print" aria-hidden="true"></i> Print</a>
+                                                <a class="dropdown-item"
+                                                href="addCustomerReceipts.php?cust_payment_id=' . $row['cust_payment_id'] . '&action=edit&type=customer_payments">
+                                                <i class="fa fa-pencil" aria-hidden="true"></i> Edit</a>
+                                                <a class="dropdown-item"
+                                                href="deleteCustomerPayments.php?cust_payment_id=' . $row['cust_payment_id'] . '">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                                                </div></div>
+                                                </td>
+                                                ';
                                                 echo "</tr>";
                                             }
                                         }
@@ -110,6 +123,9 @@
                                     </tbody>
                                     <tfoot>
                                             <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
                                                 <th></th>
                                                 <th></th>
                                                 <th></th>
@@ -147,10 +163,26 @@ var table = $('#po_reports').DataTable( {
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 ).toFixed(2);
+                var grossval2 = api
+                .column( 8 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 ).toFixed(2);
+
+                var grossval3 = api
+                .column( 9 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 ).toFixed(2);
+
 
 
                 $( api.column( 5 ).footer() ).html('Total');
                 $( api.column( 6 ).footer() ).html(grossval);
+                $( api.column( 7 ).footer() ).html(grossval2);
+                $( api.column( 8 ).footer() ).html(grossval3);
                 //   $( api.column( 5 ).footer() ).html(taxamt);
                 //   $( api.column( 7 ).footer() ).html(netval);
                 //  $( api.column( 8 ).footer() ).html(bal);
