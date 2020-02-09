@@ -240,7 +240,7 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                 <div class="col-md-6">
 
                     <!--div class="card"-->
-                        <div class="card-box noradius noborder bg-info">
+                        <div class="card-box noradius noborder bg-success">
                             <div class="row">
                                 <div class="col-md-6" style="border-right:1px solid #cccccc;">
                                     <h5 class="card-title lead text-center text-white">TOTAL RECIEVABLES</h5>
@@ -282,32 +282,38 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                 </div> 
 			
 
+                      
+                   
                 <div class="col-md-3">
                     <div class="card-box noradius noborder bg-danger">
                             <!--h5 class="card-title lead text-center text-white">USERS</h5>
                             <br/>
                             <p class="m-b-20 text-white counter text-center text-white"><?php  print_r(get_users_count());?></p-->
 							
-							<h6 class="m-b-20 text-white counter">Total Users:&nbsp;&nbsp;<?php  print_r(get_users_count());?></p>
+							<!--h6 class="m-b-20 text-white counter">Total Users:&nbsp;&nbsp;<?php  print_r(get_users_count());?></p-->
 							<!--h6 class="m-b-20 text-white counter"><a href="listCustomerCredits.php">Customer Credits:&nbsp;&nbsp;</a><?php echo getpaymentstotal();?></h6-->
 							 <h6 class="m-b-20 text-white counter">PETTY CASH:&nbsp;&nbsp;<h5 class="fa fa-rupee text-white counter">&nbsp;<b><?php echo $comprofile['petty_cash_bal'];?></h6>
 							  <h6 class="m-b-20 text-white counter"><b>UNDEPOSITED FUNDS:&nbsp;&nbsp;</h6><h6 class="fa fa-rupee text-white counter">&nbsp;<b><b><?php echo $comprofile['cash_on_hand'];?></h6>
 							
                     </div>
                 </div>
-                
-                <div class="col-xs-12 col-md-6 col-lg-6 col-xl-12">
-				    <div class="card-box noradius noborder bg-warning">
-                    <h6 class="m-b-20 text-white counter"><b>Sales:&nbsp;&nbsp;</b><?php echo getpaymentstotal();?></h6>
-                            <h6 class="m-b-20 text-white counter">Expenses:&nbsp;<?php echo getExpensestotal();?></h6>
-                            <h6 class="m-b-20 text-white counter">Bank Deposits:&nbsp;<?php echo getDepositstotal();?></h6>
-							 <h6 class="m-b-20 text-white counter">Bank Withdrawels:&nbsp;<?php echo getWithdrawelsTotal();?></h6>
+				
+               
+                <div class="col-xs-12 col-md-12 col-lg-12 col-xl-12">
+				    <div class="card-box noradius noborder bg-dark">
+                  
+                            <h6 class="m-b-20 text-white counter">EXPENSES&nbsp;<h5 class="fa fa-rupee text-white counter">&nbsp;<b><?php echo getExpensestotal();?><br><a href="ExpensesReports.php">View more..</a></h6>
+				
+                           <br>
+						   
+							 <h6 class="m-b-20 text-white counter">BANK WITHDRAWELS<h5 class="fa fa-rupee text-white counter">&nbsp;<b>&nbsp;<?php echo getWithdrawelsTotal();?></h6>
                            
 				    </div>
 				</div>
             </div>
+		
 			 
-                   <hr>
+           <hr>
 			<div class="container">
             <br/>
             <?php 
@@ -320,10 +326,10 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                             <h5 class="card-title lead text-center text-white">BANK ACCOUNTS</h5>
 							<h6 class="card-title lead text-left text-warning"><b>Bank Balances</h6>
                             <p class="card-title lead text-left text-white">
-                              getBankName();
+                             '. getBankName().'
                             </p>     
                               <p class="card-title lead text-left text-white">
-                               getBankName2();
+                              '. getBankName2().'
                             </p>       							
                         </div>
                     </div>
