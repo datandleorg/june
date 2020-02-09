@@ -336,7 +336,6 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
                             </p>       							
                         </div>
                     </div>
-					</div>
 					
 			</div> ';
 			}?>
@@ -351,8 +350,6 @@ where inv_payment_status!='Paid' and inv_status='Approved' and DATE_ADD(inv_date
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				</div>
 			</div>
-				
-
     </div>
 			
         

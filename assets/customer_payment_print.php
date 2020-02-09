@@ -9,7 +9,7 @@ if(isset($_GET['cust_payment_id']))
 }
 //and i.inv_comp_code=cr.custid
 if($cust_type == "auto"){
-    $sql = "SELECT i.*,c.*,cr.* from  invoices i , customer_payments c , customerprofile cr where c.cust_payment_id='$cust_payment_id' and i.inv_code=c.cust_payment_invoice_no  ;";
+   echo  $sql = "SELECT i.*,c.*,cr.* from  invoices i , customer_payments c , customerprofile cr where c.cust_payment_id='$cust_payment_id' and i.inv_code=c.cust_payment_invoice_no and i.inv_customer=cr.custid  ;";
 
 }else{
     $sql = "SELECT i.*,c.*,cr.* from  invoicesacc i , customer_paymentsacc c , customerprofile cr where c.cust_payment_id='$cust_payment_id' and i.inv_code=c.cust_payment_invoice_no  ;";

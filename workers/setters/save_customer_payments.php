@@ -122,12 +122,11 @@ if (isset($_POST['array'])) {
         $return = update_query($dbcon,$array,$cust_payment_id,$table,"cust_payment_id");
         $entryData = json_decode($array,true);
         $entryDataNew = json_decode($array,true);
-       $entryData['payment_status'] = $entryData['cust_payment_mode']==="Cheque"?$entryData['cust_payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
+        $entryData['payment_status'] = $entryData['cust_payment_mode']==="Cheque"?$entryData['cust_payment_cheque_status']==="Cleared" ? "Completed": "Uncleared" : "Completed" ;
 
         if($return['status']){
             if($entryData['payment_status'] ==="Completed"){
-                if($entryData['payment_mode'] !== "Cheque" && $entryData['payment_status']==="Completed"){
-
+                if($entryData['cust_payment_mode'] !== "Cheque" && $entryData['payment_status']==="Completed"){
                     $pastpayamt = $pastPayment['cust_payment_amount']+$pastPayment['cust_payment_credits_used'];
                     // deduct past payment
                     $return = updateNumericbyand($dbcon,"+$pastpayamt","invoices","inv_balance_amt","inv_code",$pastPayment['cust_payment_invoice_no']);

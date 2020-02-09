@@ -6,13 +6,12 @@ if(isset($_GET['payment_id']))
 {
     $payment_id = $_GET['payment_id'];
 }
-echo $sql = "SELECT g.*,p.*,l.*,v.supname,v.address,v.city,v.state,v.country,v.zip,v.gstin,v.mobile,c.orgname,c.image FROM grn_notes g,purchaseorders p,vendorprofile v,comprofile c,payments l
-			WHERE l.payment_id='$payment_id' and l.payment_invoice_no=g.grn_invoice_no
-			ORDER BY p.id DESC";
+ $sql = "SELECT g.*,l.*,v.supname,v.address,v.city,v.state,v.country,v.zip,v.gstin,v.mobile,c.orgname,c.image FROM grn_notes g,vendorprofile v,comprofile c,payments l WHERE l.payment_id='$payment_id' and l.payment_invoice_no=g.grn_invoice_no and v.vendorid=l.payment_vendor and g.grn_comp_code=c.orgid ORDER BY l.id DESC
+ ";
 $result = mysqli_query($dbcon,$sql);
 $row =$result-> fetch_assoc();
 $grn_po_items_arr = json_decode($row['grn_po_items'],false);
-$po_items_arr = json_decode($row['po_items'],false);
+//$po_items_arr = json_decode($row['po_items'],false);
 
 function get_itemDetails($dbcon,$code){
     $sql = "SELECT * from purchaseitemaster where id='$code' ";
@@ -71,10 +70,10 @@ function get_itemDetails($dbcon,$code){
                                 </td> 
                             </tr>    
                             <tr>
-                            <td style="padding:5px;"><b>Payment Term: </b><?php echo $row['po_payterm']>1?$row['po_payterm'].' Day(s)':"Advance"; ?></td> 
+                            <td style="padding:5px;"><b>Payment Term: </b><?php echo $row['grn_po_payterm']>1?$row['grn_po_payterm'].' Day(s)':"Advance"; ?></td> 
                             </tr>    
                             <tr>
-                                <td style="padding:5px;"><b>Due Date: </b><?php echo $row['po_payterm']>1? Date('d/m/Y', strtotime("+".$row['po_payterm']." days")) : date("d/m/Y")  ?></td> 
+                                <td style="padding:5px;"><b>Due Date: </b><?php echo $row['grn_po_payterm']>1? Date('d/m/Y', strtotime("+".$row['grn_po_payterm']." days")) : date("d/m/Y")  ?></td> 
                             </tr>   
                         </table>
 
@@ -85,12 +84,7 @@ function get_itemDetails($dbcon,$code){
                         <b>Billing & Delivery At:</b><br/>
 
                         <?php echo $row['orgname']; ?>,<br/>
-                        <?php echo $row['po_shipping_street']; ?>,<br/>
-                        <?php echo $row['po_shipping_city']; ?>,<?php echo $row['po_shipping_state']; ?>,<br/>
-                        <?php echo $row['po_shipping_country']; ?>
-                        <?php echo $row['po_shipping_city']; ?> - <?php echo $row['po_shipping_zip']; ?><br/>
-                        <b>Mob#</b> - <?php echo $row['po_shipping_phone']; ?><br/>
-                        <b>GSTIN</b> - <?php echo $row['po_shipping_gstin']; ?>
+                     
                     </td>
                     <td style="border:1px solid #000;padding:10px;">
                         <table style="">
@@ -173,7 +167,7 @@ function get_itemDetails($dbcon,$code){
                                 <?php echo get_itemDetails($dbcon,$grn_po_items_arr[$i]->itemcode);?>
                             </td>    
                             <td style="padding:10px;padding-left:5%;border-right:1px solid #000;">
-                                <?php echo $grn_po_items_arr[$i]->rwqty." ".!empty($po_items_arr[$i])?$po_items_arr[$i]->uom :"";?>
+                                <?php echo $grn_po_items_arr[$i]->rwqty." ".!empty($grn_po_items_arr[$i])?$grn_po_items_arr[$i]->uom :"";?>
 
                             </td>    
                             <td align="center" style="padding:10px;padding-left:1%;border-right:1px solid #000;">
