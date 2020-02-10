@@ -432,6 +432,8 @@ function updateNumericbyand($dbcon,$col_val,$table,$col,$cond_col,$cond_val){
         $sql.=";";
     }
 
+   // echo $sql;
+
     if (mysqli_query($dbcon,$sql)) {
         $return['status']=true;
 

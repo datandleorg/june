@@ -134,7 +134,7 @@ if (isset($_POST['array'])) {
             if($return['status']){
                     $payamt = $entryData['cust_payment_amount']+$entryData['cust_payment_credits_used'];
                     // add new payment
-                    $return = updateNumericbyand($dbcon,"-$payamt","invoices","inv_balance_amt","inv_balance_amt",$entryData['cust_payment_invoice_no']);
+                    $return = updateNumericbyand($dbcon,"-$payamt","invoices","inv_balance_amt","inv_code",$entryData['cust_payment_invoice_no']);
                    
                 if($return['status']){
 
