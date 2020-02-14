@@ -32,21 +32,32 @@ try{
         $rowId = $bdid;
         $entity = 'vendorcredits';
 
-         $entryData['amount'] = $pastData['trans_amt'];
+        $entryData['amount'] = $pastData['trans_amt'];
         $return =  handleTransactionNew($dbcon,$entryData,$entity,$rowId,$session_org,$session_user,"reverse");
 
 
         if(!$return['status']){
             throw new Exception();
         }else{
-            $sql = "DELETE FROM vendorcredits WHERE v_credits_id='".$_GET['id']."' ";
 
-            if ($dbcon->query($sql) === TRUE) {
-                header("Location: listVendorCredits.php");
-            } else {
-                echo "Error deleting record: " . $dbcon->error;
+            //updating vendorprofile
+            $pastCredAmt = $entryData['v_credits_amount'];
+            $return = updateNumericbyand($dbcon,"-$pastCredAmt","vendorprofile","vendor_credit_bal","vendorid",$entryData['v_credits_vendorid']);
+            if($return['status']){
+                $sql = "DELETE FROM vendorcredits WHERE v_credits_id='".$_GET['id']."' ";
+
+                if ($dbcon->query($sql) === TRUE) {
+                    header("Location: listVendorCredits.php");
+                } else {
+                    echo "Error deleting record: " . $dbcon->error;
+                    throw new Exception();
+                }
+            }else{
                 throw new Exception();
+
             }
+               
+          
         }
 
     $dbcon->commit();

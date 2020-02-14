@@ -47,6 +47,7 @@
                                             <th style="width:50px">Transaction#</th>												
                                             <th style="width:3000px">Date</th>												
                                             <th style="width:200px">Bank</th>
+                                            <th style="width:200px">Grn_ID</th>
                                             <th style="width:200px">Reference#</th>
                                             <th style="width:3500px">Vendor</th>												
                                             <th style="width:100px">Invoioce#</th>												
@@ -72,6 +73,7 @@
                                                 echo '<td>' .$row['payment_id'] . '</td>';
                                                 echo '<td>'.$row['payment_date'].' </td>';
                                                 echo '<td>'.$row['payment_bank'].' </td>';
+                                                echo '<td>'.$row['payment_grn_id'].' </td>';
                                                 echo '<td>'.$row['payment_ref_no'].' </td>';
                                                 echo '<td>'.$row['supname'].' </td>';
                                                 echo '<td>'.$row['payment_invoice_no'].' </td>';
@@ -144,31 +146,31 @@ var table = $('#example1').DataTable( {
                         i : 0;
                 };
                 var grossval = api
-                .column( 8)
+                .column( 9)
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 ).toFixed(2);
                 var grossval2 = api
-                .column( 9 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 ).toFixed(2);
-
-                var grossval3 = api
                 .column( 10 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 ).toFixed(2);
 
+                var grossval3 = api
+                .column( 11 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 ).toFixed(2);
 
 
-                $( api.column( 5 ).footer() ).html('Total');
-                $( api.column( 7 ).footer() ).html(grossval);
-                $( api.column( 8 ).footer() ).html(grossval2);
-                $( api.column( 9 ).footer() ).html(grossval3);
+
+                $( api.column( 6 ).footer() ).html('Total');
+                $( api.column( 8 ).footer() ).html(grossval);
+                $( api.column( 9 ).footer() ).html(grossval2);
+                $( api.column( 10 ).footer() ).html(grossval3);
                 //   $( api.column( 5 ).footer() ).html(taxamt);
                 //   $( api.column( 7 ).footer() ).html(netval);
                 //  $( api.column( 8 ).footer() ).html(bal);

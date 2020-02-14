@@ -40,14 +40,23 @@ try{
         if(!$return['status']){
             throw new Exception();
         }else{
-            $sql = "DELETE FROM customercredits WHERE customer_credits_id='".$_GET['id']."' ";
+             //updating vendorprofile
+             $pastCredAmt = $entryData['customer_credits_amount'];
+             $return = updateNumericbyand($dbcon,"-$pastCredAmt","customerprofile","cust_credit_bal","custid",$entryData['customer_credits_custid']);
+             if($return['status']){
+                $sql = "DELETE FROM customercredits WHERE customer_credits_id='".$_GET['id']."' ";
 
-            if ($dbcon->query($sql) === TRUE) {
-                header("Location: listCustomerCredits.php");
-            } else {
-                echo "Error deleting record: " . $dbcon->error;
+                if ($dbcon->query($sql) === TRUE) {
+                    header("Location: listCustomerCredits.php");
+                } else {
+                    echo "Error deleting record: " . $dbcon->error;
+                    throw new Exception();
+                }
+             }else{
                 throw new Exception();
-            }
+
+             }
+        
         }
 
     $dbcon->commit();
